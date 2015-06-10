@@ -1,0 +1,49 @@
+# GOOGLE SAMPLE PACKAGING DATA
+#
+# This file is used by Google as part of our samples packaging process.
+# End users may safely ignore this file. It has no relevance to other systems.
+---
+# Values: {DRAFT | PUBLISHED | INTERNAL | DEPRECATED | SUPERCEDED}
+status:       DRAFT
+
+# Optional, put additional explanation here for DEPRECATED or SUPERCEDED.
+# statusNote:
+
+# See http://go/sample-categories
+technologies: [Android, AppEngine, Google+]
+categories:   [Getting Started, UI]
+languages:    [Java, Python]
+solutions:    [Mobile]
+
+# May be omitted if unpublished
+github:       google/actionbar-basics
+
+# Values: BEGINNER | INTERMEDIATE | ADVANCED | EXPERT
+level:        BEGINNER
+
+# Dimensions: 512x512, PNG fomrat
+icon: screenshots/icon.png
+
+# List of APIs that this sample should be listed under. Use authoritive,
+# names that are unique for the product in question. Examples:
+#
+# Android -    android:<class-name>
+# App Engine - gae-java:<class name>
+#              gae-python:<package>
+# Web Services - ws:<name of API from Cloud Console>
+api_refs:
+    - android:com.android.ui.ActionBar
+    - ws:drive.files
+    - ws:urlshortener.url
+
+# APIs that need to be enabled in the Cloud Console.
+# In the future, we want to automatically provision API keys based on this data.
+# Use the service name for each API. (Hint: Hover over the appropriate link in the Cloud
+# Console and copy the link.)
+cloud_console_apis:
+    - maps_android_backend
+    - plus
+
+# Default: apache2. May be omitted for most samples.
+# Alternatives: apache2-android (for AOSP)
+license: apache2

@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:keepScreenOn="true">
 
-  <ccom.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview
+  <com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview
       android:id="@+id/preview"
       android:layout_width="match_parent"
       android:layout_height="match_parent">
@@ -18,6 +18,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-  </ccom.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview>
+  </com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview>
 
 </LinearLayout>

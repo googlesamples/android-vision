@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Photo Demo</string>
+    <string name="title_activity_photo_viewer">Photo Viewer</string>
+</resources>

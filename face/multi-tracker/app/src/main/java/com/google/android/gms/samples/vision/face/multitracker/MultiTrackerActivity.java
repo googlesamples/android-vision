@@ -36,7 +36,7 @@ import java.io.IOException;
  * barcode.
  */
 public final class MultiTrackerActivity extends Activity {
-    private static final String TAG = "FaceTracker";
+    private static final String TAG = "MultiTracker";
 
     private CameraSource mCameraSource;
     private CameraSourcePreview mPreview;
@@ -81,6 +81,19 @@ public final class MultiTrackerActivity extends Activity {
                 .add(faceDetector)
                 .add(barcodeDetector)
                 .build();
+
+        if (!multiDetector.isOperational()) {
+            // Note: The first time that an app using the barcode or face API is installed on a
+            // device, GMS will download a native libraries to the device in order to do detection.
+            // Usually this completes before the app is run for the first time.  But if that
+            // download has not yet completed, then the above call will not detect any barcodes
+            // and/or faces.
+            //
+            // isOperational() can be used to check if the required native libraries are currently
+            // available.  The detectors will automatically become operational once the library
+            // downloads complete on device.
+            Log.w(TAG, "Detector dependencies are not yet available.");
+        }
 
         // Creates and starts the camera.  Note that this will use a higher resolution by default
         // (1024x768) in comparison to other face detection examples, because the barcode detector

@@ -61,6 +61,17 @@ public final class FaceTrackerActivity extends Activity {
         detector.setProcessor(
                 new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory()).build());
 
+        if (!detector.isOperational()) {
+            // Note: The first time that an app using face API is installed on a device, GMS will
+            // download a native library to the device in order to do detection.  Usually this
+            // completes before the app is run for the first time.  But if that download has not yet
+            // completed, then the above call will not detect any faces.
+            //
+            // isOperational() can be used to check if the required native library is currently
+            // available.  The detector will automatically become operational once the library
+            // download completes on device.
+            Log.w(TAG, "Face detector dependencies are not yet available.");
+        }
 
         mCameraSource = new CameraSource.Builder(context, detector)
                 .setRequestedPreviewSize(640, 480)
@@ -122,9 +133,8 @@ public final class FaceTrackerActivity extends Activity {
     //==============================================================================================
 
     /**
-     * Factory for creating a face tracker to be associated with a new face.  The distributing
-     * detection processor uses this factory to create face trackers as needed -- one for each
-     * individual.
+     * Factory for creating a face tracker to be associated with a new face.  The multiprocessor
+     * uses this factory to create face trackers as needed -- one for each individual.
      */
     private class GraphicFaceTrackerFactory implements MultiProcessor.Factory<Face> {
         @Override

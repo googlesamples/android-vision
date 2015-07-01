@@ -1,7 +1,7 @@
 Android Vision API Samples
 ============
 
-These samples demonstrate the face detection API.
+These samples demonstrate the vision API for detecting faces and barcodes.
 
 Introduction
 ------------
@@ -15,14 +15,14 @@ Getting Started
 The samples build using Gradle in Android Studio.  There is no special
 configuration required.
 
-Support
+Support (Post Release)
 -------
 
-- Google+ Community: https://plus.sandbox.google.com/communities/<...>
-- Stack Overflow: http://stackoverflow.com/questions/tagged/<...>
+For General questions and discussion on StackOverflow:
+- Stack Overflow: http://stackoverflow.com/questions/tagged/android-vision
 
 If you've found an error in this sample, please file an issue:
-https://github.com/googlesamples/<...>/issues
+https://github.com/googlesamples/android-vision/issues
 
 Patches are encouraged, and may be submitted by forking this project and
 submitting a pull request through GitHub.
@@ -30,7 +30,7 @@ submitting a pull request through GitHub.
 License
 -------
 
-Copyright 2014 Google, Inc.
+Copyright 2015 Google, Inc. All Rights Reserved.
 
 Licensed to the Apache Software Foundation (ASF) under one or more contributor
 license agreements.  See the NOTICE file distributed with this work for

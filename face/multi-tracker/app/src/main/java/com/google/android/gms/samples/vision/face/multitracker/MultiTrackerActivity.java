@@ -20,13 +20,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.samples.vision.face.multitracker.ui.camera.CameraSourcePreview;
+import com.google.android.gms.samples.vision.face.multitracker.ui.camera.GraphicOverlay;
+
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.MultiDetector;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.android.gms.vision.face.FaceDetector;
-import com.google.android.gms.samples.vision.face.multitracker.ui.camera.CameraSourcePreview;
-import com.google.android.gms.samples.vision.face.multitracker.ui.camera.GraphicOverlay;
 
 import java.io.IOException;
 
@@ -95,11 +96,12 @@ public final class MultiTrackerActivity extends Activity {
             Log.w(TAG, "Detector dependencies are not yet available.");
         }
 
-        // Creates and starts the camera.  Note that this will use a higher resolution by default
-        // (1024x768) in comparison to other face detection examples, because the barcode detector
-        // works better at higher resolutions.
+        // Creates and starts the camera.  Note that this uses a higher resolution in comparison
+        // to other detection examples to enable the barcode detector to detect small barcodes
+        // at long distances.
         mCameraSource = new CameraSource.Builder(context, multiDetector)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
+                .setRequestedPreviewSize(1600, 1024)
                 .setRequestedFps(15.0f)
                 .build();
         startCameraSource();

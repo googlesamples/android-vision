@@ -40,7 +40,6 @@ class GraphicTracker<T> extends Tracker<T> {
     @Override
     public void onNewItem(int id, T item) {
         mGraphic.setId(id);
-        mOverlay.add(mGraphic);
     }
 
     /**
@@ -48,7 +47,18 @@ class GraphicTracker<T> extends Tracker<T> {
      */
     @Override
     public void onUpdate(Detector.Detections<T> detectionResults, T item) {
+        mOverlay.add(mGraphic);
         mGraphic.updateItem(item);
+    }
+
+    /**
+     * Hide the graphic when the corresponding face was not detected.  This can happen for
+     * intermediate frames temporarily, for example if the face was momentarily blocked from
+     * view.
+     */
+    @Override
+    public void onMissing(Detector.Detections<T> detectionResults) {
+        mOverlay.remove(mGraphic);
     }
 
     /**

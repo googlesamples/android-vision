@@ -102,7 +102,6 @@ public final class MultiTrackerActivity extends Activity {
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setRequestedFps(15.0f)
                 .build();
-        startCameraSource();
     }
 
     /**

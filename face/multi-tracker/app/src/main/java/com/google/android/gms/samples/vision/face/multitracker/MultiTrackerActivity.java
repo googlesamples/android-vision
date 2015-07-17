@@ -104,7 +104,6 @@ public final class MultiTrackerActivity extends Activity {
                 .setRequestedPreviewSize(1600, 1024)
                 .setRequestedFps(15.0f)
                 .build();
-        startCameraSource();
     }
 
     /**

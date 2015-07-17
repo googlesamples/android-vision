@@ -78,7 +78,6 @@ public final class FaceTrackerActivity extends Activity {
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setRequestedFps(30.0f)
                 .build();
-        startCameraSource();
     }
 
     /**

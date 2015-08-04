@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.google.android.gms.samples.vision.face.facetracker"
-        minSdkVersion 19
+        minSdkVersion 9
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"

@@ -8,7 +8,7 @@ Introduction
 
 Pre-requisites
 --------------
- Android Play Services SDK level 25 or greater.
+ Android Play Services SDK level 26 or greater.
 
 Getting Started
 ---------------

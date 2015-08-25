@@ -57,7 +57,9 @@ public final class FaceTrackerActivity extends Activity {
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
 
         Context context = getApplicationContext();
-        FaceDetector detector = new FaceDetector.Builder(context).build();
+        FaceDetector.Builder detectorBuilder = new FaceDetector.Builder(context);
+        detectorBuilder.setClassificationType(FaceDetector.ALL_CLASSIFICATIONS);
+        FaceDetector detector = detectorBuilder.build();
         detector.setProcessor(
                 new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory()).build());
 

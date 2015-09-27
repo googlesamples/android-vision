@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/topLayout"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true">
+
+  <com.google.android.gms.samples.vision.barcodereader.ui.camera.CameraSourcePreview
+      android:id="@+id/preview"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+    <com.google.android.gms.samples.vision.barcodereader.ui.camera.GraphicOverlay
+        android:id="@+id/graphicOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+  </com.google.android.gms.samples.vision.barcodereader.ui.camera.CameraSourcePreview>
+
+</LinearLayout>

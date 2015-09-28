@@ -37,6 +37,8 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
 
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.Thread.State;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

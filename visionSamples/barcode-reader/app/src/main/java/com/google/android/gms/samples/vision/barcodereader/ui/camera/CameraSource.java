@@ -408,6 +408,9 @@ public class CameraSource {
                 mProcessingThread = null;
             }
 
+            // clear the buffer to prevent oom exceptions
+            mBytesToByteBuffer.clear();
+
             if (mCamera != null) {
                 mCamera.stopPreview();
                 mCamera.setPreviewCallbackWithBuffer(null);

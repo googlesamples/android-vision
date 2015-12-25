@@ -185,6 +185,7 @@ public final class MultiTrackerActivity extends AppCompatActivity {
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setRequestedPreviewSize(1600, 1024)
                 .setRequestedFps(15.0f)
+                .setAutoFocusEnabled(true)
                 .build();
     }
 

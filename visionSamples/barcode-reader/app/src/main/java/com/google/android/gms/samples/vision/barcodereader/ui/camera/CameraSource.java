@@ -510,7 +510,10 @@ public class CameraSource {
 
         Camera.Parameters parameters = camera.getParameters();
 
-        parameters.setPictureSize(pictureSize.getWidth(), pictureSize.getHeight());
+        if (pictureSize != null) {
+            parameters.setPictureSize(pictureSize.getWidth(), pictureSize.getHeight());
+        }
+
         parameters.setPreviewSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
         parameters.setPreviewFpsRange(
                 previewFpsRange[Camera.Parameters.PREVIEW_FPS_MIN_INDEX],
@@ -618,7 +621,9 @@ public class CameraSource {
         public SizePair(android.hardware.Camera.Size previewSize,
                         android.hardware.Camera.Size pictureSize) {
             mPreview = new Size(previewSize.width, previewSize.height);
-            mPicture = new Size(pictureSize.width, pictureSize.height);
+            if (pictureSize != null) {
+                mPicture = new Size(pictureSize.width, pictureSize.height);
+            }
         }
 
         public Size previewSize() {
@@ -862,8 +867,9 @@ public class CameraSource {
                 }
 
                 if (!mBytesToByteBuffer.containsKey(data)) {
-                    Log.d(TAG, "Skipping frame.  Could not find ByteBuffer associated with the " +
-                          "image data from the camera.");
+                    Log.d(TAG,
+                        "Skipping frame.  Could not find ByteBuffer associated with the image " +
+                        "data from the camera.");
                     return;
                 }
 

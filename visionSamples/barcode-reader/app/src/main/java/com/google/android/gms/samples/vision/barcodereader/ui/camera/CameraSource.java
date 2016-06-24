@@ -1006,7 +1006,7 @@ public class CameraSource {
         int displayAngle;
         if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
             angle = (cameraInfo.orientation + degrees) % 360;
-            displayAngle = (360 - angle); // compensate for it being mirrored
+            displayAngle = (360 - angle) % 360; // compensate for it being mirrored
         } else {  // back-facing
             angle = (cameraInfo.orientation - degrees + 360) % 360;
             displayAngle = angle;

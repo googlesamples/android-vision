@@ -325,41 +325,51 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
     }
 
     /**
-     * onTap is called to capture the oldest barcode currently detected and
-     * return it to the caller.
+     * onTap returns the tapped barcode result to the calling Activity.
      *
      * @param rawX - the raw position of the tap
      * @param rawY - the raw position of the tap.
      * @return true if the activity is ending.
      */
     private boolean onTap(float rawX, float rawY) {
+        // Find tap point in preview frame coordinates.
+        int[] location = new int[2];
+        mGraphicOverlay.getLocationOnScreen(location);
+        float x = (rawX - location[0]) / mGraphicOverlay.getWidthScaleFactor();
+        float y = (rawY - location[1]) / mGraphicOverlay.getHeightScaleFactor();
 
-        //TODO: use the tap position to select the barcode.
-        BarcodeGraphic graphic = mGraphicOverlay.getFirstGraphic();
-        Barcode barcode = null;
-        if (graphic != null) {
-            barcode = graphic.getBarcode();
-            if (barcode != null) {
-                Intent data = new Intent();
-                data.putExtra(BarcodeObject, barcode);
-                setResult(CommonStatusCodes.SUCCESS, data);
-                finish();
+        // Find the barcode whose center is closest to the tapped point.
+        Barcode best = null;
+        float bestDistance = Float.MAX_VALUE;
+        for (BarcodeGraphic graphic : mGraphicOverlay.getGraphics()) {
+            Barcode barcode = graphic.getBarcode();
+            if (barcode.getBoundingBox().contains((int) x, (int) y)) {
+                // Exact hit, no need to keep looking.
+                best = barcode;
+                break;
             }
-            else {
-                Log.d(TAG, "barcode data is null");
+            float dx = x - barcode.getBoundingBox().centerX();
+            float dy = y - barcode.getBoundingBox().centerY();
+            float distance = (dx * dx) + (dy * dy);  // actually squared distance
+            if (distance < bestDistance) {
+                best = barcode;
+                bestDistance = distance;
             }
         }
-        else {
-            Log.d(TAG,"no barcode detected");
+
+        if (best != null) {
+            Intent data = new Intent();
+            data.putExtra(BarcodeObject, best);
+            setResult(CommonStatusCodes.SUCCESS, data);
+            finish();
+            return true;
         }
-        return barcode != null;
+        return false;
     }
 
     private class CaptureGestureListener extends GestureDetector.SimpleOnGestureListener {
-
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-
             return onTap(e.getRawX(), e.getRawY()) || super.onSingleTapConfirmed(e);
         }
     }

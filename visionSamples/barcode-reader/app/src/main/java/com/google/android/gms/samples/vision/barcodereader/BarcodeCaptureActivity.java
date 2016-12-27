@@ -137,6 +137,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
             }
         };
 
+        findViewById(R.id.topLayout).setOnClickListener(listener);
         Snackbar.make(mGraphicOverlay, R.string.permission_camera_rationale,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.ok, listener)

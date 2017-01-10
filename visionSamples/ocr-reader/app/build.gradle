@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.google.android.gms.samples.vision.barcodereader"
+        applicationId "com.google.android.gms.samples.vision.ocrreader"
         minSdkVersion 9
         targetSdkVersion 23
         versionCode 1

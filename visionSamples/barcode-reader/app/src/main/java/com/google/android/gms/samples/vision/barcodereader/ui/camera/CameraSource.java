@@ -91,6 +91,14 @@ public class CameraSource {
      */
     private static final float ASPECT_RATIO_TOLERANCE = 0.01f;
 
+    public CameraSourceStateListener getStateListener() {
+        return mStateListener;
+    }
+
+    public void setStateListener(CameraSourceStateListener stateListener) {
+        this.mStateListener = stateListener;
+    }
+
     @StringDef({
         Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE,
         Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO,
@@ -122,11 +130,16 @@ public class CameraSource {
 
     private int mFacing = CAMERA_FACING_BACK;
 
+    private boolean mCameraFallbackAllowed = true;
+
+    private CameraSourceStateListener mStateListener = null;
+
     /**
      * Rotation of the device, and thus the associated preview images captured from the device.
      * See {@link Frame.Metadata#getRotation()}.
      */
     private int mRotation;
+    private int mRequestedCameraId;
 
     private Size mPreviewSize;
 
@@ -143,7 +156,9 @@ public class CameraSource {
     // These instances need to be held onto to avoid GC of their underlying resources.  Even though
     // these aren't used outside of the method that creates them, they still must have hard
     // references maintained to them.
+    @SuppressWarnings("FieldCanBeLocal")
     private SurfaceView mDummySurfaceView;
+    @SuppressWarnings("FieldCanBeLocal")
     private SurfaceTexture mDummySurfaceTexture;
 
     /**
@@ -152,6 +167,8 @@ public class CameraSource {
      */
     private Thread mProcessingThread;
     private FrameProcessingRunnable mFrameProcessor;
+
+    private boolean mCanTakePicture = false;
 
     /**
      * Map to convert between a byte array, received from the camera, and its associated byte
@@ -237,6 +254,16 @@ public class CameraSource {
                 throw new IllegalArgumentException("Invalid camera: " + facing);
             }
             mCameraSource.mFacing = facing;
+            return this;
+        }
+
+        /**
+         * Sets whether fallback from front to back or vice versa is allowed.
+         * Used in case the requested camera was not available.
+         * Default: true.
+         */
+        public Builder setCameraFallbackAllowed(boolean allowed) {
+            mCameraSource.mCameraFallbackAllowed = allowed;
             return this;
         }
 
@@ -356,6 +383,11 @@ public class CameraSource {
             mFrameProcessor.setActive(true);
             mProcessingThread.start();
         }
+
+        if (mStateListener != null) {
+            mStateListener.onCameraSourceStarted();
+        }
+
         return this;
     }
 
@@ -377,10 +409,17 @@ public class CameraSource {
             mCamera.setPreviewDisplay(surfaceHolder);
             mCamera.startPreview();
 
+            mCanTakePicture = true;
+
             mProcessingThread = new Thread(mFrameProcessor);
             mFrameProcessor.setActive(true);
             mProcessingThread.start();
         }
+
+        if (mStateListener != null) {
+            mStateListener.onCameraSourceStarted();
+        }
+
         return this;
     }
 
@@ -411,6 +450,8 @@ public class CameraSource {
             // clear the buffer to prevent oom exceptions
             mBytesToByteBuffer.clear();
 
+            mCanTakePicture = false;
+
             if (mCamera != null) {
                 mCamera.stopPreview();
                 mCamera.setPreviewCallbackWithBuffer(null);
@@ -433,6 +474,10 @@ public class CameraSource {
                 mCamera = null;
             }
         }
+
+        if (mStateListener != null) {
+            mStateListener.onCameraSourceStopped();
+        }
     }
 
     /**
@@ -448,6 +493,22 @@ public class CameraSource {
      */
     public int getCameraFacing() {
         return mFacing;
+    }
+
+    /**
+     * Sets whether fallback from front to back or vice versa is allowed.
+     * Used in case the requested camera was not available.
+     */
+    public boolean isCameraFallbackAllowed() {
+        return mCameraFallbackAllowed;
+    }
+
+    public boolean isCameraFacingBackAvailable() {
+        return getIdForRequestedCamera(CAMERA_FACING_BACK) != -1;
+    }
+
+    public boolean isCameraFacingFrontAvailable() {
+        return getIdForRequestedCamera(CAMERA_FACING_FRONT) != -1;
     }
 
     public int doZoom(float scale) {
@@ -494,7 +555,10 @@ public class CameraSource {
      */
     public void takePicture(ShutterCallback shutter, PictureCallback jpeg) {
         synchronized (mCameraLock) {
-            if (mCamera != null) {
+            if (mCamera != null && mCanTakePicture) {
+
+                mCanTakePicture = false; // Preview is suspended until we're done
+
                 PictureStartCallback startCallback = new PictureStartCallback();
                 startCallback.mDelegate = shutter;
                 PictureDoneCallback doneCallback = new PictureDoneCallback();
@@ -535,7 +599,8 @@ public class CameraSource {
         synchronized (mCameraLock) {
             if (mCamera != null && mode != null) {
                 Camera.Parameters parameters = mCamera.getParameters();
-                if (parameters.getSupportedFocusModes().contains(mode)) {
+                final List<String> supportedFocusModes = parameters.getSupportedFocusModes();
+                if (supportedFocusModes != null && supportedFocusModes.contains(mode)) {
                     parameters.setFocusMode(mode);
                     mCamera.setParameters(parameters);
                     mFocusMode = mode;
@@ -575,7 +640,8 @@ public class CameraSource {
         synchronized (mCameraLock) {
             if (mCamera != null && mode != null) {
                 Camera.Parameters parameters = mCamera.getParameters();
-                if (parameters.getSupportedFlashModes().contains(mode)) {
+                final List<String> supportedFlashModes = parameters.getSupportedFlashModes();
+                if (supportedFlashModes != null && supportedFlashModes.contains(mode)) {
                     parameters.setFlashMode(mode);
                     mCamera.setParameters(parameters);
                     mFlashMode = mode;
@@ -585,6 +651,36 @@ public class CameraSource {
 
             return false;
         }
+    }
+
+    /**
+     * Checks whether a specific flash mode is supported.
+     * If the camera source is not initialized yet - then it will return false.
+     * @param mode
+     * @return true only if camera is initialized and mode is supported.
+     */
+    public boolean isFlashModeSupported(String mode) {
+        if (mCamera != null) {
+            Camera.Parameters parameters = mCamera.getParameters();
+            final List<String> supportedModes = parameters.getSupportedFlashModes();
+            return supportedModes != null && supportedModes.contains(mode);
+        }
+        return false;
+    }
+
+    /**
+     * Checks whether a specific focus mode is supported.
+     * If the camera source is not initialized yet - then it will return false.
+     * @param mode
+     * @return true only if camera is initialized and mode is supported.
+     */
+    public boolean isFocusModeSupported(String mode) {
+        if (mCamera != null) {
+            Camera.Parameters parameters = mCamera.getParameters();
+            final List<String> supportedModes = parameters.getSupportedFocusModes();
+            return supportedModes != null && supportedModes.contains(mode);
+        }
+        return false;
     }
 
     /**
@@ -600,7 +696,7 @@ public class CameraSource {
      * <p/>
      * <p>If the current flash mode is not
      * {@link Camera.Parameters#FLASH_MODE_OFF}, flash may be
-     * fired during auto-focus, depending on the driver and camera hardware.<p>
+     * fired during auto-focus, depending on the driver and camera hardware.</p>
      *
      * @param cb the callback to run
      * @see #cancelAutoFocus()
@@ -699,6 +795,7 @@ public class CameraSource {
             synchronized (mCameraLock) {
                 if (mCamera != null) {
                     mCamera.startPreview();
+                    mCanTakePicture = true;
                 }
             }
         }
@@ -740,11 +837,23 @@ public class CameraSource {
      */
     @SuppressLint("InlinedApi")
     private Camera createCamera() {
-        int requestedCameraId = getIdForRequestedCamera(mFacing);
-        if (requestedCameraId == -1) {
+        mRequestedCameraId = getIdForRequestedCamera(mFacing);
+
+        if (mRequestedCameraId == -1 && mCameraFallbackAllowed) {
+            if (mFacing == CAMERA_FACING_BACK) {
+                mFacing = CAMERA_FACING_FRONT;
+            } else {
+                mFacing = CAMERA_FACING_BACK;
+            }
+
+            mRequestedCameraId = getIdForRequestedCamera(mFacing);
+        }
+
+        if (mRequestedCameraId == -1) {
             throw new RuntimeException("Could not find requested camera.");
         }
-        Camera camera = Camera.open(requestedCameraId);
+
+        Camera camera = Camera.open(mRequestedCameraId);
 
         SizePair sizePair = selectSizePair(camera, mRequestedPreviewWidth, mRequestedPreviewHeight);
         if (sizePair == null) {
@@ -770,11 +879,11 @@ public class CameraSource {
                 previewFpsRange[Camera.Parameters.PREVIEW_FPS_MAX_INDEX]);
         parameters.setPreviewFormat(ImageFormat.NV21);
 
-        setRotation(camera, parameters, requestedCameraId);
+        setRotation(camera, parameters, mRequestedCameraId);
 
         if (mFocusMode != null) {
-            if (parameters.getSupportedFocusModes().contains(
-                    mFocusMode)) {
+            final List<String> supportedFocusModes = parameters.getSupportedFocusModes();
+            if (supportedFocusModes != null && supportedFocusModes.contains(mFocusMode)) {
                 parameters.setFocusMode(mFocusMode);
             } else {
                 Log.i(TAG, "Camera focus mode: " + mFocusMode + " is not supported on this device.");
@@ -785,13 +894,11 @@ public class CameraSource {
         mFocusMode = parameters.getFocusMode();
 
         if (mFlashMode != null) {
-            if (parameters.getSupportedFlashModes() != null) {
-                if (parameters.getSupportedFlashModes().contains(
-                        mFlashMode)) {
-                    parameters.setFlashMode(mFlashMode);
-                } else {
-                    Log.i(TAG, "Camera flash mode: " + mFlashMode + " is not supported on this device.");
-                }
+            final List<String> supportedFlashModes = parameters.getSupportedFlashModes();
+            if (supportedFlashModes != null && supportedFlashModes.contains(mFlashMode)) {
+                parameters.setFlashMode(mFlashMode);
+            } else {
+                Log.i(TAG, "Camera flash mode: " + mFlashMode + " is not supported on this device.");
             }
         }
 
@@ -970,6 +1077,12 @@ public class CameraSource {
             }
         }
         return selectedFpsRange;
+    }
+
+    public void updateRotation() {
+        if (mCamera != null) {
+            setRotation(mCamera, mCamera.getParameters(), mRequestedCameraId);
+        }
     }
 
     /**
@@ -1210,5 +1323,11 @@ public class CameraSource {
                 }
             }
         }
+    }
+
+    public interface CameraSourceStateListener
+    {
+        void onCameraSourceStarted();
+        void onCameraSourceStopped();
     }
 }

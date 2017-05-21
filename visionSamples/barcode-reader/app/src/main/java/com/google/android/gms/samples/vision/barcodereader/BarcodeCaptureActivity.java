@@ -129,6 +129,15 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
 
         final Activity thisActivity = this;
 
+        findViewById(R.id.topLayout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityCompat.requestPermissions(thisActivity, permissions,
+                        RC_HANDLE_CAMERA_PERM);
+            }
+        });
+
+
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {

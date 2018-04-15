@@ -114,6 +114,10 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void loadNative() {
+        System.loadLibrary("native-lib");
+    }
+
     /**
      * Creates and starts the camera.  Note that this uses a higher resolution in comparison
      * to other detection examples to enable the barcode detector to detect small barcodes
@@ -155,7 +159,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        loadNative();
         startCameraSource();
     }
 
@@ -208,6 +212,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             Log.d(TAG, "Camera permission granted - initialize the camera source");
             // we have permission, so create the camerasource
             createCameraSource();
+
             return;
         }
 
@@ -290,8 +295,10 @@ public final class FaceTrackerActivity extends AppCompatActivity {
          * Start tracking the detected face instance within the face overlay.
          */
         @Override
-        public void onNewItem(int faceId, Face item) {
+        public void onNewItem(int faceId, Face item)
+        {
             mFaceGraphic.setId(faceId);
+            mFaceGraphic.startRecognition(item);
         }
 
         /**
@@ -310,6 +317,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
          */
         @Override
         public void onMissing(FaceDetector.Detections<Face> detectionResults) {
+            mFaceGraphic.stopRecognition();
             mOverlay.remove(mFaceGraphic);
         }
 

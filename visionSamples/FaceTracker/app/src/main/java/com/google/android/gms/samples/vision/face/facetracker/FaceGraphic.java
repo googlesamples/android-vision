@@ -18,6 +18,7 @@ package com.google.android.gms.samples.vision.face.facetracker;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.face.Face;
@@ -52,6 +53,9 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     private int mFaceId;
     private float mFaceHappiness;
 
+    private static final String RTAG = "RTAG";
+    private Thread mT;
+
     FaceGraphic(GraphicOverlay overlay) {
         super(overlay);
 
@@ -73,6 +77,34 @@ class FaceGraphic extends GraphicOverlay.Graphic {
 
     void setId(int id) {
         mFaceId = id;
+    }
+
+    public void startRecognition(Face item)
+    {
+        test();
+        mT = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(RTAG, "startRecognition: ");
+                try {
+                    Thread.sleep(5000);
+                    mFaceId = 777;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                //mFace
+            }
+        });
+        mT.start();
+    }
+
+    public void stopRecognition()
+    {
+        Log.i(RTAG, "stopRecognition: ");
+        if (mT.isAlive())
+        {
+            mT.stop();
+        }
     }
 
 
@@ -113,4 +145,6 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         float bottom = y + yOffset;
         canvas.drawRect(left, top, right, bottom, mBoxPaint);
     }
+
+    public native void test();
 }

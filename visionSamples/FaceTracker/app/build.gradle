@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.google.android.gms.samples.vision.face.facetracker"
@@ -10,6 +10,18 @@ android {
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
+        externalNativeBuild {
+            cmake {
+                cppFlags "-frtti -fexceptions"
+                abiFilters 'x86', 'x86_64', 'armeabi', 'armeabi-v7a'
+                //arguments "-DANDROID_STL=c++_shared"
+                // Passes optional arguments to CMake.
+                //arguments "-DANDROID_ARM_NEON=TRUE", "-DANDROID_TOOLCHAIN=clang"
+
+                // Sets a flag to enable format macro constants for the C compiler.
+                //cFlags "-D__STDC_FORMAT_MACROS"
+            }
+        }
     }
     buildTypes {
         release {
@@ -17,11 +29,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:24.2.0'
-    compile 'com.android.support:design:24.2.0'
-    compile 'com.google.android.gms:play-services-vision:9.4.0+'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:support-v4:24.2.0'
+    implementation 'com.android.support:design:24.2.0'
+    implementation 'com.google.android.gms:play-services-vision:9.4.0+'
 }

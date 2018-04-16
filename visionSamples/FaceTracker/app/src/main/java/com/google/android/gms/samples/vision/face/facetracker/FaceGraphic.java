@@ -19,15 +19,20 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
+import android.util.SparseArray;
 
 import com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay;
+import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.face.Face;
+
+import java.util.Map;
 
 /**
  * Graphic instance for rendering face position, orientation, and landmarks within an associated
  * graphic overlay view.
  */
 class FaceGraphic extends GraphicOverlay.Graphic {
+    private static final String TAG = "FaceGraphic";
     private static final float FACE_POSITION_RADIUS = 10.0f;
     private static final float ID_TEXT_SIZE = 40.0f;
     private static final float ID_Y_OFFSET = 50.0f;
@@ -53,7 +58,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     private int mFaceId;
     private float mFaceHappiness;
 
-    private static final String RTAG = "RTAG";
+
     private Thread mT;
 
     FaceGraphic(GraphicOverlay overlay) {
@@ -79,31 +84,39 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         mFaceId = id;
     }
 
-    public void startRecognition(Face item)
+    public void startRecognition(Face item, Map<Face, String> mFaceNameMap)
     {
-        test();
-        mT = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Log.i(RTAG, "startRecognition: ");
-                try {
-                    Thread.sleep(5000);
-                    mFaceId = 777;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                //mFace
-            }
-        });
-        mT.start();
+        Log.i(TAG,  String.format("hashmap: %d" , mFaceNameMap.size()));
+//        test();
+//        mT = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.i(TAG, "startRecognition: ");
+//
+//                try {
+//                    Thread.sleep(5000);
+//                    mFaceId = 777;
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                //mFace
+//            }
+//        });
+//        mT.start();
     }
 
-    public void stopRecognition()
+    public void stopRecognition(Detector.Detections<Face> detectionResults, Map<Face, String> mFaceNameMap)
     {
-        Log.i(RTAG, "stopRecognition: ");
-        if (mT.isAlive())
-        {
-            mT.stop();
+        Log.i(TAG, "stopRecognition: ");
+//        if (mT.isAlive())
+//        {
+//            mT.stop();
+//        }
+        //mFaceNameMap.remove(fa)
+        SparseArray<Face> faces = detectionResults.getDetectedItems();
+        for(int i = 0; i < faces.size(); i++) {
+            Face f = faces.valueAt(i);
+            mFaceNameMap.remove(f);
         }
     }
 

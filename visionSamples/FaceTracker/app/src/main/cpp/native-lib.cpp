@@ -3,6 +3,8 @@
 #include <android/log.h>
 #include <android/bitmap.h>
 
+#include <dlib/image_processing.h>
+
 using namespace std;
 
 #define  LOG_TAG    "Native"

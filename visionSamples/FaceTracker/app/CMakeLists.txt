@@ -7,6 +7,28 @@ cmake_minimum_required(VERSION 3.4.1)
 
 set (CMAKE_CXX_STANDARD 11)
 
+set(DLIB_DIR ../../../dlib)
+include_directories(${DLIB_DIR})
+
+add_library( # Sets the name of the library.
+             lib_dlib
+
+             # Sets the library as a shared library.
+             SHARED
+
+             # Provides a relative path to your source file(s).
+             # Associated headers in the same location as their source
+             # file are automatically included.
+             ../../../dlib/dlib/threads/threads_kernel_shared.cpp
+             ../../../dlib/dlib/entropy_decoder/entropy_decoder_kernel_2.cpp
+             ../../../dlib/dlib/base64/base64_kernel_1.cpp
+             ../../../dlib/dlib/threads/threads_kernel_1.cpp
+             ../../../dlib/dlib/threads/threads_kernel_2.cpp
+             ../../../dlib/dlib/threads/thread_pool_extension.cpp
+             ../../../dlib/dlib/threads/async.cpp
+             ../../../dlib/dlib/dnn/cpu_dlib.cpp
+             ../../../dlib/dlib/dnn/tensor_tools.cpp
+             )
 
 add_library( # Sets the name of the library.
              native-lib
@@ -39,6 +61,8 @@ find_library( # Sets the name of the path variable.
 
 target_link_libraries( # Specifies the target library.
                        native-lib
+
+                       lib_dlib
 
                         -ljnigraphics
 

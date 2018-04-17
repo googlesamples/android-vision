@@ -14,12 +14,13 @@ android {
             cmake {
                 cppFlags "-frtti -fexceptions"
                 abiFilters 'x86', 'x86_64', 'armeabi', 'armeabi-v7a'
-                //arguments "-DANDROID_STL=c++_shared"
+                arguments "-DANDROID_STL=c++_shared"
                 // Passes optional arguments to CMake.
                 //arguments "-DANDROID_ARM_NEON=TRUE", "-DANDROID_TOOLCHAIN=clang"
 
                 // Sets a flag to enable format macro constants for the C compiler.
                 //cFlags "-D__STDC_FORMAT_MACROS"
+
             }
         }
     }

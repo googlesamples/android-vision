@@ -15,24 +15,32 @@
  */
 package com.google.android.gms.samples.vision.face.facetracker;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Environment;
 import android.util.Log;
 import android.util.SparseArray;
 
 import com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.face.Face;
+import com.google.android.gms.vision.Frame;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Map;
 
 /**
  * Graphic instance for rendering face position, orientation, and landmarks within an associated
  * graphic overlay view.
  */
-class FaceGraphic extends GraphicOverlay.Graphic {
+class FaceGraphic extends GraphicOverlay.Graphic implements RecognitionInterface {
     private static final String TAG = "FaceGraphic";
+
     private static final float FACE_POSITION_RADIUS = 10.0f;
     private static final float ID_TEXT_SIZE = 40.0f;
     private static final float ID_Y_OFFSET = 50.0f;
@@ -40,13 +48,13 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     private static final float BOX_STROKE_WIDTH = 5.0f;
 
     private static final int COLOR_CHOICES[] = {
-        Color.BLUE,
-        Color.CYAN,
-        Color.GREEN,
-        Color.MAGENTA,
-        Color.RED,
-        Color.WHITE,
-        Color.YELLOW
+            Color.BLUE,
+            Color.CYAN,
+            Color.GREEN,
+            Color.MAGENTA,
+            Color.RED,
+            Color.WHITE,
+            Color.YELLOW
     };
     private static int mCurrentColorIndex = 0;
 
@@ -54,16 +62,19 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     private Paint mIdPaint;
     private Paint mBoxPaint;
 
-    private volatile Face mFace;
+    public volatile Face mFace;
     private int mFaceId;
     private float mFaceHappiness;
 
+    public int frame_cx = 5; //start after 5 frames
 
     private Thread mT;
+    private CustomDetector mCustomDetector;
+    private boolean IsRecognized;
 
-    FaceGraphic(GraphicOverlay overlay) {
+    FaceGraphic(GraphicOverlay overlay, CustomDetector customDetector) {
         super(overlay);
-
+        mCustomDetector = customDetector;
         mCurrentColorIndex = (mCurrentColorIndex + 1) % COLOR_CHOICES.length;
         final int selectedColor = COLOR_CHOICES[mCurrentColorIndex];
 
@@ -84,42 +95,6 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         mFaceId = id;
     }
 
-    public void startRecognition(Face item, Map<Face, String> mFaceNameMap)
-    {
-        Log.i(TAG,  String.format("hashmap: %d" , mFaceNameMap.size()));
-//        test();
-//        mT = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Log.i(TAG, "startRecognition: ");
-//
-//                try {
-//                    Thread.sleep(5000);
-//                    mFaceId = 777;
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                //mFace
-//            }
-//        });
-//        mT.start();
-    }
-
-    public void stopRecognition(Detector.Detections<Face> detectionResults, Map<Face, String> mFaceNameMap)
-    {
-        Log.i(TAG, "stopRecognition: ");
-//        if (mT.isAlive())
-//        {
-//            mT.stop();
-//        }
-        //mFaceNameMap.remove(fa)
-        SparseArray<Face> faces = detectionResults.getDetectedItems();
-        for(int i = 0; i < faces.size(); i++) {
-            Face f = faces.valueAt(i);
-            mFaceNameMap.remove(f);
-        }
-    }
-
 
     /**
      * Updates the face instance from the detection of the most recent frame.  Invalidates the
@@ -128,6 +103,20 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     void updateFace(Face face) {
         mFace = face;
         postInvalidate();
+
+        if (frame_cx > 0) {
+            frame_cx--;
+        } else {
+            if (!IsRecognized && mCustomDetector.recognitionHandler == null) { //one face at time
+                mCustomDetector.setHandlerListener(this);
+
+                int x = (int)face.getPosition().x;
+                int y = (int)face.getPosition().y;
+                int w = (int)face.getWidth();
+                int h = (int)face.getHeight();
+                mCustomDetector.startRecognition(mFaceId, x, y, w, h);
+            }
+        }
     }
 
     /**
@@ -140,14 +129,18 @@ class FaceGraphic extends GraphicOverlay.Graphic {
             return;
         }
 
+        //Log.e(TAG, "canvas.getHeight() " + canvas.getHeight()); //1440
+        //Log.e(TAG, "canvas.getWidth() " + canvas.getWidth()); //1080
+        // 960 720
+
         // Draws a circle at the position of the detected face, with the face's track id below.
         float x = translateX(face.getPosition().x + face.getWidth() / 2);
         float y = translateY(face.getPosition().y + face.getHeight() / 2);
         canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
         canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
-        canvas.drawText("happiness: " + String.format("%.2f", face.getIsSmilingProbability()), x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
-        canvas.drawText("right eye: " + String.format("%.2f", face.getIsRightEyeOpenProbability()), x + ID_X_OFFSET * 2, y + ID_Y_OFFSET * 2, mIdPaint);
-        canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET*2, y - ID_Y_OFFSET*2, mIdPaint);
+        //canvas.drawText("happiness: " + String.format("%.2f", face.getIsSmilingProbability()), x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
+        //canvas.drawText("right eye: " + String.format("%.2f", face.getIsRightEyeOpenProbability()), x + ID_X_OFFSET * 2, y + ID_Y_OFFSET * 2, mIdPaint);
+        //canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET*2, y - ID_Y_OFFSET*2, mIdPaint);
 
         // Draws a bounding box around the face.
         float xOffset = scaleX(face.getWidth() / 2.0f);
@@ -160,4 +153,11 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     }
 
     public native void test();
+
+    @Override
+    public void onRecognized(String str) {
+        Log.w(TAG, "RRRRRRRRRRRRecognized");
+        Log.w(TAG, str);
+        IsRecognized = true;
+    }
 }

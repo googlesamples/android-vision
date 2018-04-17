@@ -22,6 +22,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -31,17 +32,15 @@ import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview;
+import com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
-import com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview;
-import com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Activity for the face tracker app.  This app detects faces with the rear facing camera, and draws
@@ -56,11 +55,10 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     private GraphicOverlay mGraphicOverlay;
     private CustomDetector customDetector;
 
-    public Map<Face, String> mFaceNameMap;
-
     private static final int RC_HANDLE_GMS = 9001;
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
+    private static final int REQUEST_WRITE_STORAGE = 112;
 
     //==============================================================================================
     // Activity Methods
@@ -77,9 +75,23 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
 
+
+        // Check for the sdcard write permission.  If the
+        // permission is not granted yet, request permission.
+        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (rc == PackageManager.PERMISSION_GRANTED) {
+            //createCameraSource();
+            Log.w(TAG, "SDCard write permission is granted.");
+        } else {
+            //requestCameraPermission();
+            requestSdCardPermission();
+            Log.w(TAG, "SDCard write permission is NOT granted.");
+        }
+
+
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
-        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             createCameraSource();
         } else {
@@ -119,6 +131,33 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void requestSdCardPermission() {
+        Log.w(TAG, "SdCard permission is not granted. Requesting permission");
+
+        final String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            ActivityCompat.requestPermissions(this, permissions, REQUEST_WRITE_STORAGE);
+            return;
+        }
+
+        final Activity thisActivity = this;
+
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityCompat.requestPermissions(thisActivity, permissions,
+                        REQUEST_WRITE_STORAGE);
+            }
+        };
+
+        Snackbar.make(mGraphicOverlay, R.string.permission_sdcard_rationale,
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.ok, listener)
+                .show();
+    }
+
     private void loadNative() {
         System.loadLibrary("native-lib");
     }
@@ -131,14 +170,12 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     private void createCameraSource() {
 
         Context context = getApplicationContext();
+
         FaceDetector detector = new FaceDetector.Builder(context)
                 .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
                 .build();
 
-        mFaceNameMap = new HashMap<>();
-        customDetector = new CustomDetector(detector, mFaceNameMap);
-                  //.setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
-                  //.build();
+        customDetector = new CustomDetector(detector);
 
         customDetector.setProcessor(
                 new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory())
@@ -156,10 +193,12 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             Log.w(TAG, "Face detector dependencies are not yet available.");
         }
 
+        //.setRequestedPreviewSize(640, 480)
+        //.setRequestedFps(30.0f)
         mCameraSource = new CameraSource.Builder(context, customDetector)
-                .setRequestedPreviewSize(640, 480)
+                .setRequestedPreviewSize(1024, 768)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
-                .setRequestedFps(30.0f)
+                .setRequestedFps(15.0f)
                 .build();
     }
 
@@ -298,7 +337,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
         GraphicFaceTracker(GraphicOverlay overlay) {
             mOverlay = overlay;
-            mFaceGraphic = new FaceGraphic(overlay);
+            mFaceGraphic = new FaceGraphic(overlay, customDetector);
         }
 
         /**
@@ -308,7 +347,6 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         public void onNewItem(int faceId, Face item)
         {
             mFaceGraphic.setId(faceId);
-            mFaceGraphic.startRecognition(item, mFaceNameMap);
         }
 
         /**
@@ -327,7 +365,6 @@ public final class FaceTrackerActivity extends AppCompatActivity {
          */
         @Override
         public void onMissing(FaceDetector.Detections<Face> detectionResults) {
-            mFaceGraphic.stopRecognition(detectionResults, mFaceNameMap);
             mOverlay.remove(mFaceGraphic);
         }
 

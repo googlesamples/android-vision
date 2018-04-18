@@ -63,9 +63,11 @@ public class CustomDetector extends Detector<Face> {
         mFrame = frame;
         if (IsBusy) {
             if (recognitionHandler != null) {
-                YuvImage yuvImage = new YuvImage(frame.getGrayscaleImageData().array(), ImageFormat.NV21, frame.getMetadata().getWidth(), frame.getMetadata().getHeight(), null);
+                YuvImage yuvImage = new YuvImage(frame.getGrayscaleImageData().array(), ImageFormat.NV21,
+                        frame.getMetadata().getWidth(), frame.getMetadata().getHeight(), null);
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                yuvImage.compressToJpeg(new Rect(0, 0, frame.getMetadata().getWidth(), frame.getMetadata().getHeight()), 100, byteArrayOutputStream);
+                yuvImage.compressToJpeg(new Rect(0, 0, frame.getMetadata().getWidth(),
+                        frame.getMetadata().getHeight()), 100, byteArrayOutputStream);
                 byte[] jpegArray = byteArrayOutputStream.toByteArray();
                 Bitmap tmpBitmap = BitmapFactory.decodeByteArray(jpegArray, 0, jpegArray.length);
                 final Bitmap cropped = Bitmap.createBitmap(tmpBitmap, x, y, w, h);

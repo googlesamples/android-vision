@@ -28,10 +28,11 @@ public class CustomDetector extends Detector<Face> {
     public RecognitionInterface recognitionHandler;
     public Frame mFrame;
     public Bitmap tmpBitmap;
-    private volatile boolean IsFirst;
+
 
     public Face faceToRegognize;
-    public boolean IsBusy;
+    public volatile boolean IsRecognitionRequested;
+    public volatile boolean IsBusy;
     private Thread mT;
 
     private int faceid;
@@ -40,17 +41,26 @@ public class CustomDetector extends Detector<Face> {
     CustomDetector(Detector<Face> delegate)
     {
         mDelegate = delegate;
-        IsFirst = true;
     }
 
-    void startRecognition(int faceId, int _x, int _y, int _w, int _h)
+    void startRecognition(int faceId, int _x, int _y, int _w, int _h) {
+//        if (!IsRunning)
+//        {
+            faceid = faceId;
+            x = _x;
+            y = _y;
+            w = _w;
+            h = _h;
+//            IsRecognitionRequested = true;
+//        } else{
+//            IsRecognitionRequested = false;
+//        }
+    }
+
+    void resetRecognition()
     {
-        IsBusy = true;
-        faceid = faceId;
-        x = _x;
-        y = _y;
-        w = _w;
-        h = _h;
+        //IsRunning = false; //call it from onRecognized
+        IsBusy = false;
     }
 
     public void setHandlerListener(RecognitionInterface listener)
@@ -61,28 +71,31 @@ public class CustomDetector extends Detector<Face> {
     //@Override
     public SparseArray<Face> detect(Frame frame) {
         mFrame = frame;
-        if (IsBusy) {
-            if (recognitionHandler != null) {
-                YuvImage yuvImage = new YuvImage(frame.getGrayscaleImageData().array(), ImageFormat.NV21,
-                        frame.getMetadata().getWidth(), frame.getMetadata().getHeight(), null);
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                yuvImage.compressToJpeg(new Rect(0, 0, frame.getMetadata().getWidth(),
-                        frame.getMetadata().getHeight()), 100, byteArrayOutputStream);
-                byte[] jpegArray = byteArrayOutputStream.toByteArray();
-                Bitmap tmpBitmap = BitmapFactory.decodeByteArray(jpegArray, 0, jpegArray.length);
-                final Bitmap cropped = Bitmap.createBitmap(tmpBitmap, x, y, w, h);
 
-                mT = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String res = test(cropped);
-                        recognitionHandler.onRecognized(res);
-                        setHandlerListener(null);
-                        IsBusy = false; //todo: stop reset
-                    }
-                });
-                mT.start();
-            }
+        if (!IsBusy && y > 0 && recognitionHandler != null) {
+            IsBusy = true;
+
+            YuvImage yuvImage = new YuvImage(frame.getGrayscaleImageData().array(), ImageFormat.NV21,
+                    frame.getMetadata().getWidth(), frame.getMetadata().getHeight(), null);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            yuvImage.compressToJpeg(new Rect(0, 0, frame.getMetadata().getWidth(),
+                    frame.getMetadata().getHeight()), 100, byteArrayOutputStream);
+            byte[] jpegArray = byteArrayOutputStream.toByteArray();
+            Bitmap tmpBitmap = BitmapFactory.decodeByteArray(jpegArray, 0, jpegArray.length);
+            final Bitmap cropped = Bitmap.createBitmap(tmpBitmap, x, y, w, h);
+
+            mT = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String res = test(cropped);
+                    recognitionHandler.onRecognized(res);
+                }
+            });
+            mT.start();
+
+        } else{
+            //it is perform recognition now
+            //IsRunning = false;
         }
 
         SparseArray<Face> faces = mDelegate.detect(frame);

@@ -70,7 +70,8 @@ class FaceGraphic extends GraphicOverlay.Graphic implements RecognitionInterface
 
     private Thread mT;
     private CustomDetector mCustomDetector;
-    private boolean IsRecognized;
+    private volatile boolean IsRecognized;
+    private String mIdentity = "";
 
     FaceGraphic(GraphicOverlay overlay, CustomDetector customDetector) {
         super(overlay);
@@ -107,13 +108,12 @@ class FaceGraphic extends GraphicOverlay.Graphic implements RecognitionInterface
         if (frame_cx > 0) {
             frame_cx--;
         } else {
-            if (!IsRecognized && mCustomDetector.recognitionHandler == null) { //one face at time
-                mCustomDetector.setHandlerListener(this);
-
+            if (!mCustomDetector.IsBusy && !IsRecognized) { //one face at time
                 int x = (int)face.getPosition().x;
                 int y = (int)face.getPosition().y;
                 int w = (int)face.getWidth();
                 int h = (int)face.getHeight();
+                mCustomDetector.setHandlerListener(this);
                 mCustomDetector.startRecognition(mFaceId, x, y, w, h);
             }
         }
@@ -138,7 +138,9 @@ class FaceGraphic extends GraphicOverlay.Graphic implements RecognitionInterface
         float y = translateY(face.getPosition().y + face.getHeight() / 2);
         canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
         canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
-        //canvas.drawText("happiness: " + String.format("%.2f", face.getIsSmilingProbability()), x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
+        if(mIdentity != ""){
+            canvas.drawText("identity: " + mIdentity, x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
+        }
         //canvas.drawText("right eye: " + String.format("%.2f", face.getIsRightEyeOpenProbability()), x + ID_X_OFFSET * 2, y + ID_Y_OFFSET * 2, mIdPaint);
         //canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET*2, y - ID_Y_OFFSET*2, mIdPaint);
 
@@ -152,12 +154,21 @@ class FaceGraphic extends GraphicOverlay.Graphic implements RecognitionInterface
         canvas.drawRect(left, top, right, bottom, mBoxPaint);
     }
 
-    public native void test();
-
     @Override
     public void onRecognized(String str) {
-        Log.w(TAG, "RRRRRRRRRRRRecognized");
-        Log.w(TAG, str);
-        IsRecognized = true;
+        frame_cx = 5; //reset
+        mCustomDetector.setHandlerListener(null); //unsubscribe
+        mCustomDetector.resetRecognition();
+        if (str == "Unknown")
+        {
+            Log.w(TAG, "Not Recognized");
+            IsRecognized = false;
+            mIdentity = str;
+        }
+        else{
+            Log.w(TAG, "Recognized");
+            IsRecognized = true;
+            mIdentity = str;
+        }
     }
 }

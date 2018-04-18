@@ -82,6 +82,13 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         if (rc == PackageManager.PERMISSION_GRANTED) {
             //createCameraSource();
             Log.w(TAG, "SDCard write permission is granted.");
+
+//            if(loadResources() == 0)
+//            {
+//                Log.i(TAG, "Resources loaded");
+//            } else{
+//                Log.e(TAG, "Resources failed to load");
+//            }
         } else {
             //requestCameraPermission();
             requestSdCardPermission();
@@ -162,6 +169,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         System.loadLibrary("native-lib");
     }
 
+
     /**
      * Creates and starts the camera.  Note that this uses a higher resolution in comparison
      * to other detection examples to enable the barcode detector to detect small barcodes
@@ -195,9 +203,10 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
         //.setRequestedPreviewSize(640, 480)
         //.setRequestedFps(30.0f)
+        //.setFacing(CameraSource.CAMERA_FACING_BACK)
         mCameraSource = new CameraSource.Builder(context, customDetector)
                 .setRequestedPreviewSize(1024, 768)
-                .setFacing(CameraSource.CAMERA_FACING_BACK)
+                .setFacing(CameraSource.CAMERA_FACING_FRONT)
                 .setRequestedFps(15.0f)
                 .build();
     }
@@ -209,6 +218,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadNative();
+        loadResources();
         startCameraSource();
     }
 
@@ -377,4 +387,6 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             mOverlay.remove(mFaceGraphic);
         }
     }
+
+    public native int loadResources();
 }

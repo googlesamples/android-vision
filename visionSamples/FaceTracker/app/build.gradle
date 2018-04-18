@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'test'
+            keyPassword 'test123321'
+            storeFile file('C:/Work/android-vision/signing/test.jks')
+            storePassword 'test123321'
+        }
+    }
     compileSdkVersion 24
     buildToolsVersion '27.0.3'
-
     defaultConfig {
         applicationId "com.google.android.gms.samples.vision.face.facetracker"
         minSdkVersion 9
@@ -23,11 +30,13 @@ android {
 
             }
         }
+        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
     externalNativeBuild {
@@ -35,10 +44,12 @@ android {
             path "CMakeLists.txt"
         }
     }
+    productFlavors {
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:support-v4:24.2.0'
     implementation 'com.android.support:design:24.2.0'
     implementation 'com.google.android.gms:play-services-vision:9.4.0+'

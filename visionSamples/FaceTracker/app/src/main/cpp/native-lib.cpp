@@ -67,7 +67,7 @@ typedef struct
     uint8_t blue;//a  see rgb_pixel assignment
 } argb;
 
-float FACE_RECOGNIZE_THRESH = 0.6;
+float FACE_RECOGNIZE_THRESH = 0.55;
 
 extern "C"
 {

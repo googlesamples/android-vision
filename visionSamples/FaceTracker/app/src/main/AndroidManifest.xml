@@ -32,7 +32,7 @@
         <activity
             android:name="com.google.android.gms.samples.vision.face.facetracker.FaceTrackerActivity"
             android:icon="@drawable/icon"
-            android:label="Face Tracker"
+            android:label="SG"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:screenOrientation="fullSensor">
             <intent-filter>

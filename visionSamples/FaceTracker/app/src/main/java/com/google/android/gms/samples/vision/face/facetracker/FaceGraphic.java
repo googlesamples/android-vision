@@ -167,7 +167,7 @@ class FaceGraphic extends GraphicOverlay.Graphic implements RecognitionInterface
         frame_cx = FRAMES_TO_SKIP; //reset
         mCustomDetector.setHandlerListener(null); //unsubscribe
         mCustomDetector.resetRecognition();
-        if (str == "Unknown")
+        if (str.startsWith("Unknown"))
         {
             Log.w(TAG, "Not Recognized");
             mBoxPaint.setColor(Color.MAGENTA);

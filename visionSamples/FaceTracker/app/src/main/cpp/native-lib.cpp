@@ -67,7 +67,7 @@ typedef struct
     uint8_t blue;//a  see rgb_pixel assignment
 } argb;
 
-int FACE_RECOGNIZE_THRESH = 0.5;
+float FACE_RECOGNIZE_THRESH = 0.6;
 
 extern "C"
 {
@@ -108,11 +108,12 @@ extern "C"
         }
 
         //todo: smth wrong with colors
-        //dlib::save_bmp(img, "/storage/emulated/0/Download/test2.bmp");
+        //dlib::save_bmp(img, "/storage/emulated/0/Download/test.bmp");
 
         std::vector<dlib::rectangle> dets = detector(img);
         LOGI("detected size %d", dets.size());
 
+        float min_dist = 0.0;
         if(dets.size() > 0 ){
             auto face = dets.front();
             std::vector<matrix<rgb_pixel>> faces;
@@ -131,21 +132,26 @@ extern "C"
             if (face_descriptors.size() > 0)
             {
                 matrix<float, 0, 1> face_desc = face_descriptors[0];
-                LOGI("recognized");
                 for (auto& i : known_faces) {
-                    if( length(face_desc -  i.second ) < FACE_RECOGNIZE_THRESH) //todo: extract thresh
+                    float dist = length(face_desc -  i.second );
+                    if (dist < min_dist){
+                        min_dist = dist;
+                    }
+                    if( dist < FACE_RECOGNIZE_THRESH) //todo: extract thresh
                     {
+                        LOGI("recognized");
                         return env->NewStringUTF(i.first.c_str());
                     }
                 }
             }
+            LOGI("not recognized, max dist %0.2f", min_dist);
         }
 
         LOGI("unlocking pixels");
         AndroidBitmap_unlockPixels(env, bmp);
 
-        const char *returnValue = "Unknown";
-        return env->NewStringUTF(returnValue);
+        std::string returnValue = "Unknown"  + std::to_string(min_dist);
+        return env->NewStringUTF(returnValue.c_str());
     }
 }
 

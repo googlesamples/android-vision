@@ -18,6 +18,7 @@ package com.google.android.gms.samples.vision.face.facetracker;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Environment;
 import android.util.Log;
@@ -61,17 +62,20 @@ class FaceGraphic extends GraphicOverlay.Graphic implements RecognitionInterface
     private Paint mFacePositionPaint;
     private Paint mIdPaint;
     private Paint mBoxPaint;
-
+    
     public volatile Face mFace;
     private int mFaceId;
     private float mFaceHappiness;
 
-    public int frame_cx = 5; //start after 5 frames
+
 
     private Thread mT;
     private CustomDetector mCustomDetector;
     private volatile boolean IsRecognized;
     private String mIdentity = "";
+
+    private int FRAMES_TO_SKIP = 15;
+    public int frame_cx = FRAMES_TO_SKIP; //start after n frames
 
     FaceGraphic(GraphicOverlay overlay, CustomDetector customDetector) {
         super(overlay);
@@ -83,11 +87,11 @@ class FaceGraphic extends GraphicOverlay.Graphic implements RecognitionInterface
         mFacePositionPaint.setColor(selectedColor);
 
         mIdPaint = new Paint();
-        mIdPaint.setColor(selectedColor);
+        mIdPaint.setColor(Color.GREEN);
         mIdPaint.setTextSize(ID_TEXT_SIZE);
 
         mBoxPaint = new Paint();
-        mBoxPaint.setColor(selectedColor);
+        mBoxPaint.setColor(Color.MAGENTA);
         mBoxPaint.setStyle(Paint.Style.STROKE);
         mBoxPaint.setStrokeWidth(BOX_STROKE_WIDTH);
     }
@@ -106,6 +110,7 @@ class FaceGraphic extends GraphicOverlay.Graphic implements RecognitionInterface
         postInvalidate();
 
         if (frame_cx > 0) {
+            mBoxPaint.setColor(Color.MAGENTA);
             frame_cx--;
         } else {
             if (!mCustomDetector.IsBusy && !IsRecognized) { //one face at time
@@ -115,6 +120,7 @@ class FaceGraphic extends GraphicOverlay.Graphic implements RecognitionInterface
                 int h = (int)face.getHeight();
                 mCustomDetector.setHandlerListener(this);
                 mCustomDetector.startRecognition(mFaceId, x, y, w, h);
+                mBoxPaint.setColor(Color.BLUE);
             }
         }
     }
@@ -136,13 +142,11 @@ class FaceGraphic extends GraphicOverlay.Graphic implements RecognitionInterface
         // Draws a circle at the position of the detected face, with the face's track id below.
         float x = translateX(face.getPosition().x + face.getWidth() / 2);
         float y = translateY(face.getPosition().y + face.getHeight() / 2);
-        canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
-        canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
+        //canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
+        //canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
         if(mIdentity != ""){
             canvas.drawText("identity: " + mIdentity, x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
         }
-        //canvas.drawText("right eye: " + String.format("%.2f", face.getIsRightEyeOpenProbability()), x + ID_X_OFFSET * 2, y + ID_Y_OFFSET * 2, mIdPaint);
-        //canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET*2, y - ID_Y_OFFSET*2, mIdPaint);
 
         // Draws a bounding box around the face.
         float xOffset = scaleX(face.getWidth() / 2.0f);
@@ -152,21 +156,27 @@ class FaceGraphic extends GraphicOverlay.Graphic implements RecognitionInterface
         float right = x + xOffset;
         float bottom = y + yOffset;
         canvas.drawRect(left, top, right, bottom, mBoxPaint);
+
+        //canvas.drawText("right eye: " + String.format("%.2f", face.getIsRightEyeOpenProbability()), x + ID_X_OFFSET * 2, y + ID_Y_OFFSET * 2, mIdPaint);
+        //canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET*2, y - ID_Y_OFFSET*2, mIdPaint);
+
     }
 
     @Override
     public void onRecognized(String str) {
-        frame_cx = 5; //reset
+        frame_cx = FRAMES_TO_SKIP; //reset
         mCustomDetector.setHandlerListener(null); //unsubscribe
         mCustomDetector.resetRecognition();
         if (str == "Unknown")
         {
             Log.w(TAG, "Not Recognized");
+            mBoxPaint.setColor(Color.MAGENTA);
             IsRecognized = false;
             mIdentity = str;
         }
         else{
             Log.w(TAG, "Recognized");
+            mBoxPaint.setColor(Color.GREEN);
             IsRecognized = true;
             mIdentity = str;
         }

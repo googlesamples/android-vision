@@ -61,13 +61,13 @@ multiclass_linear_decision_function<lin_kernel, string> df;
 
 typedef struct
 {
-    uint8_t alpha;
-    uint8_t red;
-    uint8_t green;
-    uint8_t blue;
+    uint8_t alpha;//r
+    uint8_t red;//g
+    uint8_t green;//b
+    uint8_t blue;//a  see rgb_pixel assignment
 } argb;
 
-
+int FACE_RECOGNIZE_THRESH = 0.5;
 
 extern "C"
 {
@@ -101,14 +101,14 @@ extern "C"
         for (y = 0; y < infocolor.height; y++) { //todo: performance
             argb *line = (argb *) pixelscolor;
             for (x = 0; x < infocolor.width; ++x) {
-                rgb_pixel p(line[x].red, line[x].green, line[x].blue);
+                rgb_pixel p(line[x].alpha, line[x].red, line[x].green);
                 img[y][x] = p;
             }
             pixelscolor = (char *) pixelscolor + infocolor.stride;
         }
 
         //todo: smth wrong with colors
-        //dlib::save_bmp(img, "/storage/emulated/0/Movies/test2.bmp");
+        //dlib::save_bmp(img, "/storage/emulated/0/Download/test2.bmp");
 
         std::vector<dlib::rectangle> dets = detector(img);
         LOGI("detected size %d", dets.size());
@@ -133,7 +133,7 @@ extern "C"
                 matrix<float, 0, 1> face_desc = face_descriptors[0];
                 LOGI("recognized");
                 for (auto& i : known_faces) {
-                    if( length(face_desc -  i.second ) < 0.5) //todo: extrace thresh
+                    if( length(face_desc -  i.second ) < FACE_RECOGNIZE_THRESH) //todo: extract thresh
                     {
                         return env->NewStringUTF(i.first.c_str());
                     }
@@ -159,17 +159,17 @@ Java_com_google_android_gms_samples_vision_face_facetracker_FaceTrackerActivity_
     FILE *file1 = fopen("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat", "r+");
     FILE *file2 = fopen("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat",
                         "r+");
-    FILE *file3 = fopen("/storage/emulated/0/Download/faces_linear.svm", "r+");
+    //FILE *file3 = fopen("/storage/emulated/0/Download/faces_linear.svm", "r+");
 
-    if (file1 != NULL && file2 != NULL && file3 != NULL) {
+    if (file1 != NULL && file2 != NULL ) {
         fclose(file1);
         fclose(file2);
-        fclose(file3);
+        //fclose(file3);
         dlib::deserialize("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat")
                 >> sp;
         dlib::deserialize("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat")
                 >> net;
-        dlib::deserialize("/storage/emulated/0/Download/faces_linear.svm") >> df;
+        //dlib::deserialize("/storage/emulated/0/Download/faces_linear.svm") >> df;
 
         DIR *d;
         char *p1,*p2;

@@ -16,6 +16,10 @@ import com.google.android.gms.vision.face.Face;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import static android.os.Environment.getExternalStorageDirectory;
 
 interface RecognitionInterface
 {
@@ -44,17 +48,11 @@ public class CustomDetector extends Detector<Face> {
     }
 
     void startRecognition(int faceId, int _x, int _y, int _w, int _h) {
-//        if (!IsRunning)
-//        {
             faceid = faceId;
             x = _x;
             y = _y;
             w = _w;
             h = _h;
-//            IsRecognitionRequested = true;
-//        } else{
-//            IsRecognitionRequested = false;
-//        }
     }
 
     void resetRecognition()
@@ -83,7 +81,16 @@ public class CustomDetector extends Detector<Face> {
             byte[] jpegArray = byteArrayOutputStream.toByteArray();
             Bitmap tmpBitmap = BitmapFactory.decodeByteArray(jpegArray, 0, jpegArray.length);
             final Bitmap cropped = Bitmap.createBitmap(tmpBitmap, x, y, w, h);
-
+//            try {
+//
+//                File file = new File (getExternalStorageDirectory(), "/Download/test1.bmp");
+//                FileOutputStream out = new FileOutputStream(file);
+//                cropped.compress(Bitmap.CompressFormat.JPEG, 100, out);
+//                out.flush();
+//                out.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
             mT = new Thread(new Runnable() {
                 @Override
                 public void run() {

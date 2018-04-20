@@ -43,7 +43,7 @@ class FaceGraphic extends GraphicOverlay.Graphic implements RecognitionInterface
     private static final String TAG = "FaceGraphic";
 
     private static final float FACE_POSITION_RADIUS = 10.0f;
-    private static final float ID_TEXT_SIZE = 40.0f;
+    private static final float ID_TEXT_SIZE = 80.0f;
     private static final float ID_Y_OFFSET = 50.0f;
     private static final float ID_X_OFFSET = -50.0f;
     private static final float BOX_STROKE_WIDTH = 5.0f;
@@ -145,7 +145,7 @@ class FaceGraphic extends GraphicOverlay.Graphic implements RecognitionInterface
         //canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
         //canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
         if(mIdentity != ""){
-            canvas.drawText("identity: " + mIdentity, x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
+            canvas.drawText(":) " + mIdentity, x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
         }
 
         // Draws a bounding box around the face.

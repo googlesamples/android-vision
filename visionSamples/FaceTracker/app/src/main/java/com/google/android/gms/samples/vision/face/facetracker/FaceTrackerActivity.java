@@ -23,12 +23,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -42,6 +45,8 @@ import com.google.android.gms.vision.face.FaceDetector;
 
 import java.io.IOException;
 
+import xdroid.toaster.Toaster;
+
 /**
  * Activity for the face tracker app.  This app detects faces with the rear facing camera, and draws
  * overlay graphics to indicate the position, size, and ID of each face.
@@ -53,7 +58,9 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
     private CameraSourcePreview mPreview;
     private GraphicOverlay mGraphicOverlay;
+    private Button mBtnDetect;
     private CustomDetector customDetector;
+    private FaceDetector mPictureDetector;
 
     private static final int RC_HANDLE_GMS = 9001;
     // permission request codes need to be < 256
@@ -74,6 +81,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
+        mBtnDetect = (Button) findViewById(R.id.btnDetect);
 
 
         // Check for the sdcard write permission.  If the
@@ -180,7 +188,19 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         Context context = getApplicationContext();
 
         FaceDetector detector = new FaceDetector.Builder(context)
-                .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
+                .setTrackingEnabled(true)
+                .setClassificationType(FaceDetector.NO_CLASSIFICATIONS)
+                .setProminentFaceOnly(false)
+                .setMode(FaceDetector.ACCURATE_MODE)
+                .setMinFaceSize(0.05f)
+                .build();
+
+        mPictureDetector = new FaceDetector.Builder(context)
+                .setTrackingEnabled(false)
+                .setProminentFaceOnly(false)
+                .setMinFaceSize(0.015f)  // 80 / 5312 detect up to 80 pixels head width
+                .setMode(FaceDetector.ACCURATE_MODE)
+                .setClassificationType(FaceDetector.NO_CLASSIFICATIONS)
                 .build();
 
         customDetector = new CustomDetector(detector);
@@ -201,14 +221,49 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             Log.w(TAG, "Face detector dependencies are not yet available.");
         }
 
+        if (!mPictureDetector.isOperational()) {
+            Log.w(TAG, "mPictureDetector dependencies are not yet available.");
+        }
+
         //.setRequestedPreviewSize(640, 480)
         //.setRequestedFps(30.0f)
         //.setFacing(CameraSource.CAMERA_FACING_BACK)
         mCameraSource = new CameraSource.Builder(context, customDetector)
-                .setRequestedPreviewSize(1024, 768)
-                .setFacing(CameraSource.CAMERA_FACING_FRONT)
-                .setRequestedFps(20.0f)
+                .setRequestedPreviewSize(1920, 1080)
+                .setFacing(CameraSource.CAMERA_FACING_BACK)
+                .setRequestedFps(10)
                 .build();
+
+        mBtnDetect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
+                    @Override
+                    public void onPictureTaken(byte[] bytes) {
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        final Bitmap temp = BitmapFactory.decodeByteArray(bytes, 0,
+                                bytes.length, options);
+
+                        //Log.d(TAG, temp.getWidth() + " " + temp.getHeight());
+//                        Frame frame = new Frame.Builder().setBitmap(temp).build();
+//                        SparseArray<Face> faces = mPictureDetector.detect(frame);
+//                        Log.d(TAG, String.format("Num of faces %d", faces.size()));
+
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                "Long detection started...(~1min)", Toast.LENGTH_SHORT);
+                        toast.show();
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                final String res = recognizeFromImage(temp);
+                                Toaster.toastLong(res);
+                            }
+                        }).start();
+                    }
+                });
+            }
+        });
     }
 
     /**
@@ -354,8 +409,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
          * Start tracking the detected face instance within the face overlay.
          */
         @Override
-        public void onNewItem(int faceId, Face item)
-        {
+        public void onNewItem(int faceId, Face item) {
             mFaceGraphic.setId(faceId);
         }
 
@@ -389,4 +443,5 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     }
 
     public native int loadResources();
+    public native String recognizeFromImage(Bitmap bmp);
 }

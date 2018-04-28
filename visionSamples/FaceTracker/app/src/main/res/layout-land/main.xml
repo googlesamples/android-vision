@@ -7,7 +7,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true">
-
+  <Button
+      android:id="@+id/btnDetect"
+      android:layout_width="35dp"
+      android:layout_height="wrap_content"
+      android:text="Identify" />
   <com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview
       android:id="@+id/preview"
       android:layout_width="match_parent"
@@ -19,5 +23,7 @@
         android:layout_height="match_parent" />
 
   </com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview>
+
+
 
 </LinearLayout>

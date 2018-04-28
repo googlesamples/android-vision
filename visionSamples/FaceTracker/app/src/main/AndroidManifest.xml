@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="15"
         android:targetSdkVersion="23" />
 
     <application
@@ -20,7 +20,8 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
         android:theme="@style/Theme.AppCompat"
-        android:label="FaceTracker">
+        android:label="FaceTracker"
+        android:largeHeap="true">
 
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>

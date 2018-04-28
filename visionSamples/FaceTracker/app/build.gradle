@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'test'
             keyPassword 'test123321'
-            storeFile file('C:/Work/android-vision/signing/test.jks')
+            storeFile file('E:/Work/android-vision/signing/test.jks')
             storePassword 'test123321'
         }
     }
@@ -13,7 +13,7 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.google.android.gms.samples.vision.face.facetracker"
-        minSdkVersion 9
+        minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -53,4 +53,5 @@ dependencies {
     implementation 'com.android.support:support-v4:24.2.0'
     implementation 'com.android.support:design:24.2.0'
     implementation 'com.google.android.gms:play-services-vision:9.4.0+'
+    implementation 'com.shamanland:xdroid-toaster:0.2.4'
 }

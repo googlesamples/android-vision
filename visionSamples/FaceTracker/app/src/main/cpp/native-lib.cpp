@@ -150,7 +150,8 @@ extern "C"
         LOGI("unlocking pixels");
         AndroidBitmap_unlockPixels(env, bmp);
 
-        std::string returnValue = "Unknown"  + std::to_string(min_dist);
+        //std::string returnValue = "Unknown"  + std::to_string(min_dist);
+        std::string returnValue = "Unknown";
         return env->NewStringUTF(returnValue.c_str());
     }
 }
@@ -213,4 +214,75 @@ Java_com_google_android_gms_samples_vision_face_facetracker_FaceTrackerActivity_
     }
 
     return 0;
+}extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_google_android_gms_samples_vision_face_facetracker_FaceTrackerActivity_recognizeFromImage(
+        JNIEnv *env, jobject instance, jobject bmp) {
+
+    AndroidBitmapInfo infocolor;
+    void *pixelscolor;
+    int y;
+    int x;
+    int ret;
+    array2d<rgb_pixel> img;
+    if ((ret = AndroidBitmap_getInfo(env, bmp, &infocolor)) < 0) {
+        LOGE("AndroidBitmap_getInfo() failed ! error=%d", ret);
+        return env->NewStringUTF("Image broken");
+    }
+    LOGI("color image :: width is %d; height is %d; stride is %d; format is %d;flags is %d",
+         infocolor.width, infocolor.height, infocolor.stride, infocolor.format, infocolor.flags);
+
+    if (infocolor.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
+        LOGE("Bitmap format is not RGBA_8888 !");
+        return env->NewStringUTF("Image broken 2");
+    }
+
+    if ((ret = AndroidBitmap_lockPixels(env, bmp, &pixelscolor)) < 0) {
+        LOGE("AndroidBitmap_lockPixels() failed ! error=%d", ret);
+    }
+
+    img.set_size(infocolor.height, infocolor.width);
+
+    //LOGI("size w=%d h=%d", infocolor.width, infocolor.height);
+    for (y = 0; y < infocolor.height; y++) { //todo: performance
+        argb *line = (argb *) pixelscolor;
+        for (x = 0; x < infocolor.width; ++x) {
+            rgb_pixel p(line[x].alpha, line[x].red, line[x].green);
+            img[y][x] = p;
+        }
+        pixelscolor = (char *) pixelscolor + infocolor.stride;
+    }
+
+    std::string returnValue = "Num Faces: ";
+    std::vector<dlib::rectangle> dets = detector(img);
+    returnValue += std::to_string(dets.size());
+    returnValue += ". ";
+
+            std::vector<matrix<rgb_pixel>> faces;
+    for (auto face : dets)
+    {
+        auto shape = sp(img, face);
+        matrix<rgb_pixel> face_chip;
+        extract_image_chip(img, get_face_chip_details(shape, 150, 0.25), face_chip);
+        faces.push_back(move(face_chip));
+    }
+
+    std::vector<matrix<float, 0, 1>> face_descriptors = net(faces);
+
+    for (size_t i = 0; i < face_descriptors.size(); ++i)
+    {
+        std::string name = "Unknown";
+        for (auto& j : known_faces) {
+            float dist = length(face_descriptors[i] - j.second);
+            if (dist < FACE_RECOGNIZE_THRESH) {
+                name = j.first;
+                break;
+            }
+        }
+        returnValue += name;
+        returnValue += " ";
+    }
+
+    AndroidBitmap_unlockPixels(env, bmp);
+    return env->NewStringUTF(returnValue.c_str());
 }

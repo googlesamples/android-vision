@@ -48,8 +48,9 @@ using anet_type = dlib::loss_metric<dlib::fc_no_bias<128, dlib::avg_pool_everyth
                                                 >>>>>>>>>>>>;
 
 dlib::frontal_face_detector detector = dlib::get_frontal_face_detector();
-dlib::shape_predictor sp;
-anet_type net;
+dlib::frontal_face_detector detector1 = dlib::get_frontal_face_detector();
+dlib::shape_predictor sp, sp1;
+anet_type net, net1;
 
 //std::vector<matrix<float, 0, 1>> known_faces;
 
@@ -174,8 +175,12 @@ Java_com_google_android_gms_samples_vision_face_facetracker_FaceTrackerActivity_
         //fclose(file3);
         dlib::deserialize("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat")
                 >> sp;
+        dlib::deserialize("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat")
+                >> sp1;
         dlib::deserialize("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat")
                 >> net;
+        dlib::deserialize("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat")
+                >> net1;
         //dlib::deserialize("/storage/emulated/0/Download/faces_linear.svm") >> df;
 
         DIR *d;
@@ -200,9 +205,6 @@ Java_com_google_android_gms_samples_vision_face_facetracker_FaceTrackerActivity_
                         matrix<float, 0, 1> face_vector;
                         dlib::deserialize("/storage/emulated/0/Download/"  + file) >> face_vector;
                         known_faces.insert({name, face_vector});
-
-                        //printf("%s\t",p1);
-                        //LOGI("item %s", p1);
                     }
                 }
 
@@ -243,7 +245,7 @@ Java_com_google_android_gms_samples_vision_face_facetracker_FaceTrackerActivity_
 
     img.set_size(infocolor.height, infocolor.width);
 
-    //LOGI("size w=%d h=%d", infocolor.width, infocolor.height);
+    LOGI("size w=%d h=%d", infocolor.width, infocolor.height);
     for (y = 0; y < infocolor.height; y++) { //todo: performance
         argb *line = (argb *) pixelscolor;
         for (x = 0; x < infocolor.width; ++x) {
@@ -254,20 +256,20 @@ Java_com_google_android_gms_samples_vision_face_facetracker_FaceTrackerActivity_
     }
 
     std::string returnValue = "Num Faces: ";
-    std::vector<dlib::rectangle> dets = detector(img);
+    std::vector<dlib::rectangle> dets = detector1(img);
     returnValue += std::to_string(dets.size());
     returnValue += ". ";
 
-            std::vector<matrix<rgb_pixel>> faces;
+    std::vector<matrix<rgb_pixel>> faces;
     for (auto face : dets)
     {
-        auto shape = sp(img, face);
+        auto shape = sp1(img, face);
         matrix<rgb_pixel> face_chip;
         extract_image_chip(img, get_face_chip_details(shape, 150, 0.25), face_chip);
         faces.push_back(move(face_chip));
     }
 
-    std::vector<matrix<float, 0, 1>> face_descriptors = net(faces);
+    std::vector<matrix<float, 0, 1>> face_descriptors = net1(faces);
 
     for (size_t i = 0; i < face_descriptors.size(); ++i)
     {

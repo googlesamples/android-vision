@@ -22,11 +22,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.hardware.Camera;
-import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
@@ -38,19 +34,14 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.CameraSource;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.CameraSourcePreview;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
-import com.google.android.gms.vision.text.TextBlock;
-import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.IOException;
-import java.util.Locale;
 
 /**
  * Activity for the Ocr Detecting app.  This app detects text and displays the value with the
@@ -71,9 +62,9 @@ public final class OcrCaptureActivity extends AppCompatActivity {
     public static final String UseFlash = "UseFlash";
     public static final String TextBlockObject = "String";
 
-    private CameraSource mCameraSource;
-    private CameraSourcePreview mPreview;
-    private GraphicOverlay<OcrGraphic> mGraphicOverlay;
+    private CameraSource cameraSource;
+    private CameraSourcePreview preview;
+    private GraphicOverlay<OcrGraphic> graphicOverlay;
 
     // Helper objects for detecting taps and pinches.
     private ScaleGestureDetector scaleGestureDetector;
@@ -90,8 +81,8 @@ public final class OcrCaptureActivity extends AppCompatActivity {
         super.onCreate(bundle);
         setContentView(R.layout.ocr_capture);
 
-        mPreview = (CameraSourcePreview) findViewById(R.id.preview);
-        mGraphicOverlay = (GraphicOverlay<OcrGraphic>) findViewById(R.id.graphicOverlay);
+        preview = (CameraSourcePreview) findViewById(R.id.preview);
+        graphicOverlay = (GraphicOverlay<OcrGraphic>) findViewById(R.id.graphicOverlay);
 
         // Set good defaults for capturing text.
         boolean autoFocus = true;
@@ -109,7 +100,7 @@ public final class OcrCaptureActivity extends AppCompatActivity {
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
-        Snackbar.make(mGraphicOverlay, "Tap to Speak. Pinch/Stretch to zoom",
+        Snackbar.make(graphicOverlay, "Tap to Speak. Pinch/Stretch to zoom",
                 Snackbar.LENGTH_LONG)
                 .show();
 
@@ -142,7 +133,7 @@ public final class OcrCaptureActivity extends AppCompatActivity {
             }
         };
 
-        Snackbar.make(mGraphicOverlay, R.string.permission_camera_rationale,
+        Snackbar.make(graphicOverlay, R.string.permission_camera_rationale,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.ok, listener)
                 .show();
@@ -174,7 +165,7 @@ public final class OcrCaptureActivity extends AppCompatActivity {
 
         // TODO: Check if the TextRecognizer is operational.
 
-        // TODO: Create the mCameraSource using the TextRecognizer.
+        // TODO: Create the cameraSource using the TextRecognizer.
     }
 
     /**
@@ -192,8 +183,8 @@ public final class OcrCaptureActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (mPreview != null) {
-            mPreview.stop();
+        if (preview != null) {
+            preview.stop();
         }
     }
 
@@ -204,8 +195,8 @@ public final class OcrCaptureActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mPreview != null) {
-            mPreview.release();
+        if (preview != null) {
+            preview.release();
         }
     }
 
@@ -275,13 +266,13 @@ public final class OcrCaptureActivity extends AppCompatActivity {
             dlg.show();
         }
 
-        if (mCameraSource != null) {
+        if (cameraSource != null) {
             try {
-                mPreview.start(mCameraSource, mGraphicOverlay);
+                preview.start(cameraSource, graphicOverlay);
             } catch (IOException e) {
                 Log.e(TAG, "Unable to start camera source.", e);
-                mCameraSource.release();
-                mCameraSource = null;
+                cameraSource.release();
+                cameraSource = null;
             }
         }
     }
@@ -356,8 +347,8 @@ public final class OcrCaptureActivity extends AppCompatActivity {
          */
         @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
-            if (mCameraSource != null) {
-                mCameraSource.doZoom(detector.getScaleFactor());
+            if (cameraSource != null) {
+                cameraSource.doZoom(detector.getScaleFactor());
             }
         }
     }

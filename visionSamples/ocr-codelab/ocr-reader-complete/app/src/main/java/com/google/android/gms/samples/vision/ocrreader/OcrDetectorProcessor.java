@@ -28,10 +28,10 @@ import com.google.android.gms.vision.text.TextBlock;
  */
 public class OcrDetectorProcessor implements Detector.Processor<TextBlock> {
 
-    private GraphicOverlay<OcrGraphic> mGraphicOverlay;
+    private GraphicOverlay<OcrGraphic> graphicOverlay;
 
     OcrDetectorProcessor(GraphicOverlay<OcrGraphic> ocrGraphicOverlay) {
-        mGraphicOverlay = ocrGraphicOverlay;
+        graphicOverlay = ocrGraphicOverlay;
     }
 
     /**
@@ -43,15 +43,15 @@ public class OcrDetectorProcessor implements Detector.Processor<TextBlock> {
      */
     @Override
     public void receiveDetections(Detector.Detections<TextBlock> detections) {
-        mGraphicOverlay.clear();
+        graphicOverlay.clear();
         SparseArray<TextBlock> items = detections.getDetectedItems();
         for (int i = 0; i < items.size(); ++i) {
             TextBlock item = items.valueAt(i);
             if (item != null && item.getValue() != null) {
                 Log.d("OcrDetectorProcessor", "Text detected! " + item.getValue());
+                OcrGraphic graphic = new OcrGraphic(graphicOverlay, item);
+                graphicOverlay.add(graphic);
             }
-            OcrGraphic graphic = new OcrGraphic(mGraphicOverlay, item);
-            mGraphicOverlay.add(graphic);
         }
     }
 
@@ -60,6 +60,6 @@ public class OcrDetectorProcessor implements Detector.Processor<TextBlock> {
      */
     @Override
     public void release() {
-        mGraphicOverlay.clear();
+        graphicOverlay.clear();
     }
 }

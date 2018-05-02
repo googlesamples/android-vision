@@ -15,12 +15,7 @@
  */
 package com.google.android.gms.samples.vision.ocrreader;
 
-import android.util.Log;
-import android.util.SparseArray;
-
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
-import com.google.android.gms.vision.Detector;
-import com.google.android.gms.vision.text.TextBlock;
 
 /**
  * A very simple Processor which gets detected TextBlocks and adds them to the overlay
@@ -29,10 +24,10 @@ import com.google.android.gms.vision.text.TextBlock;
  */
 public class OcrDetectorProcessor {
 
-    private GraphicOverlay<OcrGraphic> mGraphicOverlay;
+    private GraphicOverlay<OcrGraphic> graphicOverlay;
 
     OcrDetectorProcessor(GraphicOverlay<OcrGraphic> ocrGraphicOverlay) {
-        mGraphicOverlay = ocrGraphicOverlay;
+        graphicOverlay = ocrGraphicOverlay;
     }
 
     // TODO:  Once this implements Detector.Processor<TextBlock>, implement the abstract methods.

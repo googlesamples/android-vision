@@ -86,7 +86,7 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
         }
         RectF rect = new RectF(textBlock.getBoundingBox());
         rect = translateRect(rect);
-        return (rect.left < x && rect.right > x && rect.top < y && rect.bottom > y);
+        return rect.contains(x, y);
     }
 
     /**

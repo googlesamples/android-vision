@@ -21,5 +21,6 @@ before_install:
   - echo $(ant -version)
 
 script:
-- ./visionSamples/FaceTracker/gradlew build
+- cd visionSamples/FaceTracker/
+- ./gradlew build
 

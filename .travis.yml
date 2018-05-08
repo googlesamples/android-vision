@@ -19,7 +19,7 @@ android:
 
 before_install:
   - echo $(ant -version)
-  
+
 script:
-- ./visionSamples/FaceTracker/gradlew clean build
+- ./visionSamples/FaceTracker/gradlew build
 

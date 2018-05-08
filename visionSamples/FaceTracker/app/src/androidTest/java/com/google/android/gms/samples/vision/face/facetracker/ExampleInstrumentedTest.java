@@ -13,9 +13,7 @@ import static junit.framework.Assert.assertEquals;
 public class ExampleInstrumentedTest {
     @Test
     public void useAppContext() throws Exception {
-        // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
-
-        assertEquals("ch.hepia.iti.opencvnativeandroidstudio", appContext.getPackageName());
+        assertEquals("com.google.android.gms.samples.vision.face.facetracker", appContext.getPackageName());
     }
 }

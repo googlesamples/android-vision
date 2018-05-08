@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'test'
             keyPassword 'test123321'
-            storeFile file('C:/Work/android-vision/signing/test.jks')
+            storeFile file('signing/test.jks')
             storePassword 'test123321'
         }
     }

@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/hoopoe/android-vision.svg?branch=master)](https://travis-ci.com/hoopoe/android-vision)
+
 Android Vision API Samples
 ============
 

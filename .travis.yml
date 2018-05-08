@@ -1,13 +1,15 @@
 language: android
-jdk: oraclejdk8
+jdk:
+  - oraclejdk8
+branches:
+  only:
+  - master
 env:
   global:
     - ANDROID_TARGET=android-23
     - ANDROID_ABI=armeabi-v7a
 android:
   components:
-    # Uncomment the lines below if you want to
-    # use the latest revision of Android SDK Tools
     - tools
     - platform-tools
     - build-tools-27.0.3
@@ -15,18 +17,9 @@ android:
     - extra-android-m2repository
     - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
 
-    # Additional components
-    #- extra-google-google_play_services
-    #- extra-google-m2repository
-    #- extra-android-m2repository
-    #- addon-google_apis-google-26
-
-    # Specify at least one system image,
-    # if you need to run emulator(s) during your tests
-    #- sys-img-armeabi-v7a-android-26
-    #- sys-img-armeabi-v7a-android-17
-
-
 before_install:
-- chmod +x visionSamples/FaceTracker/gradlew
-- ./visionSamples/FaceTracker/gradlew dependencies || true
+  - echo $(ant -version)
+  
+script:
+- ./visionSamples/FaceTracker/gradlew clean build
+

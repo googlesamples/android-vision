@@ -287,4 +287,11 @@ Java_com_google_android_gms_samples_vision_face_facetracker_FaceTrackerActivity_
 
     AndroidBitmap_unlockPixels(env, bmp);
     return env->NewStringUTF(returnValue.c_str());
+}extern "C"
+JNIEXPORT jint JNICALL
+Java_com_google_android_gms_samples_vision_face_facetracker_FaceTrackerActivity_nativeAdd(
+        JNIEnv *env, jobject instance, jint a, jint b) {
+
+    return a + b;
+
 }

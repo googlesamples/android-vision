@@ -444,4 +444,5 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
     public native int loadResources();
     public native String recognizeFromImage(Bitmap bmp);
+    public native int nativeAdd(int a, int b);
 }

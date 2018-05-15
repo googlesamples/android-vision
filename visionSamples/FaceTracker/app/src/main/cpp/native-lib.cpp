@@ -294,4 +294,10 @@ Java_com_google_android_gms_samples_vision_face_facetracker_FaceTrackerActivity_
 
     return a + b;
 
+}extern "C"
+JNIEXPORT jstring JNICALL
+Java_dlib_android_FaceRecognizer_recognizeNative(JNIEnv *env, jobject instance) {
+
+    std::string returnValue = "Unknown";
+    return env->NewStringUTF(returnValue.c_str());
 }

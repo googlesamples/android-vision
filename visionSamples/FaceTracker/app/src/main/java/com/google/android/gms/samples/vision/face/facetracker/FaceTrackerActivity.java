@@ -45,6 +45,7 @@ import com.google.android.gms.vision.face.FaceDetector;
 
 import java.io.IOException;
 
+import dlib.android.FaceRecognizer;
 import xdroid.toaster.Toaster;
 
 /**
@@ -67,6 +68,8 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     private static final int RC_HANDLE_CAMERA_PERM = 2;
     private static final int REQUEST_WRITE_STORAGE = 112;
 
+    private FaceRecognizer mFaceRecognizer;
+
     //==============================================================================================
     // Activity Methods
     //==============================================================================================
@@ -82,7 +85,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
         mBtnDetect = (Button) findViewById(R.id.btnDetect);
-
+        mFaceRecognizer = new FaceRecognizer();
 
         // Check for the sdcard write permission.  If the
         // permission is not granted yet, request permission.
@@ -90,13 +93,6 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         if (rc == PackageManager.PERMISSION_GRANTED) {
             //createCameraSource();
             Log.w(TAG, "SDCard write permission is granted.");
-
-//            if(loadResources() == 0)
-//            {
-//                Log.i(TAG, "Resources loaded");
-//            } else{
-//                Log.e(TAG, "Resources failed to load");
-//            }
         } else {
             //requestCameraPermission();
             requestSdCardPermission();
@@ -173,10 +169,6 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void loadNative() {
-        System.loadLibrary("native-lib");
-    }
-
 
     /**
      * Creates and starts the camera.  Note that this uses a higher resolution in comparison
@@ -203,7 +195,8 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 .setClassificationType(FaceDetector.NO_CLASSIFICATIONS)
                 .build();
 
-        customDetector = new CustomDetector(detector);
+        //mFaceRecognizer
+        customDetector = new CustomDetector(detector, mFaceRecognizer);
 
         customDetector.setProcessor(
                 new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory())
@@ -256,7 +249,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                final String res = recognizeFromImage(temp);
+                                final String res = mFaceRecognizer.recognizeNative1(temp);
                                 Toaster.toastLong(res);
                             }
                         }).start();
@@ -272,8 +265,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadNative();
-        loadResources();
+        mFaceRecognizer.loadNative();
         startCameraSource();
     }
 
@@ -442,7 +434,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         }
     }
 
-    public native int loadResources();
-    public native String recognizeFromImage(Bitmap bmp);
-    public native int nativeAdd(int a, int b);
+    //public native int loadResources();
+    //public native String recognizeFromImage(Bitmap bmp);
+    //public native int nativeAdd(int a, int b);
 }

@@ -19,6 +19,8 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import dlib.android.FaceRecognizer;
+
 import static android.os.Environment.getExternalStorageDirectory;
 
 interface RecognitionInterface
@@ -31,6 +33,7 @@ public class CustomDetector extends Detector<Face> {
     private Detector<Face> mDelegate;
     public RecognitionInterface recognitionHandler;
     public Frame mFrame;
+    FaceRecognizer mFaceRecognizer; //came from face tracker activity
     public Bitmap tmpBitmap;
 
 
@@ -42,9 +45,10 @@ public class CustomDetector extends Detector<Face> {
     private int faceid;
     private int x, y, w, h;
 
-    CustomDetector(Detector<Face> delegate)
+    CustomDetector(Detector<Face> delegate, FaceRecognizer faceRecognizer)
     {
         mDelegate = delegate;
+        mFaceRecognizer = faceRecognizer; //loadNative should be already called
     }
 
     void startRecognition(int faceId, int _x, int _y, int _w, int _h) {
@@ -94,7 +98,7 @@ public class CustomDetector extends Detector<Face> {
             mT = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String res = test(cropped);
+                    String res = mFaceRecognizer.recognizeNative2(cropped);
                     recognitionHandler.onRecognized(res);
                 }
             });
@@ -116,7 +120,4 @@ public class CustomDetector extends Detector<Face> {
     public boolean setFocus(int id) {
         return mDelegate.setFocus(id);
     }
-
-
-    public native String test(Bitmap bmp);
 }

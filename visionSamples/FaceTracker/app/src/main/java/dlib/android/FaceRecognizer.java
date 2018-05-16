@@ -1,14 +1,20 @@
 package dlib.android;
 
+import android.graphics.Bitmap;
+
 public class FaceRecognizer {
 
-    FaceRecognizer() {
+    public FaceRecognizer() { }
+
+    public void loadNative()
+    {
         System.loadLibrary("native-lib");
+        loadResourcesPart1();
+        loadResourcesPart2();
     }
 
-    String Recognize() {
-
-        return recognizeNative();
-    }
-    public native String recognizeNative();
+    private native int loadResourcesPart1();
+    private native int loadResourcesPart2();
+    public native String recognizeNative1(Bitmap bmp); //full image screen
+    public native String recognizeNative2(Bitmap bmp); //customDetector
 }

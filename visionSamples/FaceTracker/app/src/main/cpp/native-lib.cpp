@@ -241,7 +241,12 @@ Java_dlib_android_FaceRecognizer_recognizeNative1(JNIEnv *env,
     }
 
     std::string returnValue = "Num Faces: ";
+
     std::vector<dlib::rectangle> dets = detector1(img);
+    if (dets.size() == 0){
+        std::string name = "Unknown";
+        return env->NewStringUTF(name.c_str());
+    }
     returnValue += std::to_string(dets.size());
     returnValue += ". ";
 

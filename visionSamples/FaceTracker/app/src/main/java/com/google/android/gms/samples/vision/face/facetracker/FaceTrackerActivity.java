@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -249,8 +250,8 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                final String res = mFaceRecognizer.recognizeNative1(temp);
-                                Toaster.toastLong(res);
+                                String[] array = mFaceRecognizer.recognizeFaces(temp);
+                                Toaster.toastLong(TextUtils.join(",", array));
                             }
                         }).start();
                     }

@@ -201,10 +201,12 @@ Java_dlib_android_FaceRecognizer_loadResourcesPart2(JNIEnv *env, jobject instanc
     }
     return 0;
 }extern "C"
-JNIEXPORT jstring JNICALL
-Java_dlib_android_FaceRecognizer_recognizeNative1(JNIEnv *env,
+JNIEXPORT jobjectArray JNICALL
+Java_dlib_android_FaceRecognizer_recognizeFaces(JNIEnv *env,
                                                          jobject instance,
                                                          jobject bmp) {
+    jobjectArray strarr;
+    std::vector<string> names;
 
     AndroidBitmapInfo infocolor;
     void *pixelscolor;
@@ -214,14 +216,16 @@ Java_dlib_android_FaceRecognizer_recognizeNative1(JNIEnv *env,
     array2d<rgb_pixel> img;
     if ((ret = AndroidBitmap_getInfo(env, bmp, &infocolor)) < 0) {
         LOGE("AndroidBitmap_getInfo() failed ! error=%d", ret);
-        return env->NewStringUTF("Image broken");
+        //return env->NewStringUTF("Image broken");
+        return strarr;
     }
     LOGI("color image :: width is %d; height is %d; stride is %d; format is %d;flags is %d",
          infocolor.width, infocolor.height, infocolor.stride, infocolor.format, infocolor.flags);
 
     if (infocolor.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
         LOGE("Bitmap format is not RGBA_8888 !");
-        return env->NewStringUTF("Image broken 2");
+        //return env->NewStringUTF("Image broken 2");
+        return strarr;
     }
 
     if ((ret = AndroidBitmap_lockPixels(env, bmp, &pixelscolor)) < 0) {
@@ -240,15 +244,13 @@ Java_dlib_android_FaceRecognizer_recognizeNative1(JNIEnv *env,
         pixelscolor = (char *) pixelscolor + infocolor.stride;
     }
 
-    std::string returnValue = "Num Faces: ";
-
+    //dlib::save_bmp(img, "/sdcard/Download/tt.bmp");
     std::vector<dlib::rectangle> dets = detector1(img);
     if (dets.size() == 0){
-        std::string name = "Unknown";
-        return env->NewStringUTF(name.c_str());
+        return strarr;
     }
-    returnValue += std::to_string(dets.size());
-    returnValue += ". ";
+
+    //LOGI("dets: %d", dets.size());
 
     std::vector<matrix<rgb_pixel>> faces;
     for (auto face : dets)
@@ -259,27 +261,36 @@ Java_dlib_android_FaceRecognizer_recognizeNative1(JNIEnv *env,
         faces.push_back(move(face_chip));
     }
 
+    //LOGI("faces: %d", faces.size());
+
     std::vector<matrix<float, 0, 1>> face_descriptors = net1(faces);
 
     for (size_t i = 0; i < face_descriptors.size(); ++i)
     {
         std::string name = "Unknown";
-        for (auto& j : known_faces) {
+        for (auto j : known_faces) {
             float dist = length(face_descriptors[i] - j.second);
             if (dist < FACE_RECOGNIZE_THRESH) {
                 name = j.first;
                 break;
             }
         }
-        returnValue += name;
-        returnValue += " ";
+        names.push_back(name);
     }
 
     AndroidBitmap_unlockPixels(env, bmp);
-    return env->NewStringUTF(returnValue.c_str());
+
+    if(names.size() > 0) {
+        strarr = env->NewObjectArray(names.size(), env->FindClass("java/lang/String"), nullptr);
+        for (int i = 0; i < names.size(); ++i)
+        {
+            env->SetObjectArrayElement(strarr, i, env->NewStringUTF(names[i].c_str()));
+        }
+    }
+    return strarr;
 }extern "C"
 JNIEXPORT jstring JNICALL
-Java_dlib_android_FaceRecognizer_recognizeNative2(JNIEnv *env, jobject instance, jobject bmp) {
+Java_dlib_android_FaceRecognizer_recognizeFace(JNIEnv *env, jobject instance, jobject bmp) {
 
     AndroidBitmapInfo infocolor;
     void *pixelscolor;
@@ -357,6 +368,8 @@ Java_dlib_android_FaceRecognizer_recognizeNative2(JNIEnv *env, jobject instance,
     AndroidBitmap_unlockPixels(env, bmp);
 
     //std::string returnValue = "Unknown"  + std::to_string(min_dist);
+
+
     std::string returnValue = "Unknown";
     return env->NewStringUTF(returnValue.c_str());
 }

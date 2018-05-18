@@ -98,7 +98,7 @@ public class CustomDetector extends Detector<Face> {
             mT = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String res = mFaceRecognizer.recognizeNative2(cropped);
+                    String res = mFaceRecognizer.recognizeFace(cropped);
                     recognitionHandler.onRecognized(res);
                 }
             });

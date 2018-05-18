@@ -15,6 +15,6 @@ public class FaceRecognizer {
 
     private native int loadResourcesPart1();
     private native int loadResourcesPart2();
-    public native String recognizeNative1(Bitmap bmp); //full image screen
-    public native String recognizeNative2(Bitmap bmp); //customDetector
+    public native String[] recognizeFaces(Bitmap bmp); //full image screen
+    public native String recognizeFace(Bitmap bmp); //customDetector
 }

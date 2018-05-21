@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import dlib.android.Exif;
 import dlib.android.FaceRecognizer;
 
 import static android.os.Environment.getExternalStorageDirectory;
@@ -83,6 +84,8 @@ public class CustomDetector extends Detector<Face> {
             yuvImage.compressToJpeg(new Rect(0, 0, frame.getMetadata().getWidth(),
                     frame.getMetadata().getHeight()), 100, byteArrayOutputStream);
             byte[] jpegArray = byteArrayOutputStream.toByteArray();
+            int orientation = Exif.getOrientation(jpegArray);
+            Log.w(TAG, String.format("Orientation %d", orientation));
             Bitmap tmpBitmap = BitmapFactory.decodeByteArray(jpegArray, 0, jpegArray.length);
             final Bitmap cropped = Bitmap.createBitmap(tmpBitmap, x, y, w, h);
 //            try {

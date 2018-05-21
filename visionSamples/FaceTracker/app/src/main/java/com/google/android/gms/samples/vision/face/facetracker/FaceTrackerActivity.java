@@ -62,7 +62,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     private GraphicOverlay mGraphicOverlay;
     private Button mBtnDetect;
     private CustomDetector customDetector;
-    private FaceDetector mPictureDetector;
+    //private FaceDetector mPictureDetector;
 
     private static final int RC_HANDLE_GMS = 9001;
     // permission request codes need to be < 256
@@ -185,16 +185,16 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 .setClassificationType(FaceDetector.NO_CLASSIFICATIONS)
                 .setProminentFaceOnly(false)
                 .setMode(FaceDetector.ACCURATE_MODE)
-                .setMinFaceSize(0.05f)
+                .setMinFaceSize(0.015f)
                 .build();
 
-        mPictureDetector = new FaceDetector.Builder(context)
-                .setTrackingEnabled(false)
-                .setProminentFaceOnly(false)
-                .setMinFaceSize(0.015f)  // 80 / 5312 detect up to 80 pixels head width
-                .setMode(FaceDetector.ACCURATE_MODE)
-                .setClassificationType(FaceDetector.NO_CLASSIFICATIONS)
-                .build();
+//        mPictureDetector = new FaceDetector.Builder(context)
+//                .setTrackingEnabled(false)
+//                .setProminentFaceOnly(false)
+//                .setMinFaceSize(0.015f)  // 80 / 5312 detect up to 80 pixels head width
+//                .setMode(FaceDetector.ACCURATE_MODE)
+//                .setClassificationType(FaceDetector.NO_CLASSIFICATIONS)
+//                .build();
 
         //mFaceRecognizer
         customDetector = new CustomDetector(detector, mFaceRecognizer);
@@ -215,9 +215,9 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             Log.w(TAG, "Face detector dependencies are not yet available.");
         }
 
-        if (!mPictureDetector.isOperational()) {
-            Log.w(TAG, "mPictureDetector dependencies are not yet available.");
-        }
+//        if (!mPictureDetector.isOperational()) {
+//            Log.w(TAG, "mPictureDetector dependencies are not yet available.");
+//        }
 
         //.setRequestedPreviewSize(640, 480)
         //.setRequestedFps(30.0f)

@@ -93,25 +93,20 @@ public class CustomDetector extends Detector<Face> {
             switch (frame.getMetadata().getRotation())
             {
                 case 1:
-                    Log.i(TAG, "orientation 1");
-                    Log.i(TAG, String.format("frame height %d", fHeight));
                     rot.postRotate(90);
                     cropped = Bitmap.createBitmap(tmpBitmap, y, fHeight - (x + w), h, w,
                             rot,false );
                     break;
                 case 2:
-                    Log.i(TAG, "orientation 2");
                     rot.postRotate(180);
                     cropped = Bitmap.createBitmap(tmpBitmap, fWidth - (x + w),
                             fHeight - (y + h), w, h, rot, false);
                     break;
                 case 3:
-                    Log.i(TAG, "orientation 3");
                     rot.postRotate(270);
                     cropped = Bitmap.createBitmap(tmpBitmap, fWidth - (y + h), x, h, w, rot, false);
                     break;
                 default:
-                    Log.i(TAG, "orientation 0");
                     cropped = Bitmap.createBitmap(tmpBitmap, x, y, w, h);
                     break;
             }

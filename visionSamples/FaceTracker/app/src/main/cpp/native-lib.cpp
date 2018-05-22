@@ -244,13 +244,12 @@ Java_dlib_android_FaceRecognizer_recognizeFaces(JNIEnv *env,
         pixelscolor = (char *) pixelscolor + infocolor.stride;
     }
 
-    //dlib::save_bmp(img, "/sdcard/Download/tt.bmp");
+    //dlib::save_bmp(img, "/sdcard/Download/res1.bmp");
+
     std::vector<dlib::rectangle> dets = detector1(img);
     if (dets.size() == 0){
         return strarr;
     }
-
-    //LOGI("dets: %d", dets.size());
 
     std::vector<matrix<rgb_pixel>> faces;
     for (auto face : dets)
@@ -260,8 +259,6 @@ Java_dlib_android_FaceRecognizer_recognizeFaces(JNIEnv *env,
         extract_image_chip(img, get_face_chip_details(shape, 150, 0.25), face_chip);
         faces.push_back(move(face_chip));
     }
-
-    //LOGI("faces: %d", faces.size());
 
     std::vector<matrix<float, 0, 1>> face_descriptors = net1(faces);
 
@@ -325,46 +322,46 @@ Java_dlib_android_FaceRecognizer_recognizeFace(JNIEnv *env, jobject instance, jo
     }
 
     //todo: smth wrong with colors
-    dlib::save_bmp(img, "/sdcard/Download/res.bmp");
+    //dlib::save_bmp(img, "/sdcard/Download/res.bmp");
 
-//    std::vector<dlib::rectangle> dets = detector(img);
-//    LOGI("detected size %d", dets.size());
-//
-//    float min_dist = 0.0;
-//    if(dets.size() > 0 ){
-//        auto face = dets.front();
-//        std::vector<matrix<rgb_pixel>> faces;
-//        int x = face.left();
-//        int y = face.top();
-//        int width = face.width();
-//        int height = face.height();
-//
-//        auto shape = sp(img, face);
-//        matrix<rgb_pixel> face_chip;
-//        extract_image_chip(img, get_face_chip_details(shape, 150, 0.25), face_chip);
-//        faces.push_back(move(face_chip));
-//
-//        std::vector<matrix<float, 0, 1>> face_descriptors = net(faces);
-//
-//        if (face_descriptors.size() > 0)
-//        {
-//            matrix<float, 0, 1> face_desc = face_descriptors[0];
-//            for (auto& i : known_faces) {
-//                float dist = length(face_desc -  i.second );
-//                if (dist < min_dist){
-//                    min_dist = dist;
-//                }
-//                if( dist < FACE_RECOGNIZE_THRESH) //todo: extract thresh
-//                {
-//                    LOGI("recognized");
-//                    return env->NewStringUTF(i.first.c_str());
-//                }
-//            }
-//        }
-//        LOGI("not recognized, max dist %0.2f", min_dist);
-//    }
-//
-    LOGI("unlocking pixels");
+    std::vector<dlib::rectangle> dets = detector(img);
+    LOGI("detected size %d", dets.size());
+
+    float min_dist = 0.0;
+    if(dets.size() > 0 ){
+        auto face = dets.front();
+        std::vector<matrix<rgb_pixel>> faces;
+        int x = face.left();
+        int y = face.top();
+        int width = face.width();
+        int height = face.height();
+
+        auto shape = sp(img, face);
+        matrix<rgb_pixel> face_chip;
+        extract_image_chip(img, get_face_chip_details(shape, 150, 0.25), face_chip);
+        faces.push_back(move(face_chip));
+
+        std::vector<matrix<float, 0, 1>> face_descriptors = net(faces);
+
+        if (face_descriptors.size() > 0)
+        {
+            matrix<float, 0, 1> face_desc = face_descriptors[0];
+            for (auto& i : known_faces) {
+                float dist = length(face_desc -  i.second );
+                if (dist < min_dist){
+                    min_dist = dist;
+                }
+                if( dist < FACE_RECOGNIZE_THRESH)
+                {
+                    //LOGI("recognized");
+                    return env->NewStringUTF(i.first.c_str());
+                }
+            }
+        }
+        LOGI("not recognized, max dist %0.2f", min_dist);
+    }
+
+//    LOGI("unlocking pixels");
     AndroidBitmap_unlockPixels(env, bmp);
 
     std::string returnValue = "Unknown";

@@ -3,6 +3,7 @@ package com.google.android.gms.samples.vision.face.facetracker;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.os.Environment;
@@ -78,16 +79,42 @@ public class CustomDetector extends Detector<Face> {
         if (!IsBusy && y > 0 && recognitionHandler != null) {
             IsBusy = true;
 
+            int fHeight = frame.getMetadata().getHeight();
+            int fWidth = frame.getMetadata().getWidth();
             YuvImage yuvImage = new YuvImage(frame.getGrayscaleImageData().array(), ImageFormat.NV21,
-                    frame.getMetadata().getWidth(), frame.getMetadata().getHeight(), null);
+                    fWidth, fHeight, null);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            yuvImage.compressToJpeg(new Rect(0, 0, frame.getMetadata().getWidth(),
-                    frame.getMetadata().getHeight()), 100, byteArrayOutputStream);
+            yuvImage.compressToJpeg(new Rect(0, 0, fWidth, fHeight),
+                    100, byteArrayOutputStream);
             byte[] jpegArray = byteArrayOutputStream.toByteArray();
-            int orientation = Exif.getOrientation(jpegArray);
-            Log.w(TAG, String.format("Orientation %d", orientation));
             Bitmap tmpBitmap = BitmapFactory.decodeByteArray(jpegArray, 0, jpegArray.length);
-            final Bitmap cropped = Bitmap.createBitmap(tmpBitmap, x, y, w, h);
+            final Bitmap cropped;
+            Matrix rot = new Matrix();
+            switch (frame.getMetadata().getRotation())
+            {
+                case 1:
+                    Log.i(TAG, "orientation 1");
+                    Log.i(TAG, String.format("frame height %d", fHeight));
+                    rot.postRotate(90);
+                    cropped = Bitmap.createBitmap(tmpBitmap, y, fHeight - (x + w), h, w,
+                            rot,false );
+                    break;
+                case 2:
+                    Log.i(TAG, "orientation 2");
+                    rot.postRotate(180);
+                    cropped = Bitmap.createBitmap(tmpBitmap, fWidth - (x + w),
+                            fHeight - (y + h), w, h, rot, false);
+                    break;
+                case 3:
+                    Log.i(TAG, "orientation 3");
+                    rot.postRotate(270);
+                    cropped = Bitmap.createBitmap(tmpBitmap, fWidth - (y + h), x, h, w, rot, false);
+                    break;
+                default:
+                    Log.i(TAG, "orientation 0");
+                    cropped = Bitmap.createBitmap(tmpBitmap, x, y, w, h);
+                    break;
+            }
 //            try {
 //
 //                File file = new File (getExternalStorageDirectory(), "/Download/test1.bmp");

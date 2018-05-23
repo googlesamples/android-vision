@@ -244,13 +244,12 @@ Java_dlib_android_FaceRecognizer_recognizeFaces(JNIEnv *env,
         pixelscolor = (char *) pixelscolor + infocolor.stride;
     }
 
-    //dlib::save_bmp(img, "/sdcard/Download/tt.bmp");
+    //dlib::save_bmp(img, "/sdcard/Download/res1.bmp");
+
     std::vector<dlib::rectangle> dets = detector1(img);
     if (dets.size() == 0){
         return strarr;
     }
-
-    //LOGI("dets: %d", dets.size());
 
     std::vector<matrix<rgb_pixel>> faces;
     for (auto face : dets)
@@ -260,8 +259,6 @@ Java_dlib_android_FaceRecognizer_recognizeFaces(JNIEnv *env,
         extract_image_chip(img, get_face_chip_details(shape, 150, 0.25), face_chip);
         faces.push_back(move(face_chip));
     }
-
-    //LOGI("faces: %d", faces.size());
 
     std::vector<matrix<float, 0, 1>> face_descriptors = net1(faces);
 
@@ -325,7 +322,7 @@ Java_dlib_android_FaceRecognizer_recognizeFace(JNIEnv *env, jobject instance, jo
     }
 
     //todo: smth wrong with colors
-    //dlib::save_bmp(img, "/storage/emulated/0/Download/test.bmp");
+    //dlib::save_bmp(img, "/sdcard/Download/res.bmp");
 
     std::vector<dlib::rectangle> dets = detector(img);
     LOGI("detected size %d", dets.size());
@@ -354,9 +351,9 @@ Java_dlib_android_FaceRecognizer_recognizeFace(JNIEnv *env, jobject instance, jo
                 if (dist < min_dist){
                     min_dist = dist;
                 }
-                if( dist < FACE_RECOGNIZE_THRESH) //todo: extract thresh
+                if( dist < FACE_RECOGNIZE_THRESH)
                 {
-                    LOGI("recognized");
+                    //LOGI("recognized");
                     return env->NewStringUTF(i.first.c_str());
                 }
             }
@@ -364,11 +361,8 @@ Java_dlib_android_FaceRecognizer_recognizeFace(JNIEnv *env, jobject instance, jo
         LOGI("not recognized, max dist %0.2f", min_dist);
     }
 
-    LOGI("unlocking pixels");
+//    LOGI("unlocking pixels");
     AndroidBitmap_unlockPixels(env, bmp);
-
-    //std::string returnValue = "Unknown"  + std::to_string(min_dist);
-
 
     std::string returnValue = "Unknown";
     return env->NewStringUTF(returnValue.c_str());

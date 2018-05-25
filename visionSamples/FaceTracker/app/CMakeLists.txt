@@ -1,4 +1,3 @@
-
 # Sets the minimum version of CMake required to build the native
 # library. You should either keep the default value or only pass a
 # value of 3.4.0 or lower.
@@ -9,57 +8,21 @@ set (CMAKE_CXX_STANDARD 11)
 
 
 # OpenCV stuff
-include_directories(/home/alorusso/Downloads/OpenCV-android-sdk/sdk/native/jni/include)
-#add_library( lib_opencv SHARED IMPORTED )
-#set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI}/libopencv_java3.so)
+include_directories("E:/Tools/opencv-3.4.0-android-sdk/OpenCV-android-sdk/sdk/native/jni/include")
+add_library( lib_opencv SHARED IMPORTED )
+set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI}/libopencv_java3.so)
 
-# /home/alorusso/workspace/SmartGlasses/Development/ANDROID/Android-vision/visionSamples/FaceTracker/app/src/main/jniLibs/${ANDROID_ABI}/libopencv_java3.so)
-# ${CMAKE_CURRENT_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI}/libopencv_java3.so)
+find_library( # Sets the name of the path variable.
+              log-lib
 
-include_directories(/home/alorusso/Downloads/opencv-3.3.0/modules/core/include/)
-set(OPENCV_DIR /home/alorusso/Downloads/opencv-3.3.0/modules)
-include_directories(${OPENCV_DIR})
-
-add_library( # Sets the name of the library.
-             lib_opencv
-
-             # Sets the library as a shared library.
-             SHARED
-
-             # Provides a relative path to your source file(s).
-             # Associated headers in the same location as their source
-             # file are automatically included.
-             /home/alorusso/Downloads/opencv-3.3.0/modules/objdetect/src/cascadedetect.cpp
-             )
-
-
-
-add_library( # Sets the name of the library.
-             OCV-native-lib
-
-             # Sets the library as a shared library.
-             SHARED
-
-             # Provides a relative path to your source file(s).
-             # Associated headers in the same location as their source
-             # file are automatically included.
-             src/main/cpp/OCV-native-lib.cpp )
-
-
-
-target_link_libraries( # Specifies the target library.
-                       OCV-native-lib
-
-                       # OpenCV lib
-                       lib_opencv
-
-                       # Links the target library to the log library
-                       # included in the NDK.
-                       ${log-lib} )
-
+              # Specifies the name of the NDK library that
+              # you want CMake to locate.
+              log )
 
 set(DLIB_DIR ../../../dlib)
 include_directories(${DLIB_DIR})
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 add_library( # Sets the name of the library.
              lib_dlib
@@ -92,33 +55,33 @@ add_library( # Sets the name of the library.
              # file are automatically included.
              src/main/cpp/native-lib.cpp )
 
-
-
-
-# Searches for a specified prebuilt library and stores the path as a
-# variable. Because system libraries are included in the search path by
-# default, you only need to specify the name of the public NDK library
-# you want to add. CMake verifies that the library exists before
-# completing its build.
-
-find_library( # Sets the name of the path variable.
-              log-lib
-
-              # Specifies the name of the NDK library that
-              # you want CMake to locate.
-              log )
-
-# Specifies libraries CMake should link to your target library. You
-# can link multiple libraries, such as libraries you define in the
-# build script, prebuilt third-party libraries, or system libraries.
-
 target_link_libraries( # Specifies the target library.
                        native-lib
 
                        lib_dlib
 
-                       -ljnigraphics
+                        -ljnigraphics
 
                        # Links the target library to the log library
                        # included in the NDK.
+                       ${log-lib} )
+
+
+
+add_library( # Sets the name of the library.
+             OCV-native-lib
+
+             # Sets the library as a shared library.
+             SHARED
+
+             # Provides a relative path to your source file(s).
+             # Associated headers in the same location as their source
+             # file are automatically included.
+             src/main/cpp/OCV-native-lib.cpp )
+
+target_link_libraries(
+                        OCV-native-lib
+
+                       lib_opencv
+
                        ${log-lib} )

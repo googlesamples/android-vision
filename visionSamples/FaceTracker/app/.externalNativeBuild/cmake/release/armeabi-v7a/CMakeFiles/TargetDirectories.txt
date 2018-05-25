@@ -1,6 +1,0 @@
-/home/alorusso/workspace/SmartGlasses/Development/ANDROID/Android-vision/visionSamples/FaceTracker/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/rebuild_cache.dir
-/home/alorusso/workspace/SmartGlasses/Development/ANDROID/Android-vision/visionSamples/FaceTracker/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/edit_cache.dir
-/home/alorusso/workspace/SmartGlasses/Development/ANDROID/Android-vision/visionSamples/FaceTracker/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/native-lib.dir
-/home/alorusso/workspace/SmartGlasses/Development/ANDROID/Android-vision/visionSamples/FaceTracker/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/lib_dlib.dir
-/home/alorusso/workspace/SmartGlasses/Development/ANDROID/Android-vision/visionSamples/FaceTracker/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/OCV-native-lib.dir
-/home/alorusso/workspace/SmartGlasses/Development/ANDROID/Android-vision/visionSamples/FaceTracker/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/lib_opencv.dir

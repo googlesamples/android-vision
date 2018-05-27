@@ -20,7 +20,7 @@ find_library( # Sets the name of the path variable.
               # you want CMake to locate.
               log )
 
-set(DLIB_DIR ../../../dlib)
+set(DLIB_DIR ../../dlib)
 include_directories(${DLIB_DIR})
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -34,15 +34,15 @@ add_library( # Sets the name of the library.
              # Provides a relative path to your source file(s).
              # Associated headers in the same location as their source
              # file are automatically included.
-             ../../../dlib/dlib/threads/threads_kernel_shared.cpp
-             ../../../dlib/dlib/entropy_decoder/entropy_decoder_kernel_2.cpp
-             ../../../dlib/dlib/base64/base64_kernel_1.cpp
-             ../../../dlib/dlib/threads/threads_kernel_1.cpp
-             ../../../dlib/dlib/threads/threads_kernel_2.cpp
-             ../../../dlib/dlib/threads/thread_pool_extension.cpp
-             ../../../dlib/dlib/threads/async.cpp
-             ../../../dlib/dlib/dnn/cpu_dlib.cpp
-             ../../../dlib/dlib/dnn/tensor_tools.cpp
+             ../../dlib/dlib/threads/threads_kernel_shared.cpp
+             ../../dlib/dlib/entropy_decoder/entropy_decoder_kernel_2.cpp
+             ../../dlib/dlib/base64/base64_kernel_1.cpp
+             ../../dlib/dlib/threads/threads_kernel_1.cpp
+             ../../dlib/dlib/threads/threads_kernel_2.cpp
+             ../../dlib/dlib/threads/thread_pool_extension.cpp
+             ../../dlib/dlib/threads/async.cpp
+             ../../dlib/dlib/dnn/cpu_dlib.cpp
+             ../../dlib/dlib/dnn/tensor_tools.cpp
              )
 
 add_library( # Sets the name of the library.

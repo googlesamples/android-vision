@@ -82,8 +82,8 @@ Java_com_google_android_gms_samples_vision_face_facetracker_FaceTrackerActivity_
 {
 
     LOGI("load resource");
-    FILE *file1 = fopen("/storage/emulated/0/Movies/shape_predictor_5_face_landmarks.dat", "r+");
-    FILE *file2 = fopen("/storage/emulated/0/Movies/dlib_face_recognition_resnet_model_v1.dat",
+    FILE *file1 = fopen("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat", "r+");
+    FILE *file2 = fopen("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat",
                         "r+");
     //FILE *file3 = fopen("/storage/emulated/0/Movies/faces_linear.svm", "r+");
 
@@ -91,13 +91,13 @@ Java_com_google_android_gms_samples_vision_face_facetracker_FaceTrackerActivity_
         fclose(file1);
         fclose(file2);
         //fclose(file3);
-        dlib::deserialize("/storage/emulated/0/Movies/shape_predictor_5_face_landmarks.dat")
+        dlib::deserialize("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat")
                 >> sp;
-        dlib::deserialize("/storage/emulated/0/Movies/shape_predictor_5_face_landmarks.dat")
+        dlib::deserialize("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat")
                 >> sp1;
-        dlib::deserialize("/storage/emulated/0/Movies/dlib_face_recognition_resnet_model_v1.dat")
+        dlib::deserialize("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat")
                 >> net;
-        dlib::deserialize("/storage/emulated/0/Movies/dlib_face_recognition_resnet_model_v1.dat")
+        dlib::deserialize("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat")
                 >> net1;
         //dlib::deserialize("/storage/emulated/0/Download/faces_linear.svm") >> df;
 
@@ -105,7 +105,7 @@ Java_com_google_android_gms_samples_vision_face_facetracker_FaceTrackerActivity_
         char *p1,*p2;
         int ret;
         struct dirent *dir;
-        d = opendir("/storage/emulated/0/Movies");
+        d = opendir("/storage/emulated/0/Download");
         if (d)
         {
             // LOGI("Loading feature vectors using *.vec", p1); AL: p1 not initialized
@@ -121,7 +121,7 @@ Java_com_google_android_gms_samples_vision_face_facetracker_FaceTrackerActivity_
                         std::string name = std::string(p1);
                         std::string file = name + ".vec";
                         matrix<float, 0, 1> face_vector;
-                        dlib::deserialize("/storage/emulated/0/Movies/"  + file) >> face_vector;
+                        dlib::deserialize("/storage/emulated/0/Download/"  + file) >> face_vector;
                         known_faces.insert({name, face_vector});
                     }
                 }
@@ -141,23 +141,23 @@ JNIEXPORT jint JNICALL
 Java_dlib_android_FaceRecognizer_loadResourcesPart1(JNIEnv *env, jobject instance) {
 
     LOGI("load resource part1");
-    FILE *file1 = fopen("/storage/emulated/0/Movies/shape_predictor_5_face_landmarks.dat", "r+");
-    FILE *file2 = fopen("/storage/emulated/0/Movies/dlib_face_recognition_resnet_model_v1.dat",
+    FILE *file1 = fopen("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat", "r+");
+    FILE *file2 = fopen("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat",
                         "r+");
 
     if (file1 != NULL && file2 != NULL ) {
         fclose(file1);
         fclose(file2);
-        dlib::deserialize("/storage/emulated/0/Movies/shape_predictor_5_face_landmarks.dat")
+        dlib::deserialize("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat")
                 >> sp;
-        dlib::deserialize("/storage/emulated/0/Movies/dlib_face_recognition_resnet_model_v1.dat")
+        dlib::deserialize("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat")
                 >> net;
 
         DIR *d;
         char *p1,*p2;
         int ret;
         struct dirent *dir;
-        d = opendir("/storage/emulated/0/Movies");
+        d = opendir("/storage/emulated/0/Download");
         if (d)
         {
             // LOGI("Loading feature vectors using *.vec", p1);  AL: p1 not initialized
@@ -173,7 +173,7 @@ Java_dlib_android_FaceRecognizer_loadResourcesPart1(JNIEnv *env, jobject instanc
                         std::string name = std::string(p1);
                         std::string file = name + ".vec";
                         matrix<float, 0, 1> face_vector;
-                        dlib::deserialize("/storage/emulated/0/Movies/"  + file) >> face_vector;
+                        dlib::deserialize("/storage/emulated/0/Download/"  + file) >> face_vector;
                         known_faces.insert({name, face_vector});
                     }
                 }
@@ -192,16 +192,16 @@ JNIEXPORT jint JNICALL
 Java_dlib_android_FaceRecognizer_loadResourcesPart2(JNIEnv *env, jobject instance) {
 
     LOGI("load resource part2");
-    FILE *file1 = fopen("/storage/emulated/0/Movies/shape_predictor_5_face_landmarks.dat", "r+");
-    FILE *file2 = fopen("/storage/emulated/0/Movies/dlib_face_recognition_resnet_model_v1.dat",
+    FILE *file1 = fopen("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat", "r+");
+    FILE *file2 = fopen("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat",
                         "r+");
 
     if (file1 != NULL && file2 != NULL ) {
         fclose(file1);
         fclose(file2);
-        dlib::deserialize("/storage/emulated/0/Movies/shape_predictor_5_face_landmarks.dat")
+        dlib::deserialize("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat")
                 >> sp1;
-        dlib::deserialize("/storage/emulated/0/Movies/dlib_face_recognition_resnet_model_v1.dat")
+        dlib::deserialize("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat")
                 >> net1;
     } else{
         return -1;

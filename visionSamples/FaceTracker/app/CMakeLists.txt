@@ -8,6 +8,7 @@ set (CMAKE_CXX_STANDARD 11)
 
 
 # OpenCV stuff
+# todo: use env variable to set opencv location
 include_directories("/Users/hoopoe/Tools/OpenCV-android-sdk/sdk/native/jni/include")
 add_library( lib_opencv SHARED IMPORTED )
 set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION /Users/hoopoe/Tools/OpenCV-android-sdk/sdk/native/libs/${ANDROID_ABI}/libopencv_java3.so)

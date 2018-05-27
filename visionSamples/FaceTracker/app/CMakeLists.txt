@@ -10,7 +10,7 @@ set (CMAKE_CXX_STANDARD 11)
 # OpenCV stuff
 include_directories("/Users/hoopoe/Tools/OpenCV-android-sdk/sdk/native/jni/include")
 add_library( lib_opencv SHARED IMPORTED )
-set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI}/libopencv_java3.so)
+set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION /Users/hoopoe/Tools/OpenCV-android-sdk/sdk/native/libs/${ANDROID_ABI}/libopencv_java3.so)
 
 find_library( # Sets the name of the path variable.
               log-lib

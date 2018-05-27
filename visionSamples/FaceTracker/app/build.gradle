@@ -36,13 +36,13 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-    sourceSets { // AL: added
-        main {
-            jniLibs.srcDirs = ['src/main/jniLibs']
-            jni.srcDirs = ['src/main/jni', 'src/main/jniLibs/']
-            //jni.srcDirs = []
-        }
-    }
+//    sourceSets { // AL: added
+//        main {
+//            jniLibs.srcDirs = ['src/main/jniLibs']
+//            jni.srcDirs = ['src/main/jni', 'src/main/jniLibs/']
+//            //jni.srcDirs = []
+//        }
+//    }
 
     buildTypes {
         release {

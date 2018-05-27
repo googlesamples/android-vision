@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/hoopoe/android-vision.svg?branch=master)](https://travis-ci.com/hoopoe/android-vision)
 
-Android Vision API Samples
+Facial Recognition on Android using dlib and opencv
 ============
 
 These samples demonstrate the vision API for detecting faces and barcodes.

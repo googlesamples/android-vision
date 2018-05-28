@@ -8,10 +8,9 @@ set (CMAKE_CXX_STANDARD 11)
 
 
 # OpenCV stuff
-# todo: use env variable to set opencv location
-include_directories("/Users/hoopoe/Tools/OpenCV-android-sdk/sdk/native/jni/include")
+include_directories($ENV{OPENCV_ANDROID_SDK}/sdk/native/jni/include)
 add_library( lib_opencv SHARED IMPORTED )
-set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION /Users/hoopoe/Tools/OpenCV-android-sdk/sdk/native/libs/${ANDROID_ABI}/libopencv_java3.so)
+set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION $ENV{OPENCV_ANDROID_SDK}/sdk/native/libs/${ANDROID_ABI}/libopencv_java3.so)
 
 find_library( # Sets the name of the path variable.
               log-lib
@@ -23,7 +22,7 @@ find_library( # Sets the name of the path variable.
 set(DLIB_DIR ../../dlib)
 include_directories(${DLIB_DIR})
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 add_library( # Sets the name of the library.
              lib_dlib

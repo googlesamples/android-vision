@@ -60,7 +60,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
     private CameraSourcePreview mPreview;
     private GraphicOverlay mGraphicOverlay;
-    private Button mBtnDetect;
+//    private Button mBtnDetect;
     private CustomDetector customDetector;
     //private FaceDetector mPictureDetector;
 
@@ -85,7 +85,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
-        mBtnDetect = (Button) findViewById(R.id.btnDetect);
+//        mBtnDetect = (Button) findViewById(R.id.btnDetect);
         mFaceRecognizer = new FaceRecognizer();
 
         // Check for the sdcard write permission.  If the
@@ -228,36 +228,36 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 .setRequestedFps(10)
                 .build();
 
-        mBtnDetect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
-                    @Override
-                    public void onPictureTaken(byte[] bytes) {
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        final Bitmap temp = BitmapFactory.decodeByteArray(bytes, 0,
-                                bytes.length, options);
-
-                        //Log.d(TAG, temp.getWidth() + " " + temp.getHeight());
-//                        Frame frame = new Frame.Builder().setBitmap(temp).build();
-//                        SparseArray<Face> faces = mPictureDetector.detect(frame);
-//                        Log.d(TAG, String.format("Num of faces %d", faces.size()));
-
-                        Toast toast = Toast.makeText(getApplicationContext(),
-                                "Long detection started...(~1min)", Toast.LENGTH_SHORT);
-                        toast.show();
-
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                String[] array = mFaceRecognizer.recognizeFaces(temp);
-                                Toaster.toastLong(TextUtils.join(",", array));
-                            }
-                        }).start();
-                    }
-                });
-            }
-        });
+//        mBtnDetect.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
+//                    @Override
+//                    public void onPictureTaken(byte[] bytes) {
+//                        BitmapFactory.Options options = new BitmapFactory.Options();
+//                        final Bitmap temp = BitmapFactory.decodeByteArray(bytes, 0,
+//                                bytes.length, options);
+//
+//                        //Log.d(TAG, temp.getWidth() + " " + temp.getHeight());
+////                        Frame frame = new Frame.Builder().setBitmap(temp).build();
+////                        SparseArray<Face> faces = mPictureDetector.detect(frame);
+////                        Log.d(TAG, String.format("Num of faces %d", faces.size()));
+//
+//                        Toast toast = Toast.makeText(getApplicationContext(),
+//                                "Long detection started...(~1min)", Toast.LENGTH_SHORT);
+//                        toast.show();
+//
+//                        new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                String[] array = mFaceRecognizer.recognizeFaces(temp);
+//                                Toaster.toastLong(TextUtils.join(",", array));
+//                            }
+//                        }).start();
+//                    }
+//                });
+//            }
+//        });
     }
 
     /**

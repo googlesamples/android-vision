@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/hoopoe/android-vision.svg?branch=master)](https://travis-ci.com/hoopoe/android-vision)
+[![Build Status](https://travis-ci.com/hoopoe/FR-android-dlib-opencv.svg?branch=master)](https://travis-ci.com/hoopoe/FR-android-dlib-opencv)
 
 Facial Recognition on Android using dlib and opencv
 ============

@@ -36,6 +36,6 @@ before_script:
   - export OPENCV_ANDROID_SDK=$(pwd)/OpenCV-android-sdk
 
 script:
-- cd visionSamples/FaceTracker/
+- cd FaceTracker
 - ./gradlew build
 

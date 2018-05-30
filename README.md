@@ -4,7 +4,7 @@ Facial Recognition on Android using dlib and opencv
 ============
 
 
-This app demonstrate realtime face detection, tracking and recognition based on predefined face vectors.
+This app demonstrate semi realtime face detection, tracking and recognition based on predefined face vectors.
 
 
 Notes:

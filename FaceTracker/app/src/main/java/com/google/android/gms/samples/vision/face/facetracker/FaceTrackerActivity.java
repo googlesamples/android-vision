@@ -225,7 +225,8 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         mCameraSource = new CameraSource.Builder(context, customDetector)
                 .setRequestedPreviewSize(1920, 1080)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
-                .setRequestedFps(10)
+                .setAutoFocusEnabled(true)
+                .setRequestedFps(20)
                 .build();
 
 //        mBtnDetect.setOnClickListener(new View.OnClickListener() {

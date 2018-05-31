@@ -12,5 +12,13 @@ Notes:
 
 export OPENCV_ANDROID_SDK=/Users/hoopoe/Tools/OpenCV-android-sdk
 
-2. dlib adapted to work with -DANDROID_STL=gnustl_shared
+2. From https://github.com/davisking/dlib-models
+
+  copy 
+  * shape_predictor_5_face_landmarks.dat
+  * dlib_face_recognition_resnet_model_v1.dat
+  
+  to /sdcard/Download 
+
+3. dlib adapted to work with -DANDROID_STL=gnustl_shared
 

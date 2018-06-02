@@ -337,12 +337,14 @@ Java_dlib_android_FaceRecognizer_recognizeFace(JNIEnv *env, jobject instance, jo
         int height = face.height();
 
         auto shape = sp(img, face);
+        LOGI("shape predictor");
         matrix<rgb_pixel> face_chip;
         extract_image_chip(img, get_face_chip_details(shape, 150, 0.25), face_chip);
         faces.push_back(move(face_chip));
 
+        LOGI("before recognized size %d", 0);
         std::vector<matrix<float, 0, 1>> face_descriptors = net(faces);
-
+        LOGI("after recognized size %d", face_descriptors.size());
         if (face_descriptors.size() > 0)
         {
             matrix<float, 0, 1> face_desc = face_descriptors[0];

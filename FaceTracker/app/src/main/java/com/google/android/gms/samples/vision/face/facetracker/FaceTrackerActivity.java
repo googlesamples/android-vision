@@ -24,6 +24,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -45,6 +46,7 @@ import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 
 import java.io.IOException;
+import java.util.List;
 
 import dlib.android.FaceRecognizer;
 import xdroid.toaster.Toaster;
@@ -67,6 +69,11 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     private static final int RC_HANDLE_GMS = 9001;
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_AND_SDCARD_PERM = 7;
+
+    private int mFrontCamWidth;
+    private int mFrontCamHeight;
+    private int mBackCamWidth;
+    private int mBackCamHeight;
 
     private FaceRecognizer mFaceRecognizer;
 
@@ -131,6 +138,42 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void calcCameraFrameSize()
+    {
+//        Log.i(TAG, String.format("width %d height %d", mFrontCamWidth, mFrontCamHeight));
+        Log.i(TAG, "test");
+        int numCameras = Camera.getNumberOfCameras();
+        Log.i(TAG, String.format("%d",numCameras));
+
+        for (int i=0;i<numCameras;i++)
+        {
+            Camera.CameraInfo cameraInfo=new Camera.CameraInfo();
+            Camera.getCameraInfo(i, cameraInfo);
+            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT)
+            {
+                Camera camera= Camera.open(i);
+                Camera.Parameters cameraParams=camera.getParameters();
+                List<Camera.Size> sizes= cameraParams.getSupportedPreviewSizes();
+                Log.i(TAG, String.format("front sizes %d", sizes.size()));
+                mFrontCamWidth = sizes.get(0).width;
+                mFrontCamHeight = sizes.get(0).height;
+                Log.i(TAG, String.format("mFrontCamWidth %d", mFrontCamWidth));
+                Log.i(TAG, String.format("mFrontCamHeight %d", mFrontCamHeight));
+                camera.release();
+            } else if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                Camera camera = Camera.open(i);
+                Camera.Parameters cameraParams = camera.getParameters();
+                List<Camera.Size> sizes = cameraParams.getSupportedPreviewSizes();
+                Log.i(TAG, String.format("back sizes %d", sizes.size()));
+                mBackCamWidth = sizes.get(0).width;
+                mBackCamHeight = sizes.get(0).height;
+                Log.i(TAG, String.format("mBackCamWidth %d", mBackCamWidth));
+                Log.i(TAG, String.format("mBackCamHeight %d", mBackCamHeight));
+                camera.release();
+            }
+        }
+    }
+
 
     /**
      * Creates and starts the camera.  Note that this uses a higher resolution in comparison
@@ -183,8 +226,9 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         //.setRequestedPreviewSize(640, 480)
         //.setRequestedFps(30.0f)
         //.setFacing(CameraSource.CAMERA_FACING_BACK)
+        calcCameraFrameSize();
         mCameraSource = new CameraSource.Builder(context, customDetector)
-                .setRequestedPreviewSize(1920, 1080)
+                .setRequestedPreviewSize(mBackCamWidth, mBackCamHeight)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setAutoFocusEnabled(true)
                 .setRequestedFps(20)

@@ -22,7 +22,7 @@ extern "C"
 
 void detect(Mat &gray) {
 
-    String face_cascade_name = "/storage/emulated/0/Movies/haarcascade_frontalface_default.xml";
+    String face_cascade_name = "/sdcard/Download/haarcascade_frontalface_default.xml";
 
     CascadeClassifier face_cascade;
     std::vector<Rect> faces;

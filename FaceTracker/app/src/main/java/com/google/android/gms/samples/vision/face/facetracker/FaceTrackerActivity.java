@@ -98,7 +98,9 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         // permission is not granted yet, request permission.
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         int rs = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+
         if (rc == PackageManager.PERMISSION_GRANTED && rs == PackageManager.PERMISSION_GRANTED) {
+
             createCameraSource();
         } else {
             requestCameraAndSdCardPermission();
@@ -114,7 +116,8 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         Log.w(TAG, "Camera and sdcard permissions are not granted. Requesting permission");
 
         final String[] permissions = new String[]{Manifest.permission.CAMERA,
-        Manifest.permission.READ_EXTERNAL_STORAGE};
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
@@ -140,12 +143,9 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
     private void calcCameraFrameSize()
     {
-//        Log.i(TAG, String.format("width %d height %d", mFrontCamWidth, mFrontCamHeight));
-        Log.i(TAG, "test");
         int numCameras = Camera.getNumberOfCameras();
-        Log.i(TAG, String.format("%d",numCameras));
 
-        for (int i=0;i<numCameras;i++)
+        for (int i = 0; i < numCameras; i++)
         {
             Camera.CameraInfo cameraInfo=new Camera.CameraInfo();
             Camera.getCameraInfo(i, cameraInfo);
@@ -154,21 +154,15 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 Camera camera= Camera.open(i);
                 Camera.Parameters cameraParams=camera.getParameters();
                 List<Camera.Size> sizes= cameraParams.getSupportedPreviewSizes();
-                Log.i(TAG, String.format("front sizes %d", sizes.size()));
                 mFrontCamWidth = sizes.get(0).width;
                 mFrontCamHeight = sizes.get(0).height;
-                Log.i(TAG, String.format("mFrontCamWidth %d", mFrontCamWidth));
-                Log.i(TAG, String.format("mFrontCamHeight %d", mFrontCamHeight));
                 camera.release();
             } else if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
                 Camera camera = Camera.open(i);
                 Camera.Parameters cameraParams = camera.getParameters();
                 List<Camera.Size> sizes = cameraParams.getSupportedPreviewSizes();
-                Log.i(TAG, String.format("back sizes %d", sizes.size()));
                 mBackCamWidth = sizes.get(0).width;
                 mBackCamHeight = sizes.get(0).height;
-                Log.i(TAG, String.format("mBackCamWidth %d", mBackCamWidth));
-                Log.i(TAG, String.format("mBackCamHeight %d", mBackCamHeight));
                 camera.release();
             }
         }
@@ -223,15 +217,12 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 //            Log.w(TAG, "mPictureDetector dependencies are not yet available.");
 //        }
 
-        //.setRequestedPreviewSize(640, 480)
-        //.setRequestedFps(30.0f)
-        //.setFacing(CameraSource.CAMERA_FACING_BACK)
         calcCameraFrameSize();
         mCameraSource = new CameraSource.Builder(context, customDetector)
                 .setRequestedPreviewSize(mBackCamWidth, mBackCamHeight)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setAutoFocusEnabled(true)
-                .setRequestedFps(20)
+                .setRequestedFps(10)
                 .build();
 
 //        mBtnDetect.setOnClickListener(new View.OnClickListener() {
@@ -324,6 +315,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "Camera permission granted - initialize the camera source");
             // we have permission, so create the camerasource
+            mFaceRecognizer.loadNative();
             createCameraSource();
 
             return;

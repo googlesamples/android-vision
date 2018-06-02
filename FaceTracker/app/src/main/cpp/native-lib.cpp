@@ -72,85 +72,23 @@ float FACE_RECOGNIZE_THRESH = 0.55;
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_google_android_gms_samples_vision_face_facetracker_FaceTrackerActivity_loadResources(
-        JNIEnv *env, jobject instance)
-{
-
-    LOGI("load resource");
-    FILE *file1 = fopen("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat", "r+");
-    FILE *file2 = fopen("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat",
-                        "r+");
-    //FILE *file3 = fopen("/storage/emulated/0/Download/faces_linear.svm", "r+");
-
-    if (file1 != NULL && file2 != NULL ) {
-        fclose(file1);
-        fclose(file2);
-        //fclose(file3);
-        dlib::deserialize("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat")
-                >> sp;
-        dlib::deserialize("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat")
-                >> sp1;
-        dlib::deserialize("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat")
-                >> net;
-        dlib::deserialize("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat")
-                >> net1;
-        //dlib::deserialize("/storage/emulated/0/Download/faces_linear.svm") >> df;
-
-        DIR *d;
-        char *p1,*p2;
-        int ret;
-        struct dirent *dir;
-        d = opendir("/storage/emulated/0/Download");
-        if (d)
-        {
-            LOGI("Loading feature vectors using *.vec", p1);
-            while ((dir = readdir(d)) != NULL)
-            {
-                p1=strtok(dir->d_name,".");
-                p2=strtok(NULL,".");
-                if(p2!=NULL)
-                {
-                    ret=strcmp(p2,"vec");
-                    if(ret==0)
-                    {
-                        std::string name = std::string(p1);
-                        std::string file = name + ".vec";
-                        matrix<float, 0, 1> face_vector;
-                        dlib::deserialize("/storage/emulated/0/Download/"  + file) >> face_vector;
-                        known_faces.insert({name, face_vector});
-                    }
-                }
-
-            }
-            closedir(d);
-        }
-    } else {
-        return 1; //failed
-    }
-
-    return 0;
-}extern "C"
-JNIEXPORT jint JNICALL
 Java_dlib_android_FaceRecognizer_loadResourcesPart1(JNIEnv *env, jobject instance) {
 
     LOGI("load resource part1");
-    FILE *file1 = fopen("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat", "r+");
-    FILE *file2 = fopen("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat",
-                        "r+");
+    FILE *file1 = fopen("/sdcard/Download/shape_predictor_5_face_landmarks.dat", "r+");
+    FILE *file2 = fopen("/sdcard/Download/dlib_face_recognition_resnet_model_v1.dat", "r+");
 
     if (file1 != NULL && file2 != NULL ) {
         fclose(file1);
         fclose(file2);
-        dlib::deserialize("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat")
-                >> sp;
-        dlib::deserialize("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat")
-                >> net;
+        dlib::deserialize("/sdcard/Download/shape_predictor_5_face_landmarks.dat") >> sp;
+        dlib::deserialize("/sdcard/Download/dlib_face_recognition_resnet_model_v1.dat") >> net;
 
         DIR *d;
         char *p1,*p2;
         int ret;
         struct dirent *dir;
-        d = opendir("/storage/emulated/0/Download");
+        d = opendir("/sdcard/Download");
         if (d)
         {
             LOGI("Loading feature vectors using *.vec", p1);
@@ -166,7 +104,7 @@ Java_dlib_android_FaceRecognizer_loadResourcesPart1(JNIEnv *env, jobject instanc
                         std::string name = std::string(p1);
                         std::string file = name + ".vec";
                         matrix<float, 0, 1> face_vector;
-                        dlib::deserialize("/storage/emulated/0/Download/"  + file) >> face_vector;
+                        dlib::deserialize("/sdcard/Download/"  + file) >> face_vector;
                         known_faces.insert({name, face_vector});
                     }
                 }
@@ -175,6 +113,7 @@ Java_dlib_android_FaceRecognizer_loadResourcesPart1(JNIEnv *env, jobject instanc
             closedir(d);
         }
     } else {
+        LOGI("Failed to load resources part1");
         return -1; //failed
     }
 
@@ -185,18 +124,16 @@ JNIEXPORT jint JNICALL
 Java_dlib_android_FaceRecognizer_loadResourcesPart2(JNIEnv *env, jobject instance) {
 
     LOGI("load resource part2");
-    FILE *file1 = fopen("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat", "r+");
-    FILE *file2 = fopen("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat",
-                        "r+");
+    FILE *file1 = fopen("/sdcard/Download/shape_predictor_5_face_landmarks.dat", "r+");
+    FILE *file2 = fopen("/sdcard/Download/dlib_face_recognition_resnet_model_v1.dat", "r+");
 
     if (file1 != NULL && file2 != NULL ) {
         fclose(file1);
         fclose(file2);
-        dlib::deserialize("/storage/emulated/0/Download/shape_predictor_5_face_landmarks.dat")
-                >> sp1;
-        dlib::deserialize("/storage/emulated/0/Download/dlib_face_recognition_resnet_model_v1.dat")
-                >> net1;
+        dlib::deserialize("/sdcard/Download/shape_predictor_5_face_landmarks.dat") >> sp1;
+        dlib::deserialize("/sdcard/Download/dlib_face_recognition_resnet_model_v1.dat") >> net1;
     } else{
+        LOGI("Failed to load resources part2");
         return -1;
     }
     return 0;
@@ -234,7 +171,7 @@ Java_dlib_android_FaceRecognizer_recognizeFaces(JNIEnv *env,
 
     img.set_size(infocolor.height, infocolor.width);
 
-    LOGI("size w=%d h=%d", infocolor.width, infocolor.height);
+//    LOGI("size w=%d h=%d", infocolor.width, infocolor.height);
     for (y = 0; y < infocolor.height; y++) { //todo: performance
         argb *line = (argb *) pixelscolor;
         for (x = 0; x < infocolor.width; ++x) {
@@ -302,6 +239,7 @@ Java_dlib_android_FaceRecognizer_recognizeFace(JNIEnv *env, jobject instance, jo
     LOGI("color image :: width is %d; height is %d; stride is %d; format is %d;flags is %d",
          infocolor.width, infocolor.height, infocolor.stride, infocolor.format, infocolor.flags);
 
+    LOGI("known_faces size %d", known_faces.size());
     if (infocolor.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
         LOGE("Bitmap format is not RGBA_8888 !");
         return env->NewStringUTF("Image broken 2");
@@ -328,7 +266,7 @@ Java_dlib_android_FaceRecognizer_recognizeFace(JNIEnv *env, jobject instance, jo
     LOGI("detected size %d", dets.size());
 
     float min_dist = 0.0;
-    if(dets.size() > 0 ){
+    if(dets.size() > 0  ){
         auto face = dets.front();
         std::vector<matrix<rgb_pixel>> faces;
         int x = face.left();
@@ -337,18 +275,18 @@ Java_dlib_android_FaceRecognizer_recognizeFace(JNIEnv *env, jobject instance, jo
         int height = face.height();
 
         auto shape = sp(img, face);
-        LOGI("shape predictor");
+//        LOGI("shape predictor");
         matrix<rgb_pixel> face_chip;
         extract_image_chip(img, get_face_chip_details(shape, 150, 0.25), face_chip);
         faces.push_back(move(face_chip));
 
-        LOGI("before recognized size %d", 0);
+//        LOGI("before recognized size %d", -1);
         std::vector<matrix<float, 0, 1>> face_descriptors = net(faces);
-        LOGI("after recognized size %d", face_descriptors.size());
+//        LOGI("after recognized size %d", face_descriptors.size());
         if (face_descriptors.size() > 0)
         {
             matrix<float, 0, 1> face_desc = face_descriptors[0];
-            for (auto& i : known_faces) {
+            for (auto i : known_faces) {
                 float dist = length(face_desc -  i.second );
                 if (dist < min_dist){
                     min_dist = dist;
@@ -363,7 +301,7 @@ Java_dlib_android_FaceRecognizer_recognizeFace(JNIEnv *env, jobject instance, jo
         LOGI("not recognized, max dist %0.2f", min_dist);
     }
 
-//    LOGI("unlocking pixels");
+    LOGI("unlocking pixels");
     AndroidBitmap_unlockPixels(env, bmp);
 
     std::string returnValue = "Unknown";

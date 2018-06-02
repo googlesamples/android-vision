@@ -9,7 +9,7 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -20,7 +20,7 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
         android:theme="@style/Theme.AppCompat"
-        android:label="FaceTracker"
+        android:label="Face Recognition"
         android:largeHeap="true">
 
         <meta-data android:name="com.google.android.gms.version"
@@ -33,7 +33,7 @@
         <activity
             android:name="com.google.android.gms.samples.vision.face.facetracker.FaceTrackerActivity"
             android:icon="@drawable/icon"
-            android:label="SG"
+            android:label="Face Recognition"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:screenOrientation="fullSensor">
             <intent-filter>

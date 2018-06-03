@@ -22,6 +22,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
@@ -218,12 +219,22 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 //        }
 
         calcCameraFrameSize();
+
+        int w = mBackCamWidth;
+        int h = mBackCamHeight;
+        int orientation = context.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            w = mBackCamHeight;
+            h = mBackCamWidth;
+        }
+
         mCameraSource = new CameraSource.Builder(context, customDetector)
-                .setRequestedPreviewSize(mBackCamWidth, mBackCamHeight)
+                .setRequestedPreviewSize(w, h)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setAutoFocusEnabled(true)
                 .setRequestedFps(10)
                 .build();
+
 
 //        mBtnDetect.setOnClickListener(new View.OnClickListener() {
 //            @Override

@@ -1,0 +1,119 @@
+
+{
+	"buildFiles" : 
+	[
+		"/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni/CMakeLists.txt"
+	],
+	"cleanCommands" : 
+	[
+		"/home/irina/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/irina/FR-android-dlib-opencv/TensorflowDetection/.externalNativeBuild/cmake/release/arm64-v8a --target clean"
+	],
+	"cppFileExtensions" : [ "cc" ],
+	"libraries" : 
+	{
+		"tensorflow_detector-Release-arm64-v8a" : 
+		{
+			"abi" : "arm64-v8a",
+			"artifactName" : "tensorflow_detector",
+			"buildCommand" : "/home/irina/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/irina/FR-android-dlib-opencv/TensorflowDetection/.externalNativeBuild/cmake/release/arm64-v8a --target tensorflow_detector",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --sysroot=/home/irina/Android/Sdk/ndk-bundle/sysroot  -Dtensorflow_detector_EXPORTS -I/home/irina/tensorflow -I/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /home/irina/Android/Sdk/ndk-bundle/sysroot/usr/include/aarch64-linux-android -D__ANDROID_API__=21 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++11 -O2 -ftree-vectorize -DSTANDALONE_DEMO_LIB                     -std=c++11 -fno-exceptions -fno-rtti -O2 -Wno-narrowing                     -fPIE -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni/imageutils_jni.cc",
+					"workingDirectory" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/.externalNativeBuild/cmake/release/arm64-v8a"
+				},
+				
+				{
+					"flags" : "  --sysroot=/home/irina/Android/Sdk/ndk-bundle/sysroot  -Dtensorflow_detector_EXPORTS -I/home/irina/tensorflow -I/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /home/irina/Android/Sdk/ndk-bundle/sysroot/usr/include/aarch64-linux-android -D__ANDROID_API__=21 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++11 -O2 -ftree-vectorize -DSTANDALONE_DEMO_LIB                     -std=c++11 -fno-exceptions -fno-rtti -O2 -Wno-narrowing                     -fPIE -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni/object_tracking/frame_pair.cc",
+					"workingDirectory" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/.externalNativeBuild/cmake/release/arm64-v8a"
+				},
+				
+				{
+					"flags" : "  --sysroot=/home/irina/Android/Sdk/ndk-bundle/sysroot  -Dtensorflow_detector_EXPORTS -I/home/irina/tensorflow -I/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /home/irina/Android/Sdk/ndk-bundle/sysroot/usr/include/aarch64-linux-android -D__ANDROID_API__=21 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++11 -O2 -ftree-vectorize -DSTANDALONE_DEMO_LIB                     -std=c++11 -fno-exceptions -fno-rtti -O2 -Wno-narrowing                     -fPIE -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni/object_tracking/image_neon.cc",
+					"workingDirectory" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/.externalNativeBuild/cmake/release/arm64-v8a"
+				},
+				
+				{
+					"flags" : "  --sysroot=/home/irina/Android/Sdk/ndk-bundle/sysroot  -Dtensorflow_detector_EXPORTS -I/home/irina/tensorflow -I/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /home/irina/Android/Sdk/ndk-bundle/sysroot/usr/include/aarch64-linux-android -D__ANDROID_API__=21 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++11 -O2 -ftree-vectorize -DSTANDALONE_DEMO_LIB                     -std=c++11 -fno-exceptions -fno-rtti -O2 -Wno-narrowing                     -fPIE -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni/object_tracking/keypoint_detector.cc",
+					"workingDirectory" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/.externalNativeBuild/cmake/release/arm64-v8a"
+				},
+				
+				{
+					"flags" : "  --sysroot=/home/irina/Android/Sdk/ndk-bundle/sysroot  -Dtensorflow_detector_EXPORTS -I/home/irina/tensorflow -I/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /home/irina/Android/Sdk/ndk-bundle/sysroot/usr/include/aarch64-linux-android -D__ANDROID_API__=21 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++11 -O2 -ftree-vectorize -DSTANDALONE_DEMO_LIB                     -std=c++11 -fno-exceptions -fno-rtti -O2 -Wno-narrowing                     -fPIE -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni/object_tracking/logging.cc",
+					"workingDirectory" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/.externalNativeBuild/cmake/release/arm64-v8a"
+				},
+				
+				{
+					"flags" : "  --sysroot=/home/irina/Android/Sdk/ndk-bundle/sysroot  -Dtensorflow_detector_EXPORTS -I/home/irina/tensorflow -I/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /home/irina/Android/Sdk/ndk-bundle/sysroot/usr/include/aarch64-linux-android -D__ANDROID_API__=21 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++11 -O2 -ftree-vectorize -DSTANDALONE_DEMO_LIB                     -std=c++11 -fno-exceptions -fno-rtti -O2 -Wno-narrowing                     -fPIE -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni/object_tracking/object_detector.cc",
+					"workingDirectory" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/.externalNativeBuild/cmake/release/arm64-v8a"
+				},
+				
+				{
+					"flags" : "  --sysroot=/home/irina/Android/Sdk/ndk-bundle/sysroot  -Dtensorflow_detector_EXPORTS -I/home/irina/tensorflow -I/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /home/irina/Android/Sdk/ndk-bundle/sysroot/usr/include/aarch64-linux-android -D__ANDROID_API__=21 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++11 -O2 -ftree-vectorize -DSTANDALONE_DEMO_LIB                     -std=c++11 -fno-exceptions -fno-rtti -O2 -Wno-narrowing                     -fPIE -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni/object_tracking/object_tracker.cc",
+					"workingDirectory" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/.externalNativeBuild/cmake/release/arm64-v8a"
+				},
+				
+				{
+					"flags" : "  --sysroot=/home/irina/Android/Sdk/ndk-bundle/sysroot  -Dtensorflow_detector_EXPORTS -I/home/irina/tensorflow -I/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /home/irina/Android/Sdk/ndk-bundle/sysroot/usr/include/aarch64-linux-android -D__ANDROID_API__=21 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++11 -O2 -ftree-vectorize -DSTANDALONE_DEMO_LIB                     -std=c++11 -fno-exceptions -fno-rtti -O2 -Wno-narrowing                     -fPIE -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni/object_tracking/object_tracker_jni.cc",
+					"workingDirectory" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/.externalNativeBuild/cmake/release/arm64-v8a"
+				},
+				
+				{
+					"flags" : "  --sysroot=/home/irina/Android/Sdk/ndk-bundle/sysroot  -Dtensorflow_detector_EXPORTS -I/home/irina/tensorflow -I/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /home/irina/Android/Sdk/ndk-bundle/sysroot/usr/include/aarch64-linux-android -D__ANDROID_API__=21 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++11 -O2 -ftree-vectorize -DSTANDALONE_DEMO_LIB                     -std=c++11 -fno-exceptions -fno-rtti -O2 -Wno-narrowing                     -fPIE -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni/object_tracking/optical_flow.cc",
+					"workingDirectory" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/.externalNativeBuild/cmake/release/arm64-v8a"
+				},
+				
+				{
+					"flags" : "  --sysroot=/home/irina/Android/Sdk/ndk-bundle/sysroot  -Dtensorflow_detector_EXPORTS -I/home/irina/tensorflow -I/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /home/irina/Android/Sdk/ndk-bundle/sysroot/usr/include/aarch64-linux-android -D__ANDROID_API__=21 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++11 -O2 -ftree-vectorize -DSTANDALONE_DEMO_LIB                     -std=c++11 -fno-exceptions -fno-rtti -O2 -Wno-narrowing                     -fPIE -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni/object_tracking/time_log.cc",
+					"workingDirectory" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/.externalNativeBuild/cmake/release/arm64-v8a"
+				},
+				
+				{
+					"flags" : "  --sysroot=/home/irina/Android/Sdk/ndk-bundle/sysroot  -Dtensorflow_detector_EXPORTS -I/home/irina/tensorflow -I/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /home/irina/Android/Sdk/ndk-bundle/sysroot/usr/include/aarch64-linux-android -D__ANDROID_API__=21 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++11 -O2 -ftree-vectorize -DSTANDALONE_DEMO_LIB                     -std=c++11 -fno-exceptions -fno-rtti -O2 -Wno-narrowing                     -fPIE -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni/object_tracking/tracked_object.cc",
+					"workingDirectory" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/.externalNativeBuild/cmake/release/arm64-v8a"
+				},
+				
+				{
+					"flags" : "  --sysroot=/home/irina/Android/Sdk/ndk-bundle/sysroot  -Dtensorflow_detector_EXPORTS -I/home/irina/tensorflow -I/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /home/irina/Android/Sdk/ndk-bundle/sysroot/usr/include/aarch64-linux-android -D__ANDROID_API__=21 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++11 -O2 -ftree-vectorize -DSTANDALONE_DEMO_LIB                     -std=c++11 -fno-exceptions -fno-rtti -O2 -Wno-narrowing                     -fPIE -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni/object_tracking/utils_neon.cc",
+					"workingDirectory" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/.externalNativeBuild/cmake/release/arm64-v8a"
+				},
+				
+				{
+					"flags" : "  --sysroot=/home/irina/Android/Sdk/ndk-bundle/sysroot  -Dtensorflow_detector_EXPORTS -I/home/irina/tensorflow -I/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /home/irina/Android/Sdk/ndk-bundle/sysroot/usr/include/aarch64-linux-android -D__ANDROID_API__=21 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++11 -O2 -ftree-vectorize -DSTANDALONE_DEMO_LIB                     -std=c++11 -fno-exceptions -fno-rtti -O2 -Wno-narrowing                     -fPIE -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni/rgb2yuv.cc",
+					"workingDirectory" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/.externalNativeBuild/cmake/release/arm64-v8a"
+				},
+				
+				{
+					"flags" : "  --sysroot=/home/irina/Android/Sdk/ndk-bundle/sysroot  -Dtensorflow_detector_EXPORTS -I/home/irina/tensorflow -I/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/include -isystem /home/irina/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -isystem /home/irina/Android/Sdk/ndk-bundle/sysroot/usr/include/aarch64-linux-android -D__ANDROID_API__=21 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++11 -O2 -ftree-vectorize -DSTANDALONE_DEMO_LIB                     -std=c++11 -fno-exceptions -fno-rtti -O2 -Wno-narrowing                     -fPIE -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/jni/yuv2rgb.cc",
+					"workingDirectory" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/.externalNativeBuild/cmake/release/arm64-v8a"
+				}
+			],
+			"output" : "/home/irina/FR-android-dlib-opencv/TensorflowDetection/build/intermediates/cmake/release/obj/arm64-v8a/libtensorflow_detector.so",
+			"toolchain" : "8769055411433122400"
+		}
+	},
+	"toolchains" : 
+	{
+		"8769055411433122400" : 
+		{
+			"cCompilerExecutable" : "/home/irina/Android/Sdk/ndk-bundle/toolchains/aarch64-linux-android-4.9/prebuilt/linux-x86_64/bin/aarch64-linux-android-gcc",
+			"cppCompilerExecutable" : "/home/irina/Android/Sdk/ndk-bundle/toolchains/aarch64-linux-android-4.9/prebuilt/linux-x86_64/bin/aarch64-linux-android-g++"
+		}
+	}
+}

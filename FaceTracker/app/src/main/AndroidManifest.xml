@@ -42,6 +42,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="org.opencv.android.facetracker.OpenCvActivity"
+            android:icon="@drawable/icon"
+            android:label="Face Recognition"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="fullSensor">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

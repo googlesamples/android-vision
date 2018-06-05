@@ -21,20 +21,17 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -46,11 +43,12 @@ import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 
+import org.opencv.android.facetracker.OpenCvActivity;
+
 import java.io.IOException;
 import java.util.List;
 
 import dlib.android.FaceRecognizer;
-import xdroid.toaster.Toaster;
 
 /**
  * Activity for the face tracker app.  This app detects faces with the rear facing camera, and draws
@@ -63,7 +61,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
     private CameraSourcePreview mPreview;
     private GraphicOverlay mGraphicOverlay;
-    //private Button mBtnDetect;
+    private Button mBtnDetect;
     private CustomDetector customDetector;
     //private FaceDetector mPictureDetector;
 
@@ -92,7 +90,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
-//        mBtnDetect = (Button) findViewById(R.id.btnDetect);
+        mBtnDetect = (Button) findViewById(R.id.btnDetect);
         mFaceRecognizer = new FaceRecognizer();
 
         // Check for the camera permission before accessing the camera.  If the
@@ -101,7 +99,6 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         int rs = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
 
         if (rc == PackageManager.PERMISSION_GRANTED && rs == PackageManager.PERMISSION_GRANTED) {
-
             createCameraSource();
         } else {
             requestCameraAndSdCardPermission();
@@ -234,6 +231,14 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 .setAutoFocusEnabled(true)
                 .setRequestedFps(10)
                 .build();
+
+        mBtnDetect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(FaceTrackerActivity.this, OpenCvActivity.class);
+                FaceTrackerActivity.this.startActivity(myIntent);
+            }
+        });
 
 
 //        mBtnDetect.setOnClickListener(new View.OnClickListener() {

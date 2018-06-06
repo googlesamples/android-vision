@@ -1,0 +1,5 @@
+/home/irina/FR/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+/home/irina/FR/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/OCV-native-lib.dir
+/home/irina/FR/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/edit_cache.dir
+/home/irina/FR/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/native-lib.dir
+/home/irina/FR/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/lib_dlib.dir

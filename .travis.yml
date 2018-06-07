@@ -34,6 +34,8 @@ before_script:
   - wget https://github.com/opencv/opencv/releases/download/3.4.1/opencv-3.4.1-android-sdk.zip
   - unzip -q opencv-3.4.1-android-sdk.zip
   - export OPENCV_ANDROID_SDK=$(pwd)/OpenCV-android-sdk
+  - git clone https://github.com/tensorflow/tensorflow.git
+  - export TF_SRC_ROOT=$(pwd)/tensorflow
 
 script:
 - cd FaceTracker

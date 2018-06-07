@@ -26,6 +26,11 @@ android:
     - android-23
     - extra-android-m2repository
     - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
+    
+  licenses:
+    - android-sdk-preview-license-.+
+    - android-sdk-license-.+
+    - google-gdk-license-.+
 
 before_install:
   - echo $(ant -version)
@@ -34,6 +39,8 @@ before_script:
   - wget https://github.com/opencv/opencv/releases/download/3.4.1/opencv-3.4.1-android-sdk.zip
   - unzip -q opencv-3.4.1-android-sdk.zip
   - export OPENCV_ANDROID_SDK=$(pwd)/OpenCV-android-sdk
+  - git clone https://github.com/tensorflow/tensorflow.git
+  - export TF_SRC_ROOT=$(pwd)/tensorflow
 
 script:
 - cd FaceTracker

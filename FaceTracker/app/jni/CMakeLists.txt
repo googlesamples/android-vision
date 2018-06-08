@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-#add_subdirectory("./jni")
 project(TENSORFLOW_DETECTOR)
 cmake_minimum_required(VERSION 3.4.1)
 

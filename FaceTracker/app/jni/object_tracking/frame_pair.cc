@@ -15,8 +15,8 @@ limitations under the License.
 
 #include <float.h>
 
-#include "config.h"
-#include "frame_pair.h"
+#include "tensorflow/examples/android/jni/object_tracking/config.h"
+#include "tensorflow/examples/android/jni/object_tracking/frame_pair.h"
 
 namespace tf_tracking {
 

@@ -20,8 +20,8 @@ limitations under the License.
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "rgb2yuv.h"
-#include "yuv2rgb.h"
+#include "tensorflow/examples/android/jni/rgb2yuv.h"
+#include "tensorflow/examples/android/jni/yuv2rgb.h"
 
 #define IMAGEUTILS_METHOD(METHOD_NAME) \
   Java_tensorflow_detector_spc_env_ImageUtils_##METHOD_NAME  // NOLINT

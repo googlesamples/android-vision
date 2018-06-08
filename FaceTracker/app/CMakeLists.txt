@@ -6,16 +6,11 @@ cmake_minimum_required(VERSION 3.4.1)
 set(CMAKE_VERBOSE_MAKEFILE on)
 set (CMAKE_CXX_STANDARD 11)
 
+set(OPENCV_ANDROID_SDK /home/irina/caffe-android-lib/android_lib/opencv/sdk/native)
 
-# OpenCV stuff
-#include_directories(/home/irina/caffe-android-lib/android_lib/opencv/sdk/native/jni/include)
-#set(OpenCV_DIR "/home/irina/caffe-android-lib/android_lib/opencv/sdk/native/jni")
-#find_package(OpenCV REQUIRED)
-#include_directories(${OpenCV_INCLUDE_DIRS})
-
-include_directories(/home/irina/caffe-android-lib/android_lib/opencv/sdk/native/jni/include)
+include_directories(${OPENCV_ANDROID_SDK}/jni/include)
 add_library( lib_opencv SHARED IMPORTED )
-set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION /home/irina/caffe-android-lib/android_lib/opencv/sdk/native/libs/${ANDROID_ABI}/libopencv_java3.so)
+set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${OPENCV_ANDROID_SDK}/libs/${ANDROID_ABI}/libopencv_java3.so)
 
 find_library( # Sets the name of the path variable.
               log-lib

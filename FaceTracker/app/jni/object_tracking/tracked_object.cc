@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-#include "tracked_object.h"
+#include "tensorflow/examples/android/jni/object_tracking/tracked_object.h"
 
 namespace tf_tracking {
 

@@ -15,7 +15,7 @@ limitations under the License.
 
 // These utility functions allow for the conversion of RGB data to YUV data.
 
-#include "rgb2yuv.h"
+#include "tensorflow/examples/android/jni/rgb2yuv.h"
 
 static inline void WriteYUV(const int x, const int y, const int width,
                             const int r8, const int g8, const int b8,

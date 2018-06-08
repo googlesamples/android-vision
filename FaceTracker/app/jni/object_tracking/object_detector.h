@@ -20,8 +20,8 @@ limitations under the License.
 // Defines the ObjectDetector class that is the main interface for detecting
 // ObjectModelBases in frames.
 
-#ifndef THIRD_PARTY_TENSORFLOW_EXAMPLES_ANDROID_JNI_OBJECT_TRACKING_OBJECT_DETECTOR_H_
-#define THIRD_PARTY_TENSORFLOW_EXAMPLES_ANDROID_JNI_OBJECT_TRACKING_OBJECT_DETECTOR_H_
+#ifndef TENSORFLOW_EXAMPLES_ANDROID_JNI_OBJECT_TRACKING_OBJECT_DETECTOR_H_
+#define TENSORFLOW_EXAMPLES_ANDROID_JNI_OBJECT_TRACKING_OBJECT_DETECTOR_H_
 
 #include <float.h>
 #include <map>
@@ -30,18 +30,18 @@ limitations under the License.
 #include <string>
 #include <vector>
 
-#include "geom.h"
-#include "image-inl.h"
-#include "image.h"
-#include "integral_image.h"
+#include "tensorflow/examples/android/jni/object_tracking/geom.h"
+#include "tensorflow/examples/android/jni/object_tracking/image-inl.h"
+#include "tensorflow/examples/android/jni/object_tracking/image.h"
+#include "tensorflow/examples/android/jni/object_tracking/integral_image.h"
 #ifdef __RENDER_OPENGL__
 #include "tensorflow/examples/android/jni/object_tracking/sprite.h"
 #endif
-#include "utils.h"
+#include "tensorflow/examples/android/jni/object_tracking/utils.h"
 
-#include "config.h"
-#include "image_data.h"
-#include "object_model.h"
+#include "tensorflow/examples/android/jni/object_tracking/config.h"
+#include "tensorflow/examples/android/jni/object_tracking/image_data.h"
+#include "tensorflow/examples/android/jni/object_tracking/object_model.h"
 
 namespace tf_tracking {
 
@@ -227,4 +227,4 @@ class ObjectDetector : public ObjectDetectorBase {
 
 }  // namespace tf_tracking
 
-#endif  // THIRD_PARTY_TENSORFLOW_EXAMPLES_ANDROID_JNI_OBJECT_TRACKING_OBJECT_DETECTOR_H_
+#endif  // TENSORFLOW_EXAMPLES_ANDROID_JNI_OBJECT_TRACKING_OBJECT_DETECTOR_H_

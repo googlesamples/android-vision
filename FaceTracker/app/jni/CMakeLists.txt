@@ -18,7 +18,6 @@ cmake_minimum_required(VERSION 3.4.1)
 
 set(CMAKE_VERBOSE_MAKEFILE on)
 
-get_filename_component(TF_SRC_ROOT /home/irina/tensorflow  ABSOLUTE)
 get_filename_component(SAMPLE_SRC_DIR  ${CMAKE_SOURCE_DIR}/  ABSOLUTE)
 
 if (ANDROID_ABI MATCHES "^armeabi-v7a$")
@@ -46,7 +45,6 @@ find_library( # Sets the name of the path variable.
 add_library(tensorflow_detector SHARED
             ${tensorflow_detector_sources})
 target_include_directories(tensorflow_detector PRIVATE
-                           ${TF_SRC_ROOT}
                            ${CMAKE_SOURCE_DIR})
 
 target_link_libraries(tensorflow_detector

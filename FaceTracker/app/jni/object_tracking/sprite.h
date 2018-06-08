@@ -19,8 +19,8 @@ limitations under the License.
 #include <GLES/gl.h>
 #include <GLES/glext.h>
 
-#include "tensorflow/examples/android/jni/object_tracking/image-inl.h"
-#include "tensorflow/examples/android/jni/object_tracking/image.h"
+#include "image-inl.h"
+#include "image.h"
 
 #ifndef __RENDER_OPENGL__
 #error sprite.h should not included if OpenGL is not enabled by platform.h

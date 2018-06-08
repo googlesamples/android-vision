@@ -24,6 +24,5 @@ export OPENCV_ANDROID_SDK=/Users/hoopoe/Tools/OpenCV-android-sdk
 
 ============
 Paths needed in changes:
-1) OPENCV_ANDROID_SDK in CMakeLists.txt
-2) TF_SRC_ROOT in jni/CMakeLists.txt
+OPENCV_ANDROID_SDK in CMakeLists.txt
 

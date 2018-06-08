@@ -29,18 +29,18 @@ limitations under the License.
 
 #include <vector>
 
-#include "tensorflow/examples/android/jni/object_tracking/geom.h"
-#include "tensorflow/examples/android/jni/object_tracking/image-inl.h"
-#include "tensorflow/examples/android/jni/object_tracking/image.h"
-#include "tensorflow/examples/android/jni/object_tracking/integral_image.h"
+#include "geom.h"
+#include "image-inl.h"
+#include "image.h"
+#include "integral_image.h"
 #ifdef __RENDER_OPENGL__
-#include "tensorflow/examples/android/jni/object_tracking/sprite.h"
+#include "sprite.h"
 #endif
-#include "tensorflow/examples/android/jni/object_tracking/utils.h"
+#include "utils.h"
 
-#include "tensorflow/examples/android/jni/object_tracking/config.h"
-#include "tensorflow/examples/android/jni/object_tracking/image_data.h"
-#include "tensorflow/examples/android/jni/object_tracking/keypoint.h"
+#include "config.h"
+#include "image_data.h"
+#include "keypoint.h"
 
 namespace tf_tracking {
 

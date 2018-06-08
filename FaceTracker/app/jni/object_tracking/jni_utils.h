@@ -18,7 +18,7 @@ limitations under the License.
 
 #include <stdint.h>
 
-#include "tensorflow/examples/android/jni/object_tracking/utils.h"
+#include "utils.h"
 
 // The JniLongField class is used to access Java fields from native code. This
 // technique of hiding pointers to native objects in opaque Java fields is how

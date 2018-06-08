@@ -19,7 +19,7 @@ limitations under the License.
 #include <GLES/gl.h>
 #include <GLES/glext.h>
 
-#include "tensorflow/examples/android/jni/object_tracking/geom.h"
+#include "geom.h"
 
 namespace tf_tracking {
 

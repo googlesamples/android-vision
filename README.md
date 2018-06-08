@@ -22,7 +22,6 @@ export OPENCV_ANDROID_SDK=/Users/hoopoe/Tools/OpenCV-android-sdk
 
 3. dlib adapted to work with -DANDROID_STL=gnustl_shared
 
-============
-Paths needed in changes:
-OPENCV_ANDROID_SDK in CMakeLists.txt
+Path needed to be changed:
+1) OPENCV_ANDROID_SDK in CMakeLists.txt
 

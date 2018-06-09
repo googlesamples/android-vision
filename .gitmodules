@@ -1,4 +1,0 @@
-[submodule "dlib"]
-	path = dlib
-	url = https://github.com/hoopoe/dlib.git
-  branch = android

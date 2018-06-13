@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+def cpuType = 'arm64-v8a'
+
+// Output directory in the local directory for packaging into the APK.
+
 android {
     signingConfigs {
         config {
@@ -13,15 +17,15 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.google.android.gms.samples.vision.face.facetracker"
-        minSdkVersion 15
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         externalNativeBuild {
             cmake {
-                cppFlags "-frtti -fexceptions"
-                //abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
-                abiFilters 'armeabi-v7a'
+                cppFlags "-frtti -fexceptions -std=c++11"
+                abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+                //abiFilters "${cpuType}"
                 arguments "-DANDROID_STL=gnustl_shared"
                 //arguments "-DANDROID_STL=c++_shared"
                 // AL:  arguments "-DANDROID_STL=c++_shared", "-DBUILD_opencv_apps:BOOL=ON", "-DBUILD_SHARED_LIBS:BOOL=ON"
@@ -84,4 +88,5 @@ dependencies {
     implementation 'com.android.support:design:23.4.0'
     implementation 'com.google.android.gms:play-services-vision:9.4.0+'
     implementation 'com.shamanland:xdroid-toaster:0.2.4'
+    implementation 'org.tensorflow:tensorflow-android:+'
 }

@@ -1,4 +1,4 @@
 [submodule "dlib"]
 	path = dlib
-	url = https://github.com/hoopoe/dlib.git
-  branch = android
+	url = git://github.com/hoopoe/dlib.git
+        branch = android

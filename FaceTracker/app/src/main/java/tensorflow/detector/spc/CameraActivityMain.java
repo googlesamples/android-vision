@@ -72,10 +72,10 @@ import org.opencv.android.facetracker.OpenCvActivity;
 public class CameraActivityMain extends Activity
     implements OnImageAvailableListener, Camera.PreviewCallback {
 
-  private static final int TF_OD_API_INPUT_SIZE = 300;
+  private static final int TF_OD_API_INPUT_SIZE = 416;
   // Tensorflow Object Detection API frozen checkpoints
   private static final String TF_OD_API_MODEL_FILE =
-          "file:///android_asset/spc_mobilenet_v3_1x_0.52_cleaned.pb";
+          "file:///android_asset/spc_detector_v1.1_150_prop_cleaned.pb";
   private static final String TF_OD_API_LABELS_FILE = "file:///android_asset/spc_labels.txt";
 
 

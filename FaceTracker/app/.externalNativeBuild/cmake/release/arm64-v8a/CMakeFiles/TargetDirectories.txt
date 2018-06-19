@@ -1,0 +1,8 @@
+/home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/release/arm64-v8a/CMakeFiles/rebuild_cache.dir
+/home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/release/arm64-v8a/CMakeFiles/OCV-native-lib.dir
+/home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/release/arm64-v8a/CMakeFiles/edit_cache.dir
+/home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/release/arm64-v8a/CMakeFiles/native-lib.dir
+/home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/release/arm64-v8a/CMakeFiles/lib_dlib.dir
+/home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/release/arm64-v8a/jni/CMakeFiles/edit_cache.dir
+/home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/release/arm64-v8a/jni/CMakeFiles/rebuild_cache.dir
+/home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/release/arm64-v8a/jni/CMakeFiles/tensorflow_detector.dir

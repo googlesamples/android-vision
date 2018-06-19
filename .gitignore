@@ -5,3 +5,5 @@ build/
 local.properties
 .DS_Store
 captures/
+*.a
+*.so

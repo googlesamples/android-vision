@@ -1,0 +1,40 @@
+{
+  "buildFiles": [
+    "/home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/CMakeLists.txt",
+    "/home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/jni/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/home/alorusso/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/release/arm64-v8a --target clean"
+  ],
+  "libraries": {
+    "OCV-native-lib-Release-arm64-v8a": {
+      "artifactName": "OCV-native-lib",
+      "buildCommand": "/home/alorusso/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/release/arm64-v8a --target OCV-native-lib",
+      "abi": "arm64-v8a",
+      "output": "/home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/build/intermediates/cmake/release/obj/arm64-v8a/libOCV-native-lib.so"
+    },
+    "lib_dlib-Release-arm64-v8a": {
+      "artifactName": "lib_dlib",
+      "buildCommand": "/home/alorusso/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/release/arm64-v8a --target lib_dlib",
+      "abi": "arm64-v8a",
+      "output": "/home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/build/intermediates/cmake/release/obj/arm64-v8a/liblib_dlib.so"
+    },
+    "native-lib-Release-arm64-v8a": {
+      "artifactName": "native-lib",
+      "buildCommand": "/home/alorusso/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/release/arm64-v8a --target native-lib",
+      "abi": "arm64-v8a",
+      "output": "/home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/build/intermediates/cmake/release/obj/arm64-v8a/libnative-lib.so"
+    },
+    "lib_opencv-Release-arm64-v8a": {
+      "artifactName": "lib_opencv",
+      "abi": "arm64-v8a",
+      "output": "/home/alorusso/Downloads/OpenCV-android-sdk/sdk/native/libs/arm64-v8a/libopencv_java3.so"
+    },
+    "tensorflow_detector-Release-arm64-v8a": {
+      "artifactName": "tensorflow_detector",
+      "buildCommand": "/home/alorusso/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/.externalNativeBuild/cmake/release/arm64-v8a --target tensorflow_detector",
+      "abi": "arm64-v8a",
+      "output": "/home/alorusso/workspace/SmartGlasses/Development/ANDROID/FR-android-dlib-opencv/FaceTracker/app/build/intermediates/cmake/release/obj/arm64-v8a/libtensorflow_detector.so"
+    }
+  }
+}

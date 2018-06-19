@@ -14,7 +14,7 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.google.android.gms.samples.vision.face.facetracker"
-        minSdkVersion 21
+        minSdkVersion 15 // AL 21 ==> 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -24,9 +24,15 @@ android {
                 abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
                 arguments "-DANDROID_STL=gnustl_shared"
             }
-        }    
+        }
         signingConfig signingConfigs.config
+
+
+        // Specifies the application ID for the test APK.
+        testApplicationId "org.opencv.android.facetracker"
+        // Specifies the fully-qualified class name of the test instrumentation runner.
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
 
 //    sourceSets { // AL: added
@@ -62,6 +68,17 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    sourceSets {main {jniLibs.srcDirs=['src/main/jni', 'src/main/jniLibs/'] }
+                androidTest {  // AL (
+                    java.srcDir file('src/androidTest/java')
+                    resources.srcDir file('src/androidTest/assets')
+                } // AL )
+}
+
+    configurations.all {
+        resolutionStrategy.force 'com.android.support:support-annotations:23.4.0'
+    }
 }
 
 dependencies {
@@ -78,4 +95,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-vision:9.4.0+'
     implementation 'com.shamanland:xdroid-toaster:0.2.4'
     implementation 'org.tensorflow:tensorflow-android:+'
+    implementation project(':openCVLibrary330')
 }

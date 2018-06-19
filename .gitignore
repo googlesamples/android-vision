@@ -7,4 +7,4 @@ local.properties
 captures/
 *.a
 *.so
-/FaceTracker/app/.externalNativeBuild/
+FaceTracker/app/.externalNativeBuild/

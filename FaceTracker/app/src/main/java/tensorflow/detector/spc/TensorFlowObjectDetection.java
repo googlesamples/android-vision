@@ -41,7 +41,7 @@ public class TensorFlowObjectDetection {
   private static final Logger LOGGER = new Logger();
 
   // Only return this many results.
-  private static final int MAX_RESULTS = 300;
+  private static final int MAX_RESULTS = 500;
 
   // Config values.
   private String inputName;

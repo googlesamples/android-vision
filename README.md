@@ -22,6 +22,19 @@ export OPENCV_ANDROID_SDK=/Users/hoopoe/Tools/OpenCV-android-sdk
 
 3. dlib adapted to work with -DANDROID_STL=gnustl_shared
 
-Path needed to be changed:
-1) OPENCV_ANDROID_SDK in CMakeLists.txt
+
+4. To enable Mobilenet/TF activity. You need to:
+
+  Copy some model from 
+  https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet_v1.md
+  
+  Change some values manually 
+
+  private static final int MAX_RESULTS = 500;
+
+  private static final int TF_OD_API_INPUT_SIZE = 416;
+  
+  private static final String TF_OD_API_MODEL_FILE ="file:///android_asset/spc_mobilenet_v3_1x_0.52_cleaned.pb"
+
+5. OpenCV disabled for now
 

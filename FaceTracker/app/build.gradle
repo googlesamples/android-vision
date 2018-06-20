@@ -14,7 +14,7 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.google.android.gms.samples.vision.face.facetracker"
-        minSdkVersion 15 // AL 21 ==> 15
+        minSdkVersion 21 // AL 21 ==> 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"

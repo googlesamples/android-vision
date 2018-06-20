@@ -8,3 +8,4 @@ captures/
 *.a
 *.so
 FaceTracker/app/.externalNativeBuild/
+*.pb

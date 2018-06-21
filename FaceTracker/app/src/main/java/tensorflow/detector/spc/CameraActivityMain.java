@@ -44,6 +44,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
 import android.os.Trace;
+import android.util.DisplayMetrics;
 import android.util.Size;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -83,7 +84,7 @@ public class CameraActivityMain extends Activity
   // Minimum detection confidence to track a detection.
   private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
 
-  private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 480);
+  private static Size DESIRED_PREVIEW_SIZE;
 
   private static final boolean SAVE_PREVIEW_BITMAP = false;
   private static final float TEXT_SIZE_DIP = 10;
@@ -138,6 +139,11 @@ public class CameraActivityMain extends Activity
   protected void onCreate(final Bundle savedInstanceState) {
     LOGGER.d("onCreate " + this);
     super.onCreate(null);
+    
+    DisplayMetrics metrics = new DisplayMetrics();
+    getWindowManager().getDefaultDisplay().getMetrics(metrics);
+    DESIRED_PREVIEW_SIZE = new Size(metrics.widthPixels, metrics.heightPixels);
+    
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     setContentView(R.layout.activity_camera);

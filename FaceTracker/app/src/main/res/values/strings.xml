@@ -4,7 +4,7 @@
     <string name="permission_camera_and_sdcard_rationale">Access to the camera and read sdcard is needed for detection</string>
     <string name="no_camera_sdcard_permission">This application cannot run because it does not have the camera or sdcard permissions.  The application will now exit.</string>
     <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
-    <string name="app_name">SPCDetecor</string>
+    <string name="app_name">SPCDetector</string>
     <string name="description_info">Info</string>
     <string name="request_permission">This app needs camera permission.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>

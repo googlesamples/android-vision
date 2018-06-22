@@ -3,7 +3,6 @@ package org.opencv.android.facetracker;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.text.TextUtils;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
@@ -14,8 +13,6 @@ import java.io.InputStream;
 import android.support.test.InstrumentationRegistry;
 import org.junit.Test;
 
-
-import static junit.framework.Assert.assertEquals;
 
 /**
  * Created by alorusso on 07/06/18.

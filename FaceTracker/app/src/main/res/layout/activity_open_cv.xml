@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/OCVtopLayout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    tools:context="org.opencv.android.facetracker.OpenCvActivity">
+
+    <org.opencv.android.JavaCameraView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/main_surface" />
+
+    <Button
+        android:id="@+id/OCVbtnSwitch"
+        android:layout_width="wrap_content"       
+        android:layout_height="350dp"
+        android:layout_alignParentBottom="true"        
+        android:text="Switch Activity" />
+
+</RelativeLayout>
+
+
+
+
+

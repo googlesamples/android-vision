@@ -15,6 +15,9 @@
  */
 package com.google.android.gms.samples.vision.barcodereader;
 
+import android.content.Context;
+import android.support.annotation.UiThread;
+
 import com.google.android.gms.samples.vision.barcodereader.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Tracker;
@@ -26,13 +29,30 @@ import com.google.android.gms.vision.barcode.Barcode;
  * to an overlay, update the graphics as the item changes, and remove the graphics when the item
  * goes away.
  */
-class BarcodeGraphicTracker extends Tracker<Barcode> {
+public class BarcodeGraphicTracker extends Tracker<Barcode> {
     private GraphicOverlay<BarcodeGraphic> mOverlay;
     private BarcodeGraphic mGraphic;
 
-    BarcodeGraphicTracker(GraphicOverlay<BarcodeGraphic> overlay, BarcodeGraphic graphic) {
-        mOverlay = overlay;
-        mGraphic = graphic;
+    private BarcodeUpdateListener mBarcodeUpdateListener;
+
+    /**
+     * Consume the item instance detected from an Activity or Fragment level by implementing the
+     * BarcodeUpdateListener interface method onBarcodeDetected.
+     */
+    public interface BarcodeUpdateListener {
+        @UiThread
+        void onBarcodeDetected(Barcode barcode);
+    }
+
+    BarcodeGraphicTracker(GraphicOverlay<BarcodeGraphic> mOverlay, BarcodeGraphic mGraphic,
+                          Context context) {
+        this.mOverlay = mOverlay;
+        this.mGraphic = mGraphic;
+        if (context instanceof BarcodeUpdateListener) {
+            this.mBarcodeUpdateListener = (BarcodeUpdateListener) context;
+        } else {
+            throw new RuntimeException("Hosting activity must implement BarcodeUpdateListener");
+        }
     }
 
     /**
@@ -41,6 +61,7 @@ class BarcodeGraphicTracker extends Tracker<Barcode> {
     @Override
     public void onNewItem(int id, Barcode item) {
         mGraphic.setId(id);
+        mBarcodeUpdateListener.onBarcodeDetected(item);
     }
 
     /**

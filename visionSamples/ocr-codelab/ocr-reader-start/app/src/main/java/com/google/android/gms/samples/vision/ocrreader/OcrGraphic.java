@@ -18,13 +18,9 @@ package com.google.android.gms.samples.vision.ocrreader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
-import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
-
-import java.util.List;
 
 /**
  * Graphic instance for rendering TextBlock position, size, and ID within an associated graphic
@@ -32,45 +28,45 @@ import java.util.List;
  */
 public class OcrGraphic extends GraphicOverlay.Graphic {
 
-    private int mId;
+    private int id;
 
     private static final int TEXT_COLOR = Color.WHITE;
 
-    private static Paint sRectPaint;
-    private static Paint sTextPaint;
-    private final TextBlock mText;
+    private static Paint rectPaint;
+    private static Paint textPaint;
+    private final TextBlock text;
 
     OcrGraphic(GraphicOverlay overlay, TextBlock text) {
         super(overlay);
 
-        mText = text;
+        this.text = text;
 
-        if (sRectPaint == null) {
-            sRectPaint = new Paint();
-            sRectPaint.setColor(TEXT_COLOR);
-            sRectPaint.setStyle(Paint.Style.STROKE);
-            sRectPaint.setStrokeWidth(4.0f);
+        if (rectPaint == null) {
+            rectPaint = new Paint();
+            rectPaint.setColor(TEXT_COLOR);
+            rectPaint.setStyle(Paint.Style.STROKE);
+            rectPaint.setStrokeWidth(4.0f);
         }
 
-        if (sTextPaint == null) {
-            sTextPaint = new Paint();
-            sTextPaint.setColor(TEXT_COLOR);
-            sTextPaint.setTextSize(54.0f);
+        if (textPaint == null) {
+            textPaint = new Paint();
+            textPaint.setColor(TEXT_COLOR);
+            textPaint.setTextSize(54.0f);
         }
         // Redraw the overlay, as this graphic has been added.
         postInvalidate();
     }
 
     public int getId() {
-        return mId;
+        return id;
     }
 
     public void setId(int id) {
-        this.mId = id;
+        this.id = id;
     }
 
     public TextBlock getTextBlock() {
-        return mText;
+        return text;
     }
 
     /**

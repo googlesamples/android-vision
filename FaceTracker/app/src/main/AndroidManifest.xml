@@ -33,16 +33,32 @@
             android:value="face" />
 
         <activity
-            android:name="tensorflow.detector.spc.CameraActivityMain"
+            android:name="tensorflow.detector.spc.CameraActivityALPRMain"
             android:icon="@drawable/icon"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme">
+            android:label="@string/app_alpr_name"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="tensorflow.detector.spc.CameraActivityMain"
+            android:icon="@drawable/icon"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
         <activity
             android:name="com.google.android.gms.samples.vision.face.facetracker.FaceTrackerActivity"
             android:icon="@drawable/icon"

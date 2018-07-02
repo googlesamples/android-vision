@@ -44,6 +44,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
 import android.os.Trace;
+import android.util.DisplayMetrics;
 import android.util.Size;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -75,7 +76,7 @@ public class CameraActivityMain extends Activity
   private static final int TF_OD_API_INPUT_SIZE = 300;
   // Tensorflow Object Detection API frozen checkpoints
   private static final String TF_OD_API_MODEL_FILE =
-          "/sdcard/Download/spc_mobilenet_v3_1x_0.52_cleaned.pb";
+          "file:///android_asset/spc_mobilenet_v3_1x_0.52_cleaned.pb";
   private static final String TF_OD_API_LABELS_FILE = "file:///android_asset/spc_labels.txt";
 
 
@@ -83,7 +84,7 @@ public class CameraActivityMain extends Activity
   // Minimum detection confidence to track a detection.
   private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
 
-  private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 480);
+  private static Size DESIRED_PREVIEW_SIZE;
 
   private static final boolean SAVE_PREVIEW_BITMAP = false;
   private static final float TEXT_SIZE_DIP = 10;
@@ -93,6 +94,9 @@ public class CameraActivityMain extends Activity
   private TensorFlowObjectDetection detector;
 
   private long lastProcessingTimeMs;
+  private long allProcessingTimeMs=0;
+  private long countOfRuns = 0;
+
   private Bitmap rgbFrameBitmap = null;
   private Bitmap croppedBitmap = null;
   private Bitmap cropCopyBitmap = null;
@@ -138,6 +142,11 @@ public class CameraActivityMain extends Activity
   protected void onCreate(final Bundle savedInstanceState) {
     LOGGER.d("onCreate " + this);
     super.onCreate(null);
+
+    DisplayMetrics metrics = new DisplayMetrics();
+    getWindowManager().getDefaultDisplay().getMetrics(metrics);
+    DESIRED_PREVIEW_SIZE = new Size(metrics.widthPixels, metrics.heightPixels);
+
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     setContentView(R.layout.activity_camera);
@@ -606,12 +615,19 @@ public class CameraActivityMain extends Activity
               }
             }
             lines.add("");
-
-            lines.add("Frame: " + previewWidth + "x" + previewHeight);
-            lines.add("Crop: " + copy.getWidth() + "x" + copy.getHeight());
-            lines.add("View: " + canvas.getWidth() + "x" + canvas.getHeight());
-            lines.add("Rotation: " + sensorOrientation);
-            lines.add("Inference time: " + lastProcessingTimeMs + "ms");
+            //if(countOfRuns < 500) {
+              lines.add("Frame: " + previewWidth + "x" + previewHeight);
+              lines.add("Crop: " + copy.getWidth() + "x" + copy.getHeight());
+              lines.add("View: " + canvas.getWidth() + "x" + canvas.getHeight());
+              lines.add("Rotation: " + sensorOrientation);
+              lines.add("Inference time: " + lastProcessingTimeMs + "ms");
+              //lines.add("Num of runs: " + countOfRuns);
+              //lines.add("Mean inference time: " + allProcessingTimeMs / countOfRuns + "ms");
+            /*}
+            else{
+              lines.add("Num of runs: " + countOfRuns);
+              lines.add("Mean inference time: " + allProcessingTimeMs / countOfRuns + "ms");
+            }*/
 
             borderedText.drawLines(canvas, 10, canvas.getHeight() - 10, lines);
               }
@@ -664,7 +680,10 @@ public class CameraActivityMain extends Activity
                 final long startTime = SystemClock.uptimeMillis();
                 final List<Recognition> results = detector.recognizeImage(croppedBitmap);
                 lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
-
+                /*if(countOfRuns < 500) {
+                  countOfRuns += 1;
+                  allProcessingTimeMs += lastProcessingTimeMs;
+                }*/
                 cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
                 final Canvas canvas = new Canvas(cropCopyBitmap);
                 final Paint paint = new Paint();

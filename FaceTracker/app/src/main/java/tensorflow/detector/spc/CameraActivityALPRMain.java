@@ -74,8 +74,6 @@ public class CameraActivityALPRMain extends Activity {
           startActivityForResult(i, REQUEST_IMAGE);
       }
     });
-
-
     resultTextView = (TextView) findViewById(R.id.textView);
 
     if (!PreferenceManager.getDefaultSharedPreferences(
@@ -99,7 +97,7 @@ public class CameraActivityALPRMain extends Activity {
       String openAlprRuntimeDataDir = ANDROID_DATA_DIR + File.separatorChar +
               RUNTIME_DATA_DIR_ASSET;
 
-      alprDetector = OpenALPRDetector.create(openAlprRuntimeDataDir, openAlprConfFile);
+      alprDetector = OpenALPRDetector.create(openAlprRuntimeDataDir, openAlprConfFile, "eu");
     }catch(final Exception e){
       LOGGER.e("Exception initializing alpr detector!", e);
     }

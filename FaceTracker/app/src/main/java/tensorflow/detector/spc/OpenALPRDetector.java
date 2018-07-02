@@ -56,14 +56,11 @@ public class OpenALPRDetector {
   private String resultLine = "";
 
 
-  public static OpenALPRDetector create(String runtimeDataDir, String openAlprConfFile) throws IOException {
+  public static OpenALPRDetector create(String runtimeDataDir, String openAlprConfFile, String country) throws IOException {
     final OpenALPRDetector d = new OpenALPRDetector();
-    d.alpr = new Alpr("eu", openAlprConfFile, runtimeDataDir);
+    d.alpr = new Alpr(country, openAlprConfFile, runtimeDataDir);
     d.alpr.setTopN(1);
     d.alpr.setDefaultRegion("");
-    LOGGER.d("=============================Is LOADED" + d.alpr.isLoaded());
-    LOGGER.d("OpenALPR Version: " + d.alpr.getVersion());
-
     return d;
   }
 
@@ -78,14 +75,10 @@ public class OpenALPRDetector {
 
     byteValues = getBytesFromBitmap(bitmap);
     try {
-      LOGGER.d("=========================Start");
-      LOGGER.d("OpenALPR Version: " + alpr.getVersion());
       AlprResults results = alpr.recognize(byteValues);
-      LOGGER.d("=========================Finish");
-      LOGGER.d("OpenALPR Version: " + alpr.getVersion());
 
-      resultLine = "OpenALPR Version: " + alpr.getVersion() +
-              " Processing Time: " + results.getTotalProcessingTimeMs() + " ms";
+      /*resultLine = "OpenALPR Version: " + alpr.getVersion() +
+              " Processing Time: " + results.getTotalProcessingTimeMs() + " ms";*/
 
       LOGGER.d("OpenALPR Version: " + alpr.getVersion());
       LOGGER.d("Image Size: " + results.getImgWidth() + "x" + results.getImgHeight());
@@ -96,8 +89,8 @@ public class OpenALPRDetector {
       LOGGER.d("  %-15s%-8s\n", "Plate Number", "Confidence");
       int i = 0;
       List<AlprRegionOfInterest> rois = results.getRegionsOfInterest();
-      if(results.getPlates().size() == 0)
-        resultLine = resultLine + " Nothing was found.";
+      /*if(results.getPlates().size() == 0)
+        resultLine = resultLine + " Nothing was found.";*/
       for (AlprPlateResult result : results.getPlates())
         {
             AlprPlate bestPlate = result.getBestPlate();
@@ -115,17 +108,21 @@ public class OpenALPRDetector {
             Recognition recognition = new Recognition("" + i, bestPlate.getCharacters(), bestPlate.getOverallConfidence(), detection);
             recognitions.add(recognition);
             LOGGER.d("%-15s%-2f\n", bestPlate.getCharacters(), bestPlate.getOverallConfidence());
-            resultLine = resultLine + " Found : " + bestPlate.getCharacters();
+            //resultLine = resultLine + " Found : " + bestPlate.getCharacters();
             LOGGER.d("Roi: %d, %d, %d, %d\n", rois.get(i).getX(), rois.get(i).getY(), rois.get(i).getWidth(), rois.get(i).getHeight());
             i += 1;
         }
     }catch (final Exception e) {
       LOGGER.e(e, "Exception!");
-      resultLine = resultLine + " Error in detecting and recognizing a plate.";
+      //resultLine = resultLine + " Error in detecting and recognizing a plate.";
       return recognitions;
     }
 
     return recognitions;
+  }
+
+  public String getVersion(){
+    return alpr.getVersion();
   }
 
   public byte[] getBytesFromBitmap(Bitmap bitmap) {
@@ -144,10 +141,6 @@ public class OpenALPRDetector {
 
   public void enableStatLogging(final boolean logStats) {
     this.logStats = logStats;
-  }
-
-  public String getStatString() {
-    return "";
   }
 
 }

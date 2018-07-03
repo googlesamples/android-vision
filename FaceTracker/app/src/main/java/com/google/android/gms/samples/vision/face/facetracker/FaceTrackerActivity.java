@@ -49,7 +49,8 @@ import java.io.IOException;
 import java.util.List;
 
 import dlib.android.FaceRecognizer;
-import tensorflow.detector.spc.CameraActivityMain;
+import tensorflow.detector.spc.CameraActivityMainALPReu;
+import tensorflow.detector.spc.CameraActivityMainSPC;
 
 /**
  * Activity for the face tracker app.  This app detects faces with the rear facing camera, and draws
@@ -236,7 +237,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         mBtnDetect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(FaceTrackerActivity.this, CameraActivityMain.class);
+                Intent myIntent = new Intent(FaceTrackerActivity.this, CameraActivityMainALPReu.class);
                 FaceTrackerActivity.this.startActivity(myIntent);
             }
         });

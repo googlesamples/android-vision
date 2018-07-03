@@ -70,13 +70,12 @@ import com.google.android.gms.samples.vision.face.facetracker.R;
 
 import org.opencv.android.facetracker.OpenCvActivity;
 
-public class CameraActivityMain extends Activity
+public class CameraActivityMainSPC extends Activity
     implements OnImageAvailableListener, Camera.PreviewCallback {
 
   private static final int TF_OD_API_INPUT_SIZE = 300;
   // Tensorflow Object Detection API frozen checkpoints
-  private static final String TF_OD_API_MODEL_FILE =
-          "file:///android_asset/spc_mobilenet_v3_1x_0.52_cleaned.pb";
+  private static final String TF_OD_API_MODEL_FILE = "file:///android_asset/spc_mobilenet_v3_1x_0.52_cleaned.pb";
   private static final String TF_OD_API_LABELS_FILE = "file:///android_asset/spc_labels.txt";
 
 
@@ -94,6 +93,9 @@ public class CameraActivityMain extends Activity
   private TensorFlowObjectDetection detector;
 
   private long lastProcessingTimeMs;
+  private long allProcessingTimeMs=0;
+  private long countOfRuns = 0;
+
   private Bitmap rgbFrameBitmap = null;
   private Bitmap croppedBitmap = null;
   private Bitmap cropCopyBitmap = null;
@@ -139,11 +141,11 @@ public class CameraActivityMain extends Activity
   protected void onCreate(final Bundle savedInstanceState) {
     LOGGER.d("onCreate " + this);
     super.onCreate(null);
-    
+
     DisplayMetrics metrics = new DisplayMetrics();
     getWindowManager().getDefaultDisplay().getMetrics(metrics);
     DESIRED_PREVIEW_SIZE = new Size(metrics.widthPixels, metrics.heightPixels);
-    
+
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     setContentView(R.layout.activity_camera);
@@ -368,7 +370,7 @@ public class CameraActivityMain extends Activity
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (shouldShowRequestPermissionRationale(PERMISSION_CAMERA) ||
           shouldShowRequestPermissionRationale(PERMISSION_STORAGE)) {
-        Toast.makeText(CameraActivityMain.this,
+        Toast.makeText(CameraActivityMainSPC.this,
             "Camera AND storage permission are required for this app", Toast.LENGTH_LONG).show();
       }
       requestPermissions(new String[] {PERMISSION_CAMERA, PERMISSION_STORAGE}, PERMISSIONS_REQUEST);
@@ -433,7 +435,7 @@ public class CameraActivityMain extends Activity
                 public void onPreviewSizeChosen(final Size size, final int rotation) {
                   previewHeight = size.getHeight();
                   previewWidth = size.getWidth();
-                  CameraActivityMain.this.onPreviewSizeChosen(size, rotation);
+                  CameraActivityMainSPC.this.onPreviewSizeChosen(size, rotation);
                 }
               },
               this,
@@ -457,8 +459,8 @@ public class CameraActivityMain extends Activity
     mBtnSwitch.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Intent myIntent = new Intent(CameraActivityMain.this, FaceTrackerActivity.class);
-        CameraActivityMain.this.startActivity(myIntent);
+        Intent myIntent = new Intent(CameraActivityMainSPC.this, FaceTrackerActivity.class);
+        CameraActivityMainSPC.this.startActivity(myIntent);
       }
     });
   }
@@ -612,12 +614,19 @@ public class CameraActivityMain extends Activity
               }
             }
             lines.add("");
-
-            lines.add("Frame: " + previewWidth + "x" + previewHeight);
-            lines.add("Crop: " + copy.getWidth() + "x" + copy.getHeight());
-            lines.add("View: " + canvas.getWidth() + "x" + canvas.getHeight());
-            lines.add("Rotation: " + sensorOrientation);
-            lines.add("Inference time: " + lastProcessingTimeMs + "ms");
+            //if(countOfRuns < 500) {
+              lines.add("Frame: " + previewWidth + "x" + previewHeight);
+              lines.add("Crop: " + copy.getWidth() + "x" + copy.getHeight());
+              lines.add("View: " + canvas.getWidth() + "x" + canvas.getHeight());
+              lines.add("Rotation: " + sensorOrientation);
+              lines.add("Inference time: " + lastProcessingTimeMs + "ms");
+              //lines.add("Num of runs: " + countOfRuns);
+              //lines.add("Mean inference time: " + allProcessingTimeMs / countOfRuns + "ms");
+            /*}
+            else{
+              lines.add("Num of runs: " + countOfRuns);
+              lines.add("Mean inference time: " + allProcessingTimeMs / countOfRuns + "ms");
+            }*/
 
             borderedText.drawLines(canvas, 10, canvas.getHeight() - 10, lines);
               }
@@ -670,7 +679,10 @@ public class CameraActivityMain extends Activity
                 final long startTime = SystemClock.uptimeMillis();
                 final List<Recognition> results = detector.recognizeImage(croppedBitmap);
                 lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
-
+                /*if(countOfRuns < 500) {
+                  countOfRuns += 1;
+                  allProcessingTimeMs += lastProcessingTimeMs;
+                }*/
                 cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
                 final Canvas canvas = new Canvas(cropCopyBitmap);
                 final Paint paint = new Paint();

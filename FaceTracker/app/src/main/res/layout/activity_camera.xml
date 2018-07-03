@@ -22,13 +22,13 @@
 
     <Button
         android:id="@+id/btnSwitch"
-        android:layout_width="150dp"
+        android:layout_width="wrap_content"
         android:background="@android:color/black"
         android:textColor="@android:color/white"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="Switch Activity" />
+        android:drawableRight="@drawable/face_detection" />
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"

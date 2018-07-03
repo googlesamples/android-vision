@@ -14,42 +14,78 @@
 using namespace std;
 using namespace cv;
 
-#define AppTag "OCV-FD::Activity"
+
+#define  LOG_TAG    "OCV-Native"
+#define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+#define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
+
+
 
 extern "C"
 {
 
+/*
+inline void vector_Rect_to_Mat(vector<Rect>& v_rect, Mat& mat)
+{
+    mat = Mat(v_rect, true);
+}
+*/
 
-void detect(Mat &gray) {
+inline void vector_Rect_to_Mat(std::vector<Rect>& v_rect, Mat& mat)
+{
+    mat = Mat(v_rect, true);
+}
 
+
+CascadeClassifier face_cascade;
+
+vector<Rect> detect(Mat &gray) {
+
+    std::vector<Rect> faces = {};
+    face_cascade.detectMultiScale(gray, faces, 1.1, 3, 0, Size(20, 20), Size(1000, 1000));
+
+    /*
+    for (size_t i = 0; i < faces.size(); i++) {
+        rectangle(gray, faces[i], cv::Scalar(255, 255, 255), 2, 8, 0);
+    }
+    */
+    return faces;
+}
+
+
+
+JNIEXPORT void JNICALL
+Java_org_opencv_android_facetracker_HaarDetector_loadResources(
+        JNIEnv *env, jobject instance)
+{
     String face_cascade_name = "/sdcard/Download/haarcascade_frontalface_default.xml";
 
-    CascadeClassifier face_cascade;
-    std::vector<Rect> faces;
-
-    if( !face_cascade.load( face_cascade_name ) ){
-        printf("--(!)Error loading\n");
-        __android_log_print(ANDROID_LOG_DEBUG, AppTag, "Resources NOT found: exiting");
+    if (!face_cascade.load(face_cascade_name)) {
+        LOGE("OCV resources NOT loaded");
         return;
-    }
-
-    face_cascade.detectMultiScale(gray,faces,1.1,3,0,Size(20,20),Size(1000,1000));
-
-    for(size_t i=0; i<faces.size(); i++)
-    {
-        rectangle(gray,faces[i],cv::Scalar(255, 255, 255), 2, 8, 0);
+    } else {
+        LOGI("OCV resources loaded");
     }
 }
 
 
-void JNICALL
-Java_ch_hepia_iti_opencvnativeandroidstudio_MainActivity_imgProcess(JNIEnv *env, jclass,
-                                                                    jlong inputAddrMat,
-                                                                    jlong imageAddrGray) {
-    Mat &mRgb = *(Mat *)inputAddrMat;
-    Mat &mGray = *(Mat *)imageAddrGray;
+JNIEXPORT void JNICALL
+Java_org_opencv_android_facetracker_HaarDetector_OpenCVdetector(JNIEnv *env, jclass instance,
+                                                                jlong inputAddrMat, jlong matRects) {
 
-    detect (mGray);
+    vector<Rect> faces;
+
+
+    Mat &origImg = *((Mat *)inputAddrMat);
+    Mat mGray;
+    cv::cvtColor(origImg, mGray, CV_BGR2GRAY);
+
+    faces = detect (mGray);
+    //faces = detect(origImg);
+
+    vector_Rect_to_Mat(faces, *((Mat*)matRects));
+}
 }
 
-}
+// inline void Mat_to_vector_Rect (Mat &mat, vector <Rect> &v_rect);
+// ((Mat*)matRect) = Mat(faces, true);

@@ -7,16 +7,24 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.android.CameraBridgeViewBase;
 
+import android.app.Activity;
+import android.content.Context;
+import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.content.Intent;
+import android.view.Display;
+import android.view.Surface;
+import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.samples.vision.face.facetracker.R;
+import com.google.android.gms.samples.vision.face.facetracker.FaceTrackerActivity;
 
 
 
@@ -26,8 +34,11 @@ public class OpenCvActivity extends AppCompatActivity implements CameraBridgeVie
     private Mat mRgba;
     private CameraBridgeViewBase mOpenCvCameraView;
     private RelativeLayout mRelativeLayout;
+    private Camera mCamera;
     HaarDetector hd = new HaarDetector();
     Button mBtnSwitch;
+    int cameraId = -1;
+
 
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -62,7 +73,11 @@ public class OpenCvActivity extends AppCompatActivity implements CameraBridgeVie
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "called onCreate");
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_open_cv);
 
         /* Permissions for Android 6+
@@ -73,9 +88,22 @@ public class OpenCvActivity extends AppCompatActivity implements CameraBridgeVie
         mRelativeLayout = (RelativeLayout)findViewById(R.id.OCVtopLayout);
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.main_surface);
 
+        // what are the following used for?
         mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
         //mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
+
+
+        /*
+        int numberOfCameras = Camera.getNumberOfCameras();
+        for (int i = 0; i < numberOfCameras; i++) {
+            CameraInfo info = new CameraInfo();
+            Camera.getCameraInfo(i, info);
+            if (info.facing == CameraInfo.CAMERA_FACING_BACK) {
+                cameraId = i;
+                break;
+            }
+        }*/
 
         onListenButton();
     }
@@ -87,11 +115,8 @@ public class OpenCvActivity extends AppCompatActivity implements CameraBridgeVie
         mBtnSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*
                 Intent myIntent = new Intent(OpenCvActivity.this, FaceTrackerActivity.class);
                 OpenCvActivity.this.startActivity(myIntent);
-                */
-                finish();
             }
         });
     }
@@ -143,4 +168,5 @@ public class OpenCvActivity extends AppCompatActivity implements CameraBridgeVie
 
         return mRgba;
     }
+
 }

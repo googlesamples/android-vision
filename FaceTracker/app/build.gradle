@@ -33,6 +33,7 @@ android {
         // Specifies the fully-qualified class name of the test instrumentation runner.
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+
     }
 
 //    sourceSets { // AL: added

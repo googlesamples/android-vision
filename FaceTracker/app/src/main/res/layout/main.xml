@@ -16,7 +16,7 @@
         android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:drawableRight="@drawable/eu"
+        android:drawableRight="@drawable/objects"
         />
 
     <com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview

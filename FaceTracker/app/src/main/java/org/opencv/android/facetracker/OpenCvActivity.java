@@ -10,7 +10,7 @@ import com.google.android.gms.samples.vision.face.facetracker.FaceTrackerActivit
 import com.google.android.gms.samples.vision.face.facetracker.R;
 
 
-import tensorflow.detector.spc.CameraActivityMainSPC;
+import tensorflow.detector.spc.CameraActivityMain;
 
 public class OpenCvActivity extends AppCompatActivity {
     private static final String TAG = "OpenCvActivity";
@@ -27,7 +27,7 @@ public class OpenCvActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent myIntent = new Intent(OpenCvActivity.this, CameraActivityMainSPC.class);
+                Intent myIntent = new Intent(OpenCvActivity.this, CameraActivityMain.class);
 
                 OpenCvActivity.this.startActivity(myIntent);
             }

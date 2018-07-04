@@ -36,6 +36,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#000"
-        tools:context="tensorflow.detector.spc.CameraActivityMainSPC" >
+        tools:context="tensorflow.detector.spc.CameraActivityMain" >
     </FrameLayout>
 </RelativeLayout>

@@ -56,6 +56,7 @@ public class TensorFlowObjectDetection {
   private float[] outputClasses;
   private float[] outputNumDetections;
   private String[] outputNames;
+
   private boolean logStats = false;
 
   private TensorFlowInferenceInterface inferenceInterface;
@@ -133,6 +134,7 @@ public class TensorFlowObjectDetection {
   public List<Recognition> recognizeImage(final Bitmap bitmap) {
     // Log this method so that it can be analyzed with systrace.
     Trace.beginSection("recognizeImage");
+
     Trace.beginSection("preprocessBitmap");
     // Preprocess the image data from 0-255 int to normalized float based
     // on the provided parameters.

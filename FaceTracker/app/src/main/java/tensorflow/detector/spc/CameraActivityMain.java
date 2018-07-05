@@ -68,8 +68,6 @@ import tensorflow.detector.spc.tracking.MultiBoxTracker;
 import com.google.android.gms.samples.vision.face.facetracker.FaceTrackerActivity;
 import com.google.android.gms.samples.vision.face.facetracker.R;
 
-import org.opencv.android.facetracker.OpenCvActivity;
-
 public class CameraActivityMain extends Activity
     implements OnImageAvailableListener, Camera.PreviewCallback {
 

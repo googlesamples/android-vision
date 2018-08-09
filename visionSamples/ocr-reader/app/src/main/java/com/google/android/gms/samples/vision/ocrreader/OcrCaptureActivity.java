@@ -97,16 +97,17 @@ public final class OcrCaptureActivity extends AppCompatActivity {
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             createCameraSource(autoFocus, useFlash);
+			
+			Snackbar.make(mGraphicOverlay, "Tap to capture. Pinch/Stretch to zoom",
+                Snackbar.LENGTH_LONG)
+                .show();
+			
         } else {
             requestCameraPermission();
         }
 
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
-
-        Snackbar.make(mGraphicOverlay, "Tap to capture. Pinch/Stretch to zoom",
-                Snackbar.LENGTH_LONG)
-                .show();
     }
 
     /**
@@ -267,6 +268,10 @@ public final class OcrCaptureActivity extends AppCompatActivity {
             boolean autoFocus = getIntent().getBooleanExtra(AutoFocus,false);
             boolean useFlash = getIntent().getBooleanExtra(UseFlash, false);
             createCameraSource(autoFocus, useFlash);
+			
+			Snackbar.make(mGraphicOverlay, "Tap to capture. Pinch/Stretch to zoom",
+                Snackbar.LENGTH_LONG)
+                .show();
             return;
         }
 

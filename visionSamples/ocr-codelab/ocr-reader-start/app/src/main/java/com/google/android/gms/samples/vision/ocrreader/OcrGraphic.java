@@ -18,9 +18,13 @@ package com.google.android.gms.samples.vision.ocrreader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
+import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
+
+import java.util.List;
 
 /**
  * Graphic instance for rendering TextBlock position, size, and ID within an associated graphic
@@ -87,5 +91,22 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
     @Override
     public void draw(Canvas canvas) {
         // TODO: Draw the text onto the canvas.
+        if (text == null) {
+            return;
+        }
+
+        // Draws the bounding box around the TextBlock.
+        RectF rect = new RectF(text.getBoundingBox());
+        rect = translateRect(rect);
+        canvas.drawRect(rect, rectPaint);
+
+        // Render the text at the bottom of the box.
+//        canvas.drawText(text.getValue(), rect.left, rect.bottom, textPaint);
+        List<? extends Text> textComponents = text.getComponents();
+        for(Text currentText : textComponents) {
+            float left = translateX(currentText.getBoundingBox().left);
+            float bottom = translateY(currentText.getBoundingBox().bottom);
+            canvas.drawText(currentText.getValue(), left, bottom, textPaint);
+        }
     }
 }

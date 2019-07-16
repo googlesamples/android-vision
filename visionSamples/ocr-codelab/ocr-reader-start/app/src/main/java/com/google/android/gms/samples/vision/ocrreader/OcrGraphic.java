@@ -82,7 +82,12 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
      */
     public boolean contains(float x, float y) {
         // TODO: Check if this graphic's text contains this point.
-        return false;
+        if (text == null) {
+            return false;
+        }
+        RectF rect = new RectF(text.getBoundingBox());
+        rect = translateRect(rect);
+        return rect.contains(x, y);
     }
 
     /**

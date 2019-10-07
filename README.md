@@ -1,48 +1,13 @@
 Android Vision API Samples
-============
+==========================
 
-These samples demonstrate the vision API for detecting faces and barcodes.
+The Mobile Vision API is now a part of [ML Kit][3]. We strongly encourage you to try it out, as it comes with new capabilities like on-device image labeling! Also, note that we ultimately plan to wind down the Mobile Vision API, with all new on-device ML capabilities released via ML Kit. Check out [this codelab][4] to use the vision APIs in ML Kit.
 
-Introduction
-------------
+This sample has been deprecated/archived meaning it's read-only and it's no longer actively maintained (more details on archiving can be found [here][1]).
 
-Pre-requisites
---------------
- Android Play Services SDK level 26 or greater.
+For other related samples, check out the new [github.com/android/user-interface-samples][2] repo. Thank you!
 
-Getting Started
----------------
-The samples build using Gradle in Android Studio.  There is no special
-configuration required.
-
-Support (Post Release)
--------
-
-For General questions and discussion on StackOverflow:
-- Stack Overflow: http://stackoverflow.com/questions/tagged/android-vision
-
-If you've found an error in this sample, please file an issue:
-https://github.com/googlesamples/android-vision/issues
-
-Patches are encouraged, and may be submitted by forking this project and
-submitting a pull request through GitHub.
-
-License
--------
-
-Copyright 2015 Google, Inc. All Rights Reserved.
-
-Licensed to the Apache Software Foundation (ASF) under one or more contributor
-license agreements.  See the NOTICE file distributed with this work for
-additional information regarding copyright ownership.  The ASF licenses this
-file to you under the Apache License, Version 2.0 (the "License"); you may not
-use this file except in compliance with the License.  You may obtain a copy of
-the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
-License for the specific language governing permissions and limitations under
-the License.
+[1]: https://help.github.com/en/articles/about-archiving-repositories
+[2]: https://github.com/android/user-interface-samples
+[3]: https://developers.google.com/ml-kit/vision
+[4]: https://github.com/firebase/quickstart-android/tree/master/mlkit

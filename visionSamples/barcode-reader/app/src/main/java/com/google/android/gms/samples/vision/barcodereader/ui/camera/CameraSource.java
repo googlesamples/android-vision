@@ -19,6 +19,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
@@ -53,7 +54,7 @@ import java.util.Map;
 
 /**
  * Manages the camera in conjunction with an underlying
- * {@link com.google.android.gms.vision.Detector}.  This receives preview frames from the camera at
+ * {@link Detector}.  This receives preview frames from the camera at
  * a specified rate, sending those frames to the detector as fast as it is able to process those
  * frames.
  * <p/>
@@ -92,23 +93,23 @@ public class CameraSource {
     private static final float ASPECT_RATIO_TOLERANCE = 0.01f;
 
     @StringDef({
-        Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE,
-        Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO,
-        Camera.Parameters.FOCUS_MODE_AUTO,
-        Camera.Parameters.FOCUS_MODE_EDOF,
-        Camera.Parameters.FOCUS_MODE_FIXED,
-        Camera.Parameters.FOCUS_MODE_INFINITY,
-        Camera.Parameters.FOCUS_MODE_MACRO
+            Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE,
+            Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO,
+            Camera.Parameters.FOCUS_MODE_AUTO,
+            Camera.Parameters.FOCUS_MODE_EDOF,
+            Camera.Parameters.FOCUS_MODE_FIXED,
+            Camera.Parameters.FOCUS_MODE_INFINITY,
+            Camera.Parameters.FOCUS_MODE_MACRO
     })
     @Retention(RetentionPolicy.SOURCE)
     private @interface FocusMode {}
 
     @StringDef({
-        Camera.Parameters.FLASH_MODE_ON,
-        Camera.Parameters.FLASH_MODE_OFF,
-        Camera.Parameters.FLASH_MODE_AUTO,
-        Camera.Parameters.FLASH_MODE_RED_EYE,
-        Camera.Parameters.FLASH_MODE_TORCH
+            Camera.Parameters.FLASH_MODE_ON,
+            Camera.Parameters.FLASH_MODE_OFF,
+            Camera.Parameters.FLASH_MODE_AUTO,
+            Camera.Parameters.FLASH_MODE_RED_EYE,
+            Camera.Parameters.FLASH_MODE_TORCH
     })
     @Retention(RetentionPolicy.SOURCE)
     private @interface FlashMode {}
@@ -740,6 +741,9 @@ public class CameraSource {
      */
     @SuppressLint("InlinedApi")
     private Camera createCamera() {
+        if (!isCameraHardware()) {
+            throw new RuntimeException("This device does not support camera.");
+        }
         int requestedCameraId = getIdForRequestedCamera(mFacing);
         if (requestedCameraId == -1) {
             throw new RuntimeException("Could not find requested camera.");
@@ -815,6 +819,18 @@ public class CameraSource {
     }
 
     /**
+     * Check the device supports camera
+     *
+     */
+    private boolean isCameraHardware() {
+        if (mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Gets the id for the camera specified by the direction it is facing.  Returns -1 if no such
      * camera was found.
      *
@@ -876,8 +892,8 @@ public class CameraSource {
         private Size mPreview;
         private Size mPicture;
 
-        public SizePair(android.hardware.Camera.Size previewSize,
-                        android.hardware.Camera.Size pictureSize) {
+        public SizePair(Camera.Size previewSize,
+                        Camera.Size pictureSize) {
             mPreview = new Size(previewSize.width, previewSize.height);
             if (pictureSize != null) {
                 mPicture = new Size(pictureSize.width, pictureSize.height);
@@ -905,18 +921,18 @@ public class CameraSource {
      */
     private static List<SizePair> generateValidPreviewSizeList(Camera camera) {
         Camera.Parameters parameters = camera.getParameters();
-        List<android.hardware.Camera.Size> supportedPreviewSizes =
+        List<Camera.Size> supportedPreviewSizes =
                 parameters.getSupportedPreviewSizes();
-        List<android.hardware.Camera.Size> supportedPictureSizes =
+        List<Camera.Size> supportedPictureSizes =
                 parameters.getSupportedPictureSizes();
         List<SizePair> validPreviewSizes = new ArrayList<>();
-        for (android.hardware.Camera.Size previewSize : supportedPreviewSizes) {
+        for (Camera.Size previewSize : supportedPreviewSizes) {
             float previewAspectRatio = (float) previewSize.width / (float) previewSize.height;
 
             // By looping through the picture sizes in order, we favor the higher resolutions.
             // We choose the highest resolution in order to support taking the full resolution
             // picture later.
-            for (android.hardware.Camera.Size pictureSize : supportedPictureSizes) {
+            for (Camera.Size pictureSize : supportedPictureSizes) {
                 float pictureAspectRatio = (float) pictureSize.width / (float) pictureSize.height;
                 if (Math.abs(previewAspectRatio - pictureAspectRatio) < ASPECT_RATIO_TOLERANCE) {
                     validPreviewSizes.add(new SizePair(previewSize, pictureSize));
@@ -930,7 +946,7 @@ public class CameraSource {
         // still account for it.
         if (validPreviewSizes.size() == 0) {
             Log.w(TAG, "No preview sizes have a corresponding same-aspect-ratio picture size");
-            for (android.hardware.Camera.Size previewSize : supportedPreviewSizes) {
+            for (Camera.Size previewSize : supportedPreviewSizes) {
                 // The null picture size will let us know that we shouldn't set a picture size.
                 validPreviewSizes.add(new SizePair(previewSize, null));
             }
@@ -1006,7 +1022,7 @@ public class CameraSource {
 
         int angle;
         int displayAngle;
-        if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+        if (cameraInfo.facing == CameraInfo.CAMERA_FACING_FRONT) {
             angle = (cameraInfo.orientation + degrees) % 360;
             displayAngle = (360 - angle) % 360; // compensate for it being mirrored
         } else {  // back-facing
@@ -1126,8 +1142,8 @@ public class CameraSource {
 
                 if (!mBytesToByteBuffer.containsKey(data)) {
                     Log.d(TAG,
-                        "Skipping frame.  Could not find ByteBuffer associated with the image " +
-                        "data from the camera.");
+                            "Skipping frame.  Could not find ByteBuffer associated with the image " +
+                                    "data from the camera.");
                     return;
                 }
 

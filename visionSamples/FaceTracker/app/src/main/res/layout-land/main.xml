@@ -1,23 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/topLayout"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:keepScreenOn="true">
-
-  <com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview
-      android:id="@+id/preview"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+  <RelativeLayout
+      android:id="@+id/topLayout"
       android:layout_width="match_parent"
-      android:layout_height="match_parent">
-
-    <com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay
-        android:id="@+id/faceOverlay"
+      android:layout_height="match_parent"
+      android:keepScreenOn="true"
+      android:orientation="vertical">
+    <com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview
+        android:id="@+id/preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rl_camera_ctls">
 
-  </com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview>
+      <com.google.android.gms.samples.vision.face.facetracker.ui.graph.GraphicOverlay
+          android:id="@+id/faceOverlay"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent" />
 
-</LinearLayout>
+    </com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview>
+
+    <LinearLayout
+        android:id="@+id/rl_camera_ctls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
+        android:minHeight="70dp"
+        android:gravity="center"
+        android:layout_alignParentBottom="true">
+      <Button
+          android:id="@+id/btn_take"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="0.5"
+          android:text="拍照"
+          android:textSize="18sp"
+          android:onClick="onClick"/>
+
+      <Button
+          android:id="@+id/btn_facing"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="0.5"
+          android:text="轉向"
+          android:textSize="18sp"
+          android:onClick="onClick"/>
+    </LinearLayout>
+  </RelativeLayout>
+</layout>

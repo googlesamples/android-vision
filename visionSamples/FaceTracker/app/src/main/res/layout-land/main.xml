@@ -1,49 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
   <RelativeLayout
       android:id="@+id/topLayout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:keepScreenOn="true"
       android:orientation="vertical">
-    <com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview
+
+    <com.google.android.gms.samples.vision.face.facetracker.ui.face.camera.CameraSourcePreview
         android:id="@+id/preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/rl_camera_ctls">
+        android:layout_height="match_parent">
 
-      <com.google.android.gms.samples.vision.face.facetracker.ui.graph.GraphicOverlay
+      <com.google.android.gms.samples.vision.face.facetracker.ui.face.graph.GraphicOverlay
           android:id="@+id/faceOverlay"
           android:layout_width="match_parent"
           android:layout_height="match_parent" />
 
-    </com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview>
+    </com.google.android.gms.samples.vision.face.facetracker.ui.face.camera.CameraSourcePreview>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/rl_camera_ctls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="1"
-        android:minHeight="70dp"
-        android:gravity="center"
+        android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true">
-      <Button
-          android:id="@+id/btn_take"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="0.5"
-          android:text="拍照"
-          android:textSize="18sp"
-          android:onClick="onClick"/>
 
-      <Button
-          android:id="@+id/btn_facing"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="0.5"
-          android:text="轉向"
-          android:textSize="18sp"
-          android:onClick="onClick"/>
-    </LinearLayout>
+      <ImageView
+          android:id="@+id/iv_btn_take"
+          android:layout_width="120dp"
+          android:layout_height="120dp"
+          android:layout_centerHorizontal="true"
+          android:src="@drawable/selector_btn_shutter_bg"
+          android:onClick="onClick"
+          app:layout_constraintTop_toTopOf="parent"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintLeft_toLeftOf="parent"
+          app:layout_constraintRight_toRightOf="parent" />
+
+      <ImageView
+          android:id="@+id/iv_btn_switch"
+          android:layout_width="80dp"
+          android:layout_height="80dp"
+          android:layout_centerVertical="true"
+          android:layout_toLeftOf="@id/iv_btn_take"
+          android:src="@drawable/ic_switch"
+          android:onClick="onClick"
+          app:layout_constraintTop_toTopOf="parent"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintLeft_toLeftOf="parent"
+          app:layout_constraintRight_toLeftOf="@id/iv_btn_take"/>
+    </android.support.constraint.ConstraintLayout>
   </RelativeLayout>
 </layout>

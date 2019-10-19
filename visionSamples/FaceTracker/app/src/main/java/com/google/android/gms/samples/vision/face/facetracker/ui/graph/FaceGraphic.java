@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.android.gms.samples.vision.face.facetracker;
+package com.google.android.gms.samples.vision.face.facetracker.ui.graph;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.face.Face;
 
 /**
  * Graphic instance for rendering face position, orientation, and landmarks within an associated
  * graphic overlay view.
  */
-class FaceGraphic extends GraphicOverlay.Graphic {
+public class FaceGraphic extends Graphic {
     private static final float FACE_POSITION_RADIUS = 10.0f;
     private static final float ID_TEXT_SIZE = 40.0f;
     private static final float ID_Y_OFFSET = 50.0f;
@@ -34,13 +33,13 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     private static final float BOX_STROKE_WIDTH = 5.0f;
 
     private static final int COLOR_CHOICES[] = {
-        Color.BLUE,
-        Color.CYAN,
-        Color.GREEN,
-        Color.MAGENTA,
-        Color.RED,
-        Color.WHITE,
-        Color.YELLOW
+            Color.BLUE,
+            Color.CYAN,
+            Color.GREEN,
+            Color.MAGENTA,
+            Color.RED,
+            Color.WHITE,
+            Color.YELLOW
     };
     private static int mCurrentColorIndex = 0;
 
@@ -52,7 +51,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     private int mFaceId;
     private float mFaceHappiness;
 
-    FaceGraphic(GraphicOverlay overlay) {
+    public FaceGraphic(GraphicOverlay overlay) {
         super(overlay);
 
         mCurrentColorIndex = (mCurrentColorIndex + 1) % COLOR_CHOICES.length;
@@ -71,7 +70,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         mBoxPaint.setStrokeWidth(BOX_STROKE_WIDTH);
     }
 
-    void setId(int id) {
+    public void setId(int id) {
         mFaceId = id;
     }
 
@@ -80,7 +79,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
      * Updates the face instance from the detection of the most recent frame.  Invalidates the
      * relevant portions of the overlay to trigger a redraw.
      */
-    void updateFace(Face face) {
+    public void updateFace(Face face) {
         mFace = face;
         postInvalidate();
     }
@@ -90,27 +89,34 @@ class FaceGraphic extends GraphicOverlay.Graphic {
      */
     @Override
     public void draw(Canvas canvas) {
-        Face face = mFace;
-        if (face == null) {
+        if (mFace == null) {
             return;
         }
 
         // Draws a circle at the position of the detected face, with the face's track id below.
-        float x = translateX(face.getPosition().x + face.getWidth() / 2);
-        float y = translateY(face.getPosition().y + face.getHeight() / 2);
-        canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
-        canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
-        canvas.drawText("happiness: " + String.format("%.2f", face.getIsSmilingProbability()), x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
-        canvas.drawText("right eye: " + String.format("%.2f", face.getIsRightEyeOpenProbability()), x + ID_X_OFFSET * 2, y + ID_Y_OFFSET * 2, mIdPaint);
-        canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET*2, y - ID_Y_OFFSET*2, mIdPaint);
-
+        float centerX = translateX(mFace.getPosition().x + mFace.getWidth() / 2);
+        float centerY = translateY(mFace.getPosition().y + mFace.getHeight() / 2);
         // Draws a bounding box around the face.
-        float xOffset = scaleX(face.getWidth() / 2.0f);
-        float yOffset = scaleY(face.getHeight() / 2.0f);
-        float left = x - xOffset;
-        float top = y - yOffset;
-        float right = x + xOffset;
-        float bottom = y + yOffset;
+        float xOffset = scaleX(mFace.getWidth() / 2.0f);
+        float yOffset = scaleY(mFace.getHeight() / 2.0f);
+        float left = centerX - xOffset;
+        float top = centerY - yOffset;
+        float right = centerX + xOffset;
+        float bottom = centerY + yOffset;
+
+        // TODO: suit for marking static image
+        //canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
+//        for (Landmark landmark : face.getLandmarks()) {
+//            int cx = (int) (landmark.getPosition().x);
+//            int cy = (int) (landmark.getPosition().y);
+//            canvas.drawCircle(scaleX(face.getPosition().x + cx),  scaleY(face.getPosition().y + cy), 8, mIdPaint);
+//        }
+        // Draw border outline
         canvas.drawRect(left, top, right, bottom, mBoxPaint);
+        // Draw Information
+        //canvas.drawText("id: " + mFaceId, right + 50, top + 50, mIdPaint);
+        canvas.drawText("left eye: " + String.format("%.2f", mFace.getIsLeftEyeOpenProbability()), right + 50, top + 150, mIdPaint);
+        canvas.drawText("right eye: " + String.format("%.2f", mFace.getIsRightEyeOpenProbability()), right  + 50, top + 200, mIdPaint);
+        canvas.drawText("happiness: " + String.format("%.2f", mFace.getIsSmilingProbability()), right  + 50, top + 250, mIdPaint);
     }
 }

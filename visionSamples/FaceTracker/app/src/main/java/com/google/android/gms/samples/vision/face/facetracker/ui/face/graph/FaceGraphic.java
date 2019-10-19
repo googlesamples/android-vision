@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.android.gms.samples.vision.face.facetracker.ui.graph;
+package com.google.android.gms.samples.vision.face.facetracker.ui.face.graph;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.google.android.gms.vision.face.Face;
+import com.google.android.gms.vision.face.Landmark;
 
 /**
  * Graphic instance for rendering face position, orientation, and landmarks within an associated
@@ -27,6 +28,7 @@ import com.google.android.gms.vision.face.Face;
  */
 public class FaceGraphic extends Graphic {
     private static final float FACE_POSITION_RADIUS = 10.0f;
+    private static final float FACE_LANDMARK_RADIUS = 8.0f;
     private static final float ID_TEXT_SIZE = 40.0f;
     private static final float ID_Y_OFFSET = 50.0f;
     private static final float ID_X_OFFSET = -50.0f;
@@ -106,17 +108,17 @@ public class FaceGraphic extends Graphic {
 
         // TODO: suit for marking static image
         //canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
-//        for (Landmark landmark : face.getLandmarks()) {
-//            int cx = (int) (landmark.getPosition().x);
-//            int cy = (int) (landmark.getPosition().y);
-//            canvas.drawCircle(scaleX(face.getPosition().x + cx),  scaleY(face.getPosition().y + cy), 8, mIdPaint);
+//        for (Landmark landmark : mFace.getLandmarks()) {
+//            float cx = scaleX(landmark.getPosition().x);
+//            float cy = scaleY(landmark.getPosition().y);
+//            canvas.drawCircle(cx, cy, FACE_LANDMARK_RADIUS, mIdPaint);
 //        }
         // Draw border outline
         canvas.drawRect(left, top, right, bottom, mBoxPaint);
         // Draw Information
         //canvas.drawText("id: " + mFaceId, right + 50, top + 50, mIdPaint);
-        canvas.drawText("left eye: " + String.format("%.2f", mFace.getIsLeftEyeOpenProbability()), right + 50, top + 150, mIdPaint);
-        canvas.drawText("right eye: " + String.format("%.2f", mFace.getIsRightEyeOpenProbability()), right  + 50, top + 200, mIdPaint);
-        canvas.drawText("happiness: " + String.format("%.2f", mFace.getIsSmilingProbability()), right  + 50, top + 250, mIdPaint);
+        canvas.drawText("left eye: " + String.format("%.2f %%", mFace.getIsLeftEyeOpenProbability() * 100), right + 50, top + 150, mIdPaint);
+        canvas.drawText("right eye: " + String.format("%.2f %%", mFace.getIsRightEyeOpenProbability() * 100), right  + 50, top + 200, mIdPaint);
+        canvas.drawText("happiness: " + String.format("%.2f %%", mFace.getIsSmilingProbability() * 100), right  + 50, top + 250, mIdPaint);
     }
 }

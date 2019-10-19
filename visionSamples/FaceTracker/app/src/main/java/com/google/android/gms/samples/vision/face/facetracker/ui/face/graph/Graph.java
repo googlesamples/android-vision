@@ -1,4 +1,4 @@
-package com.google.android.gms.samples.vision.face.facetracker.ui.graph;
+package com.google.android.gms.samples.vision.face.facetracker.ui.face.graph;
 
 import android.graphics.Canvas;
 

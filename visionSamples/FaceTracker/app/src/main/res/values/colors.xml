@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="shutter_effect_color_start">#000000</color>
+    <color name="shutter_effect_color_end">#00ffffff</color>
+</resources>

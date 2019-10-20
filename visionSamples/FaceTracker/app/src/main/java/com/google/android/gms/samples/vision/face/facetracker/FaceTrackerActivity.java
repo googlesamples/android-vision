@@ -16,6 +16,8 @@
 package com.google.android.gms.samples.vision.face.facetracker;
 
 import android.Manifest;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -27,9 +29,11 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -56,6 +60,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
     private static final float CAMERA_SOURCE_REQUEST_FPS = 30.0f;
+    private static final int CAMERA_SHUTTER_EFFECT_DURATION_IN_MS = 100;
 
 
     private MainBinding mBinding;
@@ -77,7 +82,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
-        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        int rc = ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             createCameraSource();
         } else {
@@ -151,8 +156,8 @@ public final class FaceTrackerActivity extends AppCompatActivity {
      * at long distances.
      */
     private void createCameraSource() {
-        FaceDetector detector = new FaceDetector.Builder(this)
-                .setTrackingEnabled(true)
+        FaceDetector detector = new FaceDetector.Builder(getApplicationContext())
+                .setTrackingEnabled(false)
                 .setLandmarkType(FaceDetector.ALL_CLASSIFICATIONS)
                 .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
                 .setMode(FaceDetector.FAST_MODE)
@@ -173,7 +178,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             // download completes on device.
             Toast.makeText(this, "臉部偵測功能尚無法使用, 請重新開啟App或更新GMS", Toast.LENGTH_LONG).show();
         } else {
-            mCameraSource = new CameraSource.Builder(this, detector)
+            mCameraSource = new CameraSource.Builder(getApplicationContext(), detector)
                     .setRequestedPreviewSize(640, 480)
                     .setAutoFocusEnabled(true)
                     .setFacing(mCurCameraFacing)
@@ -210,7 +215,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             return;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
         builder.setTitle("Face Tracker sample")
                 .setMessage(R.string.no_camera_permission)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -232,7 +237,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
      */
     private void startCameraSource() {
         // check that the device has play services available.
-        int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+        int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getApplicationContext());
 
         if (code != ConnectionResult.SUCCESS) {
             Dialog dlg = GoogleApiAvailability.getInstance().getErrorDialog(this, code, RC_HANDLE_GMS);
@@ -257,8 +262,13 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 mBinding.preview.takePhoto(new CameraSource.ShutterCallback() {
                     @Override
                     public void onShutter() {
-                        // TODO: 圖片拍照後當下效果
-                        Log.d("", "");
+                        ObjectAnimator backgroundColorAnimator = ObjectAnimator.ofObject(mBinding.vShutterEffect
+                                , "backgroundColor"
+                                , new ArgbEvaluator()
+                                , ContextCompat.getColor(getApplicationContext(), R.color.shutter_effect_color_start)
+                                , ContextCompat.getColor(getApplicationContext(), R.color.shutter_effect_color_end));
+                        backgroundColorAnimator.setDuration(CAMERA_SHUTTER_EFFECT_DURATION_IN_MS);
+                        backgroundColorAnimator.start();
                     }
                 }, new CameraSource.PictureCallback() {
                     @Override

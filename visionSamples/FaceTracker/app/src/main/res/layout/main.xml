@@ -12,13 +12,16 @@
             android:id="@+id/preview"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
             <com.google.android.gms.samples.vision.face.facetracker.ui.face.graph.GraphicOverlay
                 android:id="@+id/faceOverlay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-
         </com.google.android.gms.samples.vision.face.facetracker.ui.face.camera.CameraSourcePreview>
+
+        <View
+            android:id="@+id/v_shutter_effect"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/rl_camera_ctls"

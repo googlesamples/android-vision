@@ -36,16 +36,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.samples.vision.face.facetracker.databinding.MainBinding;
-import com.google.android.gms.samples.vision.face.facetracker.ui.face.graph.FaceGraphic;
-import com.google.android.gms.samples.vision.face.facetracker.ui.face.graph.GraphicOverlay;
 import com.google.android.gms.samples.vision.face.facetracker.ui.face.tracker.GraphicFaceTrackerFactory;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.MultiProcessor;
-import com.google.android.gms.vision.Tracker;
-import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 
 import java.io.IOException;
@@ -65,8 +62,6 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     private static final int RC_HANDLE_CAMERA_PERM = 2;
     private static final float CAMERA_SOURCE_REQUEST_FPS = 30.0f;
 
-
-
     private MainBinding mBinding;
     private CameraSource mCameraSource = null;
     private int mCurCameraFacing = CameraSource.CAMERA_FACING_FRONT;
@@ -83,6 +78,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         super.onCreate(icicle);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.main);
+        mBinding.ivBtnSwitch.setTag(R.drawable.selector_btn_shutter_bg);
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
@@ -267,8 +263,9 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                     public void onPictureTaken(byte[] bytes) {
                         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
+                        mBinding.ivBtnSwitch.setTag(R.drawable.ic_confirm);
+                        mBinding.ivBtnSwitch.setImageResource(R.drawable.ic_confirm);
                         mBinding.preview.setVisibility(GONE);
-                        mBinding.ivBtnSwitch.setVisibility(GONE);
                         mBinding.ivBtnTake.setVisibility(GONE);
                         mBinding.ivBtnRetry.setVisibility(VISIBLE);
                         mBinding.ivPhoto.setVisibility(VISIBLE);
@@ -279,25 +276,31 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             break;
 
             case R.id.iv_btn_switch: {
-                mCurCameraFacing = (mCurCameraFacing == CameraSource.CAMERA_FACING_FRONT) ? CameraSource.CAMERA_FACING_BACK : CameraSource.CAMERA_FACING_FRONT;
+                int resId = (Integer) mBinding.ivBtnSwitch.getTag();
+                if(resId == R.drawable.ic_switch) {
+                    mCurCameraFacing = (mCurCameraFacing == CameraSource.CAMERA_FACING_FRONT) ? CameraSource.CAMERA_FACING_BACK : CameraSource.CAMERA_FACING_FRONT;
 
-                mBinding.preview.release();
-                createCameraSource();
-                startCameraSource();
+                    mBinding.preview.release();
+                    createCameraSource();
+                    startCameraSource();
+                } else {
+                    Log.d("", "");
+                }
             }
             break;
 
             case R.id.iv_btn_retry: {
+                mBinding.ivBtnSwitch.setTag(R.drawable.ic_switch);
+                mBinding.ivBtnSwitch.setImageResource(R.drawable.ic_switch);
                 mBinding.preview.setVisibility(VISIBLE);
-                mBinding.ivBtnSwitch.setVisibility(VISIBLE);
                 mBinding.ivBtnTake.setVisibility(VISIBLE);
                 mBinding.ivBtnRetry.setVisibility(GONE);
-
                 mBinding.ivPhoto.setVisibility(GONE);
                 mBinding.ivPhoto.setImageBitmap(null);
+
                 BitmapDrawable drawable = (BitmapDrawable) mBinding.ivPhoto.getDrawable();
                 Bitmap bitmap = drawable.getBitmap();
-                if(bitmap != null && !bitmap.isRecycled()) {
+                if (bitmap != null && !bitmap.isRecycled()) {
                     bitmap.recycle();
                 }
 

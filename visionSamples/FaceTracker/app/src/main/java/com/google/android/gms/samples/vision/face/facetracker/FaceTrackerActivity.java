@@ -26,6 +26,7 @@ import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -49,6 +50,9 @@ import com.google.android.gms.vision.face.FaceDetector;
 
 import java.io.IOException;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 /**
  * Activity for the face tracker app.  This app detects faces with the rear facing camera, and draws
  * overlay graphics to indicate the position, size, and ID of each face.
@@ -60,7 +64,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
     private static final float CAMERA_SOURCE_REQUEST_FPS = 30.0f;
-    private static final int CAMERA_SHUTTER_EFFECT_DURATION_IN_MS = 100;
+
 
 
     private MainBinding mBinding;
@@ -179,7 +183,6 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             Toast.makeText(this, "臉部偵測功能尚無法使用, 請重新開啟App或更新GMS", Toast.LENGTH_LONG).show();
         } else {
             mCameraSource = new CameraSource.Builder(getApplicationContext(), detector)
-                    .setRequestedPreviewSize(640, 480)
                     .setAutoFocusEnabled(true)
                     .setFacing(mCurCameraFacing)
                     .setRequestedFps(CAMERA_SOURCE_REQUEST_FPS)
@@ -259,23 +262,17 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.iv_btn_take: {
-                mBinding.preview.takePhoto(new CameraSource.ShutterCallback() {
-                    @Override
-                    public void onShutter() {
-                        ObjectAnimator backgroundColorAnimator = ObjectAnimator.ofObject(mBinding.vShutterEffect
-                                , "backgroundColor"
-                                , new ArgbEvaluator()
-                                , ContextCompat.getColor(getApplicationContext(), R.color.shutter_effect_color_start)
-                                , ContextCompat.getColor(getApplicationContext(), R.color.shutter_effect_color_end));
-                        backgroundColorAnimator.setDuration(CAMERA_SHUTTER_EFFECT_DURATION_IN_MS);
-                        backgroundColorAnimator.start();
-                    }
-                }, new CameraSource.PictureCallback() {
+                mBinding.preview.takePhoto(mBinding.vShutterEffect, null, new CameraSource.PictureCallback() {
                     @Override
                     public void onPictureTaken(byte[] bytes) {
-                        // TODO: 圖片拍完得到bitmap的後處理
                         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        Log.d("", "");
+
+                        mBinding.preview.setVisibility(GONE);
+                        mBinding.ivBtnSwitch.setVisibility(GONE);
+                        mBinding.ivBtnTake.setVisibility(GONE);
+                        mBinding.ivBtnRetry.setVisibility(VISIBLE);
+                        mBinding.ivPhoto.setVisibility(VISIBLE);
+                        mBinding.ivPhoto.setImageBitmap(bitmap);
                     }
                 });
             }
@@ -287,6 +284,24 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 mBinding.preview.release();
                 createCameraSource();
                 startCameraSource();
+            }
+            break;
+
+            case R.id.iv_btn_retry: {
+                mBinding.preview.setVisibility(VISIBLE);
+                mBinding.ivBtnSwitch.setVisibility(VISIBLE);
+                mBinding.ivBtnTake.setVisibility(VISIBLE);
+                mBinding.ivBtnRetry.setVisibility(GONE);
+
+                mBinding.ivPhoto.setVisibility(GONE);
+                mBinding.ivPhoto.setImageBitmap(null);
+                BitmapDrawable drawable = (BitmapDrawable) mBinding.ivPhoto.getDrawable();
+                Bitmap bitmap = drawable.getBitmap();
+                if(bitmap != null && !bitmap.isRecycled()) {
+                    bitmap.recycle();
+                }
+
+                mBinding.getRoot().requestLayout();
             }
             break;
         }

@@ -51,7 +51,7 @@ public class FaceGraphic extends Graphic {
 
     private volatile Face mFace;
     private int mFaceId;
-    private float mFaceHappiness;
+//    private float mFaceHappiness;
 
     public FaceGraphic(GraphicOverlay overlay) {
         super(overlay);
@@ -117,6 +117,7 @@ public class FaceGraphic extends Graphic {
         canvas.drawRect(left, top, right, bottom, mBoxPaint);
         // Draw Information
         //canvas.drawText("id: " + mFaceId, right + 50, top + 50, mIdPaint);
+        canvas.drawText("FaceID: " + mFaceId, right + 50, top + 100, mIdPaint);
         canvas.drawText("left eye: " + String.format("%.2f %%", mFace.getIsLeftEyeOpenProbability() * 100), right + 50, top + 150, mIdPaint);
         canvas.drawText("right eye: " + String.format("%.2f %%", mFace.getIsRightEyeOpenProbability() * 100), right  + 50, top + 200, mIdPaint);
         canvas.drawText("happiness: " + String.format("%.2f %%", mFace.getIsSmilingProbability() * 100), right  + 50, top + 250, mIdPaint);

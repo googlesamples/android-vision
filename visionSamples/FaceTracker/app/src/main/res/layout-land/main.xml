@@ -20,6 +20,16 @@
 
     </com.google.android.gms.samples.vision.face.facetracker.ui.face.camera.CameraSourcePreview>
 
+    <ImageView
+        android:id="@+id/iv_photo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <View
+        android:id="@+id/v_shutter_effect"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/rl_camera_ctls"
         android:layout_width="match_parent"
@@ -29,8 +39,8 @@
 
       <ImageView
           android:id="@+id/iv_btn_take"
-          android:layout_width="120dp"
-          android:layout_height="120dp"
+          android:layout_width="100dp"
+          android:layout_height="100dp"
           android:layout_centerHorizontal="true"
           android:src="@drawable/selector_btn_shutter_bg"
           android:onClick="onClick"
@@ -41,8 +51,8 @@
 
       <ImageView
           android:id="@+id/iv_btn_switch"
-          android:layout_width="80dp"
-          android:layout_height="80dp"
+          android:layout_width="70dp"
+          android:layout_height="70dp"
           android:layout_centerVertical="true"
           android:layout_toLeftOf="@id/iv_btn_take"
           android:src="@drawable/ic_switch"
@@ -51,6 +61,19 @@
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintLeft_toLeftOf="parent"
           app:layout_constraintRight_toLeftOf="@id/iv_btn_take"/>
+
+      <ImageView
+          android:id="@+id/iv_btn_retry"
+          android:layout_width="70dp"
+          android:layout_height="70dp"
+          android:layout_centerVertical="true"
+          android:src="@drawable/ic_retry"
+          android:visibility="gone"
+          android:onClick="onClick"
+          app:layout_constraintTop_toTopOf="parent"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintLeft_toRightOf="@id/iv_btn_take"
+          app:layout_constraintRight_toRightOf="parent"/>
     </android.support.constraint.ConstraintLayout>
   </RelativeLayout>
 </layout>

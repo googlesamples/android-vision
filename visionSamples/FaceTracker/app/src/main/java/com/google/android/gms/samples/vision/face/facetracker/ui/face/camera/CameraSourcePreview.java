@@ -15,29 +15,39 @@
  */
 package com.google.android.gms.samples.vision.face.facetracker.ui.face.camera;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.common.images.Size;
+import com.google.android.gms.samples.vision.face.facetracker.R;
 import com.google.android.gms.samples.vision.face.facetracker.ui.face.graph.GraphicOverlay;
 import com.google.android.gms.vision.CameraSource;
 
 import java.io.IOException;
 
 public class CameraSourcePreview extends ViewGroup {
+
     private static final String TAG = "CameraSourcePreview";
+    private static final int CAMERA_SHUTTER_EFFECT_DURATION_IN_MS = 100;
 
     private Context mContext;
     private SurfaceView mSurfaceView;
     private CameraSource mCameraSource;
     private GraphicOverlay mOverlay;
+    private CameraSource.PictureCallback mPictureCallback;
+    private CameraSource.ShutterCallback mShutterCallback;
     private boolean mStartRequested;
     private boolean mSurfaceAvailable;
+
 
     public CameraSourcePreview(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -77,8 +87,38 @@ public class CameraSourcePreview extends ViewGroup {
         }
     }
 
-    public void takePhoto(CameraSource.ShutterCallback shutterCallback, CameraSource.PictureCallback pictureCallback) {
-        mCameraSource.takePicture(shutterCallback, pictureCallback);
+    public void takePhoto(final View view, final CameraSource.ShutterCallback shutterCallback, final CameraSource.PictureCallback pictureCallback) {
+        if(mShutterCallback == null) {
+            mShutterCallback = new CameraSource.ShutterCallback() {
+                @Override
+                public void onShutter() {
+                    Context ctx = getContext();
+                    ObjectAnimator backgroundColorAnimator = ObjectAnimator.ofObject(view
+                            , "backgroundColor"
+                            , new ArgbEvaluator()
+                            , ContextCompat.getColor(ctx, R.color.shutter_effect_color_start)
+                            , ContextCompat.getColor(ctx, R.color.shutter_effect_color_end));
+                    backgroundColorAnimator.setDuration(CAMERA_SHUTTER_EFFECT_DURATION_IN_MS);
+                    backgroundColorAnimator.start();
+
+                    if (shutterCallback != null) {
+                        shutterCallback.onShutter();
+                    }
+                }
+            };
+        }
+
+        if(mPictureCallback == null) {
+            mPictureCallback = new CameraSource.PictureCallback() {
+                @Override
+                public void onPictureTaken(byte[] bytes) {
+                    if (pictureCallback != null) {
+                        pictureCallback.onPictureTaken(bytes);
+                    }
+                }
+            };
+        }
+        mCameraSource.takePicture(mShutterCallback, mPictureCallback);
     }
 
     private void startIfReady() throws IOException {
@@ -129,13 +169,13 @@ public class CameraSourcePreview extends ViewGroup {
         int width = right - left;
         int height = bottom - top;
 
-        if (mCameraSource != null) {
-            Size size = mCameraSource.getPreviewSize();
-            if (size != null) {
-                width = size.getWidth();
-                height = size.getHeight();
-            }
-        }
+//        if (mCameraSource != null) {
+//            Size size = mCameraSource.getPreviewSize();
+//            if (size != null) {
+//                width = size.getWidth();
+//                height = size.getHeight();
+//            }
+//        }
 
         // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
         //if (isPortraitMode()) {

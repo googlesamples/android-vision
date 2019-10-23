@@ -26,7 +26,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.google.android.gms.common.images.Size;
 import com.google.android.gms.samples.vision.face.facetracker.R;
 import com.google.android.gms.samples.vision.face.facetracker.ui.face.graph.GraphicOverlay;
@@ -87,8 +86,12 @@ public class CameraSourcePreview extends ViewGroup {
         }
     }
 
+    public void setIsDrawFaceTracking(boolean isDrawFaceTracking) {
+        mOverlay.setIsDrawFaceTracking(isDrawFaceTracking);
+    }
+
     public void takePhoto(final View view, final CameraSource.ShutterCallback shutterCallback, final CameraSource.PictureCallback pictureCallback) {
-        if(mShutterCallback == null) {
+        if (mShutterCallback == null) {
             mShutterCallback = new CameraSource.ShutterCallback() {
                 @Override
                 public void onShutter() {
@@ -108,7 +111,7 @@ public class CameraSourcePreview extends ViewGroup {
             };
         }
 
-        if(mPictureCallback == null) {
+        if (mPictureCallback == null) {
             mPictureCallback = new CameraSource.PictureCallback() {
                 @Override
                 public void onPictureTaken(byte[] bytes) {

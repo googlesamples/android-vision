@@ -24,6 +24,7 @@ import com.google.android.gms.vision.CameraSource;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A view which renders a series of custom graphics to be overlayed on top of an associated preview
@@ -44,13 +45,15 @@ import java.util.Set;
  * </ol>
  */
 public class GraphicOverlay extends View {
+
     private final Object mLock = new Object();
-    int mPreviewWidth;
-    float mWidthScaleFactor = 1.0f;
-    int mPreviewHeight;
-    float mHeightScaleFactor = 1.0f;
-    int mFacing = CameraSource.CAMERA_FACING_BACK;
     Set<Graphic> mGraphics = new HashSet<>();
+    float mHeightScaleFactor = 1.0f;
+    float mWidthScaleFactor = 1.0f;
+    private int mPreviewWidth;
+    private int mPreviewHeight;
+    int mFacing = CameraSource.CAMERA_FACING_BACK;
+    private AtomicBoolean mIsDrawFaceTracking = new AtomicBoolean(false);
 
     public GraphicOverlay(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -99,12 +102,18 @@ public class GraphicOverlay extends View {
         postInvalidate();
     }
 
+    public void setIsDrawFaceTracking(boolean isDrawFaceTracking) {
+        mIsDrawFaceTracking.set(isDrawFaceTracking);
+    }
+
     /**
      * Draws the overlay with its associated graphic objects.
      */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        if (!mIsDrawFaceTracking.get()) return;
 
         synchronized (mLock) {
             if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {

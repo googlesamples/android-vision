@@ -24,7 +24,7 @@
             android:value="face" />
 
         <activity
-            android:name="com.google.android.gms.samples.vision.face.facetracker.FaceTrackerCameraActivity"
+            android:name="com.google.android.gms.samples.vision.face.facetracker.flow.FaceTrackerCameraActivity"
             android:icon="@drawable/icon"
             android:label="Face Tracker"
             android:theme="@style/Theme.AppCompat.NoActionBar"

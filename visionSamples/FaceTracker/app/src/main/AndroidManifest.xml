@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.google.android.gms.samples.vision.face.facetracker"
     android:installLocation="auto"
     android:versionCode="1"
     android:versionName="1">
 
     <uses-feature android:name="android.hardware.camera" />
-
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -14,7 +14,8 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
         android:theme="@style/Theme.AppCompat"
-        android:label="FaceTracker">
+        android:label="FaceTracker"
+        tools:replace="android:label">
 
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>

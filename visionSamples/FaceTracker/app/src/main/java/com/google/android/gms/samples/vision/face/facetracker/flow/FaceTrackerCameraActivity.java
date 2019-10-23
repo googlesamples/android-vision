@@ -31,7 +31,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.samples.vision.face.facetracker.R;
-import com.google.android.gms.samples.vision.face.facetracker.databinding.MainBinding;
+import com.google.android.gms.samples.vision.face.facetracker.databinding.ActivityFaceTrackerCameraBinding;
 import com.google.android.gms.samples.vision.face.facetracker.ui.face.tracker.GraphicFaceTrackerFactory;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.MultiProcessor;
@@ -123,9 +123,9 @@ public final class FaceTrackerCameraActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        mBinding = DataBindingUtil.setContentView(this, R.layout.main);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_face_tracker_camera);
 
-        mBinding.ivBtnSwitch.setTag(R.drawable.ic_switch);
+        mBinding.ivBtnSwitch.setTag(R.drawable.ic_facing);
         initSettingsPopupMenu();
     }
 
@@ -281,7 +281,7 @@ public final class FaceTrackerCameraActivity extends AppCompatActivity {
             case R.id.iv_btn_switch: {
                 int resId = (Integer) mBinding.ivBtnSwitch.getTag();
 
-                if(resId == R.drawable.ic_switch) {
+                if(resId == R.drawable.ic_facing) {
                     mCurCameraFacing = (mCurCameraFacing == CameraSource.CAMERA_FACING_FRONT) ? CameraSource.CAMERA_FACING_BACK : CameraSource.CAMERA_FACING_FRONT;
 
                     mBinding.preview.release();
@@ -298,8 +298,8 @@ public final class FaceTrackerCameraActivity extends AppCompatActivity {
             break;
 
             case R.id.iv_btn_retry: {
-                mBinding.ivBtnSwitch.setTag(R.drawable.ic_switch);
-                mBinding.ivBtnSwitch.setImageResource(R.drawable.ic_switch);
+                mBinding.ivBtnSwitch.setTag(R.drawable.ic_facing);
+                mBinding.ivBtnSwitch.setImageResource(R.drawable.ic_facing);
                 mBinding.preview.setVisibility(VISIBLE);
                 mBinding.ivBtnTake.setVisibility(VISIBLE);
                 mBinding.ivBtnRetry.setVisibility(INVISIBLE);

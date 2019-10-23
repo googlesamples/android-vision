@@ -42,9 +42,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -61,12 +59,13 @@ public final class FaceTrackerCameraActivity extends AppCompatActivity {
 
     private PopupMenu mSettingMenu;
 
-    private MainBinding mBinding;
+    private ActivityFaceTrackerCameraBinding mBinding;
     private CameraSource mCameraSource = null;
-    private Set<Face> mDetectedFaceSet = Collections.synchronizedSet(new HashSet<Face>());
     private File mOutputFile;
+    private AtomicInteger mFaceCount = new AtomicInteger(0);
     private int mCurCameraFacing;
     private boolean mIsDrawFaceTracking = false;
+    private boolean mHasPhotoCaptured = false;
 
 
     @Override
@@ -81,8 +80,6 @@ public final class FaceTrackerCameraActivity extends AppCompatActivity {
         super.onResume();
 
         init();
-        // Restarts the camera.
-        startCameraSource();
     }
 
     @Override
@@ -131,23 +128,20 @@ public final class FaceTrackerCameraActivity extends AppCompatActivity {
 
     private void init() {
         Intent intent = getIntent();
-        // Assign the default data
-        if(intent == null) {
+        // Assign the default EXTRA_OUTPUT data
+        if (intent == null || !intent.hasExtra(EXTRA_OUTPUT)) {
             intent = new Intent();
             intent.putExtra(EXTRA_OUTPUT, getExternalCacheDir() + File.separator + TEMP_PHOTO_FILE_NAME);
         }
 
-        if(intent != null && intent.hasExtra(EXTRA_OUTPUT)) {
-            String outputPath = intent.getStringExtra(EXTRA_OUTPUT);
-            mOutputFile = new File(outputPath);
-            mCurCameraFacing = intent.getIntExtra(EXTRA_DEFAULT_FACING,  CameraSource.CAMERA_FACING_BACK);
-            mIsDrawFaceTracking = intent.getBooleanExtra(EXTRA_IS_DRAW_FACE_TRACKING, false);
+        String outputPath = intent.getStringExtra(EXTRA_OUTPUT);
+        mOutputFile = new File(outputPath);
+        mCurCameraFacing = intent.getIntExtra(EXTRA_DEFAULT_FACING, CameraSource.CAMERA_FACING_BACK);
+        mIsDrawFaceTracking = intent.getBooleanExtra(EXTRA_IS_DRAW_FACE_TRACKING, false);
 
-            mSettingMenu.getMenu().getItem(0).setChecked(mIsDrawFaceTracking);
-            createCameraSource();
-        } else {
-            throw new IllegalArgumentException("Miss to specify the output file uri for EXTRA_OUTPUT parameters");
-        }
+        mSettingMenu.getMenu().getItem(0).setChecked(mIsDrawFaceTracking);
+        createCameraSource();
+        startCameraSource();
     }
 
     private void initSettingsPopupMenu() {
@@ -184,7 +178,11 @@ public final class FaceTrackerCameraActivity extends AppCompatActivity {
         detector.setProcessor(new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory(mBinding.faceOverlay, new GraphicFaceTrackerFactory.IFaceItamCallback() {
             @Override
             public void onNewItem(Face face) {
-                mDetectedFaceSet.add(face);
+                // If ivPhoto has bitmap then user must capture a photo in preview,
+                // then we need ignore all face event in preview duration
+                if (!mHasPhotoCaptured) {
+                    mFaceCount.incrementAndGet();
+                }
             }
 
             @Override
@@ -192,12 +190,13 @@ public final class FaceTrackerCameraActivity extends AppCompatActivity {
 
             @Override
             public void onMissing(Face face) {
-                mDetectedFaceSet.remove(face);
             }
 
             @Override
             public void onDone(Face face) {
-                mDetectedFaceSet.remove(face);
+                if (!mHasPhotoCaptured && mFaceCount.get() > 0) {
+                    mFaceCount.decrementAndGet();
+                }
             }
         })).build());
 
@@ -219,7 +218,7 @@ public final class FaceTrackerCameraActivity extends AppCompatActivity {
                     .build();
         }
 
-        mDetectedFaceSet.clear();
+        mFaceCount.set(0);
     }
 
     /**
@@ -273,6 +272,8 @@ public final class FaceTrackerCameraActivity extends AppCompatActivity {
                         mBinding.ivBtnRetry.setVisibility(VISIBLE);
                         mBinding.ivPhoto.setVisibility(VISIBLE);
                         mBinding.ivPhoto.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+
+                        mHasPhotoCaptured = true;
                     }
                 });
             }
@@ -290,7 +291,7 @@ public final class FaceTrackerCameraActivity extends AppCompatActivity {
                 } else {
                     Intent intent = new Intent();
 
-                    intent.putExtra(EXTRA_IS_CONTAIN_FACE, mDetectedFaceSet.size() > 0);
+                    intent.putExtra(EXTRA_IS_CONTAIN_FACE, mFaceCount.get() > 0);
                     setResult(RESULT_OK, intent);
                     finish();
                 }
@@ -306,6 +307,7 @@ public final class FaceTrackerCameraActivity extends AppCompatActivity {
                 mBinding.ivPhoto.setVisibility(INVISIBLE);
                 mBinding.ivPhoto.setImageBitmap(null);
 
+                mHasPhotoCaptured = false;
                 release();
             }
             break;

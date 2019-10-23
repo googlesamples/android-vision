@@ -11,14 +11,23 @@ import com.google.android.gms.vision.face.Face;
  */
 public class GraphicFaceTrackerFactory implements MultiProcessor.Factory<Face>  {
 
+    public interface IFaceItamCallback {
+        void onNewItem(Face face);
+        void onUpdate(Face face);
+        void onMissing(Face face);
+        void onDone(Face face);
+    }
+
+    private final IFaceItamCallback mFaceItemCallback;
     private final GraphicOverlay mOverlay;
 
-    public GraphicFaceTrackerFactory(GraphicOverlay mOverlay) {
+    public GraphicFaceTrackerFactory(GraphicOverlay mOverlay, IFaceItamCallback faceItamCallback) {
         this.mOverlay = mOverlay;
+        this.mFaceItemCallback = faceItamCallback;
     }
 
     @Override
     public Tracker<Face> create(Face face) {
-        return new GraphicFaceTracker(mOverlay);
+        return new GraphicFaceTracker(mOverlay, mFaceItemCallback);
     }
 }

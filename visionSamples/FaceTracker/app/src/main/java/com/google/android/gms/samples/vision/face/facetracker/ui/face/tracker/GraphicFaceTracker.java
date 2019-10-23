@@ -10,9 +10,11 @@ public class GraphicFaceTracker extends Tracker<Face> {
 
     private final GraphicOverlay mOverlay;
     private final FaceGraphic mFaceGraphic;
+    private final GraphicFaceTrackerFactory.IFaceItamCallback mFaceItemCallback;
 
-    GraphicFaceTracker(GraphicOverlay overlay) {
+    GraphicFaceTracker(GraphicOverlay overlay, GraphicFaceTrackerFactory.IFaceItamCallback faceItamCallback) {
         mOverlay = overlay;
+        mFaceItemCallback = faceItamCallback;
         mFaceGraphic = new FaceGraphic(overlay);
     }
 
@@ -22,6 +24,7 @@ public class GraphicFaceTracker extends Tracker<Face> {
     @Override
     public void onNewItem(int faceId, Face item) {
         mFaceGraphic.setId(faceId);
+        mFaceItemCallback.onNewItem(item);
     }
 
     /**
@@ -31,6 +34,7 @@ public class GraphicFaceTracker extends Tracker<Face> {
     public void onUpdate(FaceDetector.Detections<Face> detectionResults, Face face) {
         mOverlay.add(mFaceGraphic);
         mFaceGraphic.updateFace(face);
+        mFaceItemCallback.onUpdate(face);
     }
 
     /**
@@ -41,6 +45,7 @@ public class GraphicFaceTracker extends Tracker<Face> {
     @Override
     public void onMissing(FaceDetector.Detections<Face> detectionResults) {
         mOverlay.remove(mFaceGraphic);
+        mFaceItemCallback.onMissing(mFaceGraphic.getFace());
     }
 
     /**
@@ -50,5 +55,6 @@ public class GraphicFaceTracker extends Tracker<Face> {
     @Override
     public void onDone() {
         mOverlay.remove(mFaceGraphic);
+        mFaceItemCallback.onDone(mFaceGraphic.getFace());
     }
 }

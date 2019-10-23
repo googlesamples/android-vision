@@ -20,7 +20,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.google.android.gms.vision.face.Face;
-import com.google.android.gms.vision.face.Landmark;
 
 /**
  * Graphic instance for rendering face position, orientation, and landmarks within an associated
@@ -84,6 +83,10 @@ public class FaceGraphic extends Graphic {
     public void updateFace(Face face) {
         mFace = face;
         postInvalidate();
+    }
+
+    public Face getFace() {
+        return mFace;
     }
 
     /**

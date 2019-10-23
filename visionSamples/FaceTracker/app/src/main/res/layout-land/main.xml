@@ -2,46 +2,71 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
   <RelativeLayout
-      android:id="@+id/topLayout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:keepScreenOn="true"
-      android:orientation="vertical">
+      android:background="@android:color/black"
+      android:keepScreenOn="true">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rl_top_camera_ctls_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:padding="10dp"
+        android:layout_alignParentTop="true">
+      <ImageView
+          android:id="@+id/iv_back"
+          android:layout_width="30dp"
+          android:layout_height="30dp"
+          android:src="@drawable/ic_back"
+          android:onClick="onClick"
+          app:layout_constraintLeft_toLeftOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          app:layout_constraintBottom_toBottomOf="parent"/>
+
+      <ImageView
+          android:id="@+id/iv_settings"
+          android:layout_width="30dp"
+          android:layout_height="30dp"
+          android:src="@drawable/ic_setting"
+          android:onClick="onClick"
+          app:layout_constraintRight_toRightOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.gms.samples.vision.face.facetracker.ui.face.camera.CameraSourcePreview
         android:id="@+id/preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_top_camera_ctls_layout"
+        android:layout_above="@+id/rl_bottom_camera_ctls_layout">
       <com.google.android.gms.samples.vision.face.facetracker.ui.face.graph.GraphicOverlay
           android:id="@+id/faceOverlay"
           android:layout_width="match_parent"
           android:layout_height="match_parent" />
-
     </com.google.android.gms.samples.vision.face.facetracker.ui.face.camera.CameraSourcePreview>
 
     <ImageView
         android:id="@+id/iv_photo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_alignTop="@id/preview"
+        android:layout_alignBottom="@id/preview"/>
 
     <View
         android:id="@+id/v_shutter_effect"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/rl_camera_ctls"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rl_bottom_camera_ctls_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
         android:layout_alignParentBottom="true">
 
       <ImageView
           android:id="@+id/iv_btn_take"
-          android:layout_width="100dp"
-          android:layout_height="100dp"
-          android:layout_centerHorizontal="true"
+          android:layout_width="80dp"
+          android:layout_height="80dp"
           android:src="@drawable/selector_btn_shutter_bg"
           android:onClick="onClick"
           app:layout_constraintTop_toTopOf="parent"
@@ -51,29 +76,26 @@
 
       <ImageView
           android:id="@+id/iv_btn_switch"
-          android:layout_width="70dp"
-          android:layout_height="70dp"
-          android:layout_centerVertical="true"
-          android:layout_toLeftOf="@id/iv_btn_take"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
           android:src="@drawable/ic_switch"
           android:onClick="onClick"
-          app:layout_constraintTop_toTopOf="parent"
-          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintTop_toTopOf="@id/iv_btn_take"
+          app:layout_constraintBottom_toBottomOf="@id/iv_btn_take"
           app:layout_constraintLeft_toLeftOf="parent"
           app:layout_constraintRight_toLeftOf="@id/iv_btn_take"/>
 
       <ImageView
           android:id="@+id/iv_btn_retry"
-          android:layout_width="70dp"
-          android:layout_height="70dp"
-          android:layout_centerVertical="true"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
           android:src="@drawable/ic_retry"
-          android:visibility="gone"
+          android:visibility="invisible"
           android:onClick="onClick"
-          app:layout_constraintTop_toTopOf="parent"
-          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintTop_toTopOf="@id/iv_btn_take"
+          app:layout_constraintBottom_toBottomOf="@id/iv_btn_take"
           app:layout_constraintLeft_toRightOf="@id/iv_btn_take"
           app:layout_constraintRight_toRightOf="parent"/>
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
   </RelativeLayout>
 </layout>

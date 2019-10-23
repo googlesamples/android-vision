@@ -16,138 +16,162 @@
 package com.google.android.gms.samples.vision.face.facetracker;
 
 import android.Manifest;
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.samples.vision.face.facetracker.databinding.MainBinding;
 import com.google.android.gms.samples.vision.face.facetracker.ui.face.tracker.GraphicFaceTrackerFactory;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.MultiProcessor;
+import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
-/**
- * Activity for the face tracker app.  This app detects faces with the rear facing camera, and draws
- * overlay graphics to indicate the position, size, and ID of each face.
- */
-public final class FaceTrackerActivity extends AppCompatActivity {
+public final class FaceTrackerCameraActivity extends AppCompatActivity {
 
-    private static final String TAG = "FaceTracker";
+    public static final String TEMP_PHOTO_FILE_NAME = "face_track.jpg";
+    public static final String EXTRA_OUTPUT = "extra_output";
+    public static final String EXTRA_DEFAULT_FACING = "extra_default_facing";
+    public static final String EXTRA_IS_CONTAIN_FACE = "extra_is_contain_face";
+    public static final String EXTRA_IS_DRAW_FACE_TRACKING = "extra_is_draw_face_tracking";
     private static final int RC_HANDLE_GMS = 9001;
-    // permission request codes need to be < 256
-    private static final int RC_HANDLE_CAMERA_PERM = 2;
     private static final float CAMERA_SOURCE_REQUEST_FPS = 30.0f;
+
+    private PopupMenu mSettingMenu;
 
     private MainBinding mBinding;
     private CameraSource mCameraSource = null;
-    private int mCurCameraFacing = CameraSource.CAMERA_FACING_FRONT;
+    private Set<Face> mDetectedFaceSet = Collections.synchronizedSet(new HashSet<Face>());
+    private File mOutputFile;
+    private int mCurCameraFacing;
+    private boolean mIsDrawFaceTracking = false;
 
-    //==============================================================================================
-    // Activity Methods
-    //==============================================================================================
 
-    /**
-     * Initializes the UI and initiates the creation of a face detector.
-     */
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        mBinding = DataBindingUtil.setContentView(this, R.layout.main);
-        mBinding.ivBtnSwitch.setTag(R.drawable.selector_btn_shutter_bg);
-
-        // Check for the camera permission before accessing the camera.  If the
-        // permission is not granted yet, request permission.
-        int rc = ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
-        if (rc == PackageManager.PERMISSION_GRANTED) {
-            createCameraSource();
-        } else {
-            requestCameraPermission();
-        }
+        initView();
     }
 
-    /**
-     * Restarts the camera.
-     */
     @Override
     protected void onResume() {
         super.onResume();
 
+        init();
+        // Restarts the camera.
         startCameraSource();
     }
 
-    /**
-     * Stops the camera.
-     */
     @Override
     protected void onPause() {
         super.onPause();
+
+        // Stops the camera.
         mBinding.preview.stop();
     }
 
-    /**
-     * Releases the resources associated with the camera source, the associated detector, and the
-     * rest of the processing pipeline.
-     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        //Releases the resources associated with the camera source, the associated detector, and the rest of the processing pipeline.
         mBinding.preview.release();
+        release();
     }
 
-    /**
-     * Handles the requesting of the camera permission.  This includes
-     * showing a "Snackbar" message of why the permission is needed then
-     * sending the request.
-     */
-    private void requestCameraPermission() {
-        Log.w(TAG, "Camera permission is not granted. Requesting permission");
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
 
-        final String[] permissions = new String[]{Manifest.permission.CAMERA};
+        outState.putInt(EXTRA_DEFAULT_FACING, mCurCameraFacing);
+        outState.putString(EXTRA_OUTPUT, mOutputFile.getAbsolutePath());
+        outState.putBoolean(EXTRA_IS_DRAW_FACE_TRACKING, mIsDrawFaceTracking);
+    }
 
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.CAMERA)) {
-            ActivityCompat.requestPermissions(this, permissions, RC_HANDLE_CAMERA_PERM);
-            return;
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Intent intent = new Intent();
+
+        intent.putExtra(EXTRA_DEFAULT_FACING, savedInstanceState.getInt(EXTRA_DEFAULT_FACING));
+        intent.putExtra(EXTRA_OUTPUT, savedInstanceState.getString(EXTRA_OUTPUT));
+        intent.putExtra(EXTRA_IS_DRAW_FACE_TRACKING, savedInstanceState.getBoolean(EXTRA_IS_DRAW_FACE_TRACKING));
+        setIntent(intent);
+    }
+
+    private void initView() {
+        mBinding = DataBindingUtil.setContentView(this, R.layout.main);
+
+        mBinding.ivBtnSwitch.setTag(R.drawable.ic_switch);
+        initSettingsPopupMenu();
+    }
+
+    private void init() {
+        // TODO: This is fake data
+        //Intent intent = getIntent();
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_OUTPUT, getExternalCacheDir() + File.separator + TEMP_PHOTO_FILE_NAME);
+
+        if(intent != null && intent.hasExtra(EXTRA_OUTPUT)) {
+            String outputPath = intent.getStringExtra(EXTRA_OUTPUT);
+            mOutputFile = new File(outputPath);
+            mCurCameraFacing = intent.getIntExtra(EXTRA_DEFAULT_FACING,  CameraSource.CAMERA_FACING_BACK);
+            mIsDrawFaceTracking = intent.getBooleanExtra(EXTRA_IS_DRAW_FACE_TRACKING, false);
+
+            mSettingMenu.getMenu().getItem(0).setChecked(mIsDrawFaceTracking);
+            createCameraSource();
+        } else {
+            throw new IllegalArgumentException("Miss to specify the output file uri for EXTRA_OUTPUT parameters");
         }
+    }
 
-        final Activity thisActivity = this;
+    private void initSettingsPopupMenu() {
+        mSettingMenu = new PopupMenu(this, mBinding.ivSettings);
 
-        View.OnClickListener listener = new View.OnClickListener() {
+        mSettingMenu.getMenuInflater().inflate(R.menu.menu_camera_menu, mSettingMenu.getMenu());
+        mSettingMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
-            public void onClick(View view) {
-                ActivityCompat.requestPermissions(thisActivity, permissions,
-                        RC_HANDLE_CAMERA_PERM);
-            }
-        };
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.item_is_draw_face_tracking) {
+                    mIsDrawFaceTracking = !item.isChecked();
 
-        Snackbar.make(mBinding.faceOverlay, R.string.permission_camera_rationale, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.ok, listener)
-                .show();
+                    item.setChecked(mIsDrawFaceTracking);
+                    mBinding.preview.setIsDrawFaceTracking(mIsDrawFaceTracking);
+                }
+                return false;
+            }
+        });
     }
 
     /**
@@ -163,9 +187,25 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 .setMode(FaceDetector.FAST_MODE)
                 .build();
 
-        detector.setProcessor(
-                new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory(mBinding.faceOverlay))
-                        .build());
+        detector.setProcessor(new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory(mBinding.faceOverlay, new GraphicFaceTrackerFactory.IFaceItamCallback() {
+            @Override
+            public void onNewItem(Face face) {
+                mDetectedFaceSet.add(face);
+            }
+
+            @Override
+            public void onUpdate(Face face) {}
+
+            @Override
+            public void onMissing(Face face) {
+                mDetectedFaceSet.remove(face);
+            }
+
+            @Override
+            public void onDone(Face face) {
+                mDetectedFaceSet.remove(face);
+            }
+        })).build());
 
         if (!detector.isOperational()) {
             // Note: The first time that an app using face API is installed on a device, GMS will
@@ -176,7 +216,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
             // isOperational() can be used to check if the required native library is currently
             // available.  The detector will automatically become operational once the library
             // download completes on device.
-            Toast.makeText(this, "臉部偵測功能尚無法使用, 請重新開啟App或更新GMS", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Face tracking is not available, plz update the GMS or restart the app", Toast.LENGTH_LONG).show();
         } else {
             mCameraSource = new CameraSource.Builder(getApplicationContext(), detector)
                     .setAutoFocusEnabled(true)
@@ -184,50 +224,9 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                     .setRequestedFps(CAMERA_SOURCE_REQUEST_FPS)
                     .build();
         }
+
+        mDetectedFaceSet.clear();
     }
-
-    /**
-     * Callback for the result from requesting permissions. This method
-     * is invoked for every call on {@link #requestPermissions(String[], int)}.
-     * <p>
-     * <strong>Note:</strong> It is possible that the permissions request interaction
-     * with the user is interrupted. In this case you will receive empty permissions
-     * and results arrays which should be treated as a cancellation.
-     * </p>
-     *
-     * @param requestCode  The request code passed in {@link #requestPermissions(String[], int)}.
-     * @param permissions  The requested permissions. Never null.
-     * @param grantResults The grant results for the corresponding permissions
-     *                     which is either {@link PackageManager#PERMISSION_GRANTED}
-     *                     or {@link PackageManager#PERMISSION_DENIED}. Never null.
-     * @see #requestPermissions(String[], int)
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode != RC_HANDLE_CAMERA_PERM) {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            return;
-        }
-
-        if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            createCameraSource();
-            return;
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-        builder.setTitle("Face Tracker sample")
-                .setMessage(R.string.no_camera_permission)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        finish();
-                    }
-                })
-                .show();
-    }
-
-    //==============================================================================================
-    // Camera Source Preview
-    //==============================================================================================
 
     /**
      * Starts or restarts the camera source, if it exists.  If the camera source doesn't exist yet
@@ -246,6 +245,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         if (mCameraSource != null) {
             try {
                 mBinding.preview.start(mCameraSource, mBinding.faceOverlay);
+                mBinding.preview.setIsDrawFaceTracking(mIsDrawFaceTracking);
             } catch (IOException e) {
                 e.printStackTrace();
                 mBinding.preview.release();
@@ -261,15 +261,24 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 mBinding.preview.takePhoto(mBinding.vShutterEffect, null, new CameraSource.PictureCallback() {
                     @Override
                     public void onPictureTaken(byte[] bytes) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        try {
+                            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(mOutputFile));
+
+                            bos.write(bytes, 0, bytes.length);
+                            bos.flush();
+                            bos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(FaceTrackerCameraActivity.this, "Photo capture failed", Toast.LENGTH_LONG).show();
+                        }
 
                         mBinding.ivBtnSwitch.setTag(R.drawable.ic_confirm);
                         mBinding.ivBtnSwitch.setImageResource(R.drawable.ic_confirm);
-                        mBinding.preview.setVisibility(GONE);
-                        mBinding.ivBtnTake.setVisibility(GONE);
+                        mBinding.preview.setVisibility(INVISIBLE);
+                        mBinding.ivBtnTake.setVisibility(INVISIBLE);
                         mBinding.ivBtnRetry.setVisibility(VISIBLE);
                         mBinding.ivPhoto.setVisibility(VISIBLE);
-                        mBinding.ivPhoto.setImageBitmap(bitmap);
+                        mBinding.ivPhoto.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
                     }
                 });
             }
@@ -277,6 +286,7 @@ public final class FaceTrackerActivity extends AppCompatActivity {
 
             case R.id.iv_btn_switch: {
                 int resId = (Integer) mBinding.ivBtnSwitch.getTag();
+
                 if(resId == R.drawable.ic_switch) {
                     mCurCameraFacing = (mCurCameraFacing == CameraSource.CAMERA_FACING_FRONT) ? CameraSource.CAMERA_FACING_BACK : CameraSource.CAMERA_FACING_FRONT;
 
@@ -284,7 +294,11 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                     createCameraSource();
                     startCameraSource();
                 } else {
-                    Log.d("", "");
+                    Intent intent = new Intent();
+
+                    intent.putExtra(EXTRA_IS_CONTAIN_FACE, mDetectedFaceSet.size() > 0);
+                    setResult(RESULT_OK, intent);
+                    finish();
                 }
             }
             break;
@@ -294,19 +308,34 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 mBinding.ivBtnSwitch.setImageResource(R.drawable.ic_switch);
                 mBinding.preview.setVisibility(VISIBLE);
                 mBinding.ivBtnTake.setVisibility(VISIBLE);
-                mBinding.ivBtnRetry.setVisibility(GONE);
-                mBinding.ivPhoto.setVisibility(GONE);
+                mBinding.ivBtnRetry.setVisibility(INVISIBLE);
+                mBinding.ivPhoto.setVisibility(INVISIBLE);
                 mBinding.ivPhoto.setImageBitmap(null);
 
-                BitmapDrawable drawable = (BitmapDrawable) mBinding.ivPhoto.getDrawable();
-                Bitmap bitmap = drawable.getBitmap();
-                if (bitmap != null && !bitmap.isRecycled()) {
-                    bitmap.recycle();
-                }
-
-                mBinding.getRoot().requestLayout();
+                release();
             }
             break;
+
+            case R.id.iv_back: {
+                setResult(RESULT_OK, null);
+                finish();
+            }
+            break;
+
+            case R.id.iv_settings: {
+                mSettingMenu.show();
+            }
+            break;
+        }
+    }
+
+    private void release() {
+        mBinding.ivPhoto.setImageBitmap(null);
+
+        BitmapDrawable drawable = (BitmapDrawable) mBinding.ivPhoto.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+        if (bitmap != null && !bitmap.isRecycled()) {
+            bitmap.recycle();
         }
     }
 }

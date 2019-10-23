@@ -138,10 +138,12 @@ public final class FaceTrackerCameraActivity extends AppCompatActivity {
     }
 
     private void init() {
-        // TODO: This is fake data
-        //Intent intent = getIntent();
-        Intent intent = new Intent();
-        intent.putExtra(EXTRA_OUTPUT, getExternalCacheDir() + File.separator + TEMP_PHOTO_FILE_NAME);
+        Intent intent = getIntent();
+        // Assign the default data
+        if(intent == null) {
+            intent = new Intent();
+            intent.putExtra(EXTRA_OUTPUT, getExternalCacheDir() + File.separator + TEMP_PHOTO_FILE_NAME);
+        }
 
         if(intent != null && intent.hasExtra(EXTRA_OUTPUT)) {
             String outputPath = intent.getStringExtra(EXTRA_OUTPUT);

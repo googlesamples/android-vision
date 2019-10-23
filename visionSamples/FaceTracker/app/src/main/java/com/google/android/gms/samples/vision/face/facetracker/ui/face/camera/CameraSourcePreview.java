@@ -13,31 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.android.gms.samples.vision.face.facetracker.ui.camera;
+package com.google.android.gms.samples.vision.face.facetracker.ui.face.camera;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.ViewGroup;
-
 import com.google.android.gms.common.images.Size;
+import com.google.android.gms.samples.vision.face.facetracker.R;
+import com.google.android.gms.samples.vision.face.facetracker.ui.face.graph.GraphicOverlay;
 import com.google.android.gms.vision.CameraSource;
 
 import java.io.IOException;
 
 public class CameraSourcePreview extends ViewGroup {
+
     private static final String TAG = "CameraSourcePreview";
+    private static final int CAMERA_SHUTTER_EFFECT_DURATION_IN_MS = 100;
 
     private Context mContext;
     private SurfaceView mSurfaceView;
+    private CameraSource mCameraSource;
+    private GraphicOverlay mOverlay;
+    private CameraSource.PictureCallback mPictureCallback;
+    private CameraSource.ShutterCallback mShutterCallback;
     private boolean mStartRequested;
     private boolean mSurfaceAvailable;
-    private CameraSource mCameraSource;
 
-    private GraphicOverlay mOverlay;
 
     public CameraSourcePreview(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -50,22 +59,18 @@ public class CameraSourcePreview extends ViewGroup {
         addView(mSurfaceView);
     }
 
-    public void start(CameraSource cameraSource) throws IOException {
+    public void start(CameraSource cameraSource, GraphicOverlay overlay) throws IOException {
+        mOverlay = overlay;
+
         if (cameraSource == null) {
             stop();
         }
-
         mCameraSource = cameraSource;
 
         if (mCameraSource != null) {
             mStartRequested = true;
             startIfReady();
         }
-    }
-
-    public void start(CameraSource cameraSource, GraphicOverlay overlay) throws IOException {
-        mOverlay = overlay;
-        start(cameraSource);
     }
 
     public void stop() {
@@ -81,9 +86,48 @@ public class CameraSourcePreview extends ViewGroup {
         }
     }
 
+    public void setIsDrawFaceTracking(boolean isDrawFaceTracking) {
+        mOverlay.setIsDrawFaceTracking(isDrawFaceTracking);
+    }
+
+    public void takePhoto(final View view, final CameraSource.ShutterCallback shutterCallback, final CameraSource.PictureCallback pictureCallback) {
+        if (mShutterCallback == null) {
+            mShutterCallback = new CameraSource.ShutterCallback() {
+                @Override
+                public void onShutter() {
+                    Context ctx = getContext();
+                    ObjectAnimator backgroundColorAnimator = ObjectAnimator.ofObject(view
+                            , "backgroundColor"
+                            , new ArgbEvaluator()
+                            , ContextCompat.getColor(ctx, R.color.shutter_effect_color_start)
+                            , ContextCompat.getColor(ctx, R.color.shutter_effect_color_end));
+                    backgroundColorAnimator.setDuration(CAMERA_SHUTTER_EFFECT_DURATION_IN_MS);
+                    backgroundColorAnimator.start();
+
+                    if (shutterCallback != null) {
+                        shutterCallback.onShutter();
+                    }
+                }
+            };
+        }
+
+        if (mPictureCallback == null) {
+            mPictureCallback = new CameraSource.PictureCallback() {
+                @Override
+                public void onPictureTaken(byte[] bytes) {
+                    if (pictureCallback != null) {
+                        pictureCallback.onPictureTaken(bytes);
+                    }
+                }
+            };
+        }
+        mCameraSource.takePicture(mShutterCallback, mPictureCallback);
+    }
+
     private void startIfReady() throws IOException {
         if (mStartRequested && mSurfaceAvailable) {
             mCameraSource.start(mSurfaceView.getHolder());
+
             if (mOverlay != null) {
                 Size size = mCameraSource.getPreviewSize();
                 int min = Math.min(size.getWidth(), size.getHeight());
@@ -108,6 +152,7 @@ public class CameraSourcePreview extends ViewGroup {
             try {
                 startIfReady();
             } catch (IOException e) {
+                e.printStackTrace();
                 Log.e(TAG, "Could not start camera source.", e);
             }
         }
@@ -124,34 +169,32 @@ public class CameraSourcePreview extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        int width = 320;
-        int height = 240;
-        if (mCameraSource != null) {
-            Size size = mCameraSource.getPreviewSize();
-            if (size != null) {
-                width = size.getWidth();
-                height = size.getHeight();
-            }
-        }
+        int width = right - left;
+        int height = bottom - top;
+
+//        if (mCameraSource != null) {
+//            Size size = mCameraSource.getPreviewSize();
+//            if (size != null) {
+//                width = size.getWidth();
+//                height = size.getHeight();
+//            }
+//        }
 
         // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
-        if (isPortraitMode()) {
-            int tmp = width;
-            width = height;
-            height = tmp;
-        }
-
-        final int layoutWidth = right - left;
-        final int layoutHeight = bottom - top;
+        //if (isPortraitMode()) {
+        //    int tmp = width;
+        //    width = height;
+        //    height = tmp;
+        //}
 
         // Computes height and width for potentially doing fit width.
-        int childWidth = layoutWidth;
-        int childHeight = (int)(((float) layoutWidth / (float) width) * height);
+        int childWidth = width;
+        int childHeight = (int) (((float) width / width) * height);
 
         // If height is too tall using fit width, does fit height instead.
-        if (childHeight > layoutHeight) {
-            childHeight = layoutHeight;
-            childWidth = (int)(((float) layoutHeight / (float) height) * width);
+        if (childHeight > height) {
+            childHeight = height;
+            childWidth = (int) (((float) height / (float) height) * width);
         }
 
         for (int i = 0; i < getChildCount(); ++i) {
@@ -161,6 +204,7 @@ public class CameraSourcePreview extends ViewGroup {
         try {
             startIfReady();
         } catch (IOException e) {
+            e.printStackTrace();
             Log.e(TAG, "Could not start camera source.", e);
         }
     }

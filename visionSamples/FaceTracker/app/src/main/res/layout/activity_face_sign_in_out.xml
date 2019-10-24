@@ -2,6 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="activity"
+            type="com.google.android.gms.samples.vision.face.facetracker.flow.FaceSignInOutActivity" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -9,6 +16,7 @@
         android:keepScreenOn="true">
 
         <include
+            android:id="@+id/rl_include_time_info_layout"
             layout="@layout/view_top_time_info_layout"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -19,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/clock_margin_top"
-            app:layout_constraintTop_toBottomOf="@id/rl_time_info_layout"
+            app:layout_constraintTop_toBottomOf="@id/rl_include_time_info_layout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
@@ -32,6 +40,7 @@
             android:textSize="@dimen/press_signing_txt_size"
             android:text="@string/btn_press_signing_in"
             android:layout_marginTop="@dimen/btn_press_signing_in_top"
+            android:onClick="onClick"
             app:layout_constraintTop_toBottomOf="@+id/cvac_clock"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
@@ -46,6 +55,7 @@
             android:textSize="@dimen/press_signing_txt_size"
             android:text="@string/btn_press_signing_out"
             android:layout_marginTop="@dimen/btn_press_signing_out_top"
+            android:onClick="onClick"
             app:layout_constraintTop_toBottomOf="@+id/btn_press_signing_in"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>

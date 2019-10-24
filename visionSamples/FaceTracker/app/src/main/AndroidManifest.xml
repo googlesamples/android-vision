@@ -27,11 +27,11 @@
             android:value="face" />
 
         <activity
-            android:name="com.google.android.gms.samples.vision.face.facetracker.flow.FaceSignInOut"
+            android:name="com.google.android.gms.samples.vision.face.facetracker.flow.FaceSignInOutActivity"
             android:icon="@drawable/icon"
             android:label="Face Tracker"
             android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

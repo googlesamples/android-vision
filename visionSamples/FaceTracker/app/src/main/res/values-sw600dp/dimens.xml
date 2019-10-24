@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="txt_size_time_info">85sp</dimen>
+    <dimen name="txt_size_date_info">30sp</dimen>
+    <dimen name="txt_size_detect_progress">44sp</dimen>
+</resources>

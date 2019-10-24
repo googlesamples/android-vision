@@ -10,12 +10,14 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
+        android:name=".FaceTrackerApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
         android:theme="@style/Theme.AppCompat"
         android:label="FaceTracker"
-        tools:replace="android:label">
+        tools:replace="android:label"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
@@ -25,7 +27,7 @@
             android:value="face" />
 
         <activity
-            android:name="com.google.android.gms.samples.vision.face.facetracker.flow.FaceTrackerCameraActivity"
+            android:name="com.google.android.gms.samples.vision.face.facetracker.flow.FaceSignInOut"
             android:icon="@drawable/icon"
             android:label="Face Tracker"
             android:theme="@style/Theme.AppCompat.NoActionBar"
@@ -36,6 +38,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<!--        <activity-->
+<!--            android:name="com.google.android.gms.samples.vision.face.facetracker.flow.FaceSigningEntry"-->
+<!--            android:icon="@drawable/icon"-->
+<!--            android:label="Face Tracker"-->
+<!--            android:theme="@style/Theme.AppCompat.NoActionBar"-->
+<!--            android:screenOrientation="fullSensor">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
     </application>
 
 </manifest>

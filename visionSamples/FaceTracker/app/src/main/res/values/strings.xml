@@ -6,4 +6,7 @@
     <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
 
     <string name="msg_detecting_progress">辨識中...請稍候</string>
+
+    <string name="btn_press_signing_in">上班打卡</string>
+    <string name="btn_press_signing_out">下班打卡</string>
 </resources>

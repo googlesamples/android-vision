@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="txt_size_time_info">85sp</dimen>
-    <dimen name="txt_size_date_info">30sp</dimen>
-    <dimen name="txt_size_detect_progress">44sp</dimen>
+    <dimen name="time_info_txt_size">85sp</dimen>
+    <dimen name="date_info_txt_size">30sp</dimen>
+    <dimen name="clock_face_diameter">512dp</dimen>
+    <dimen name="clock_face_w">512dp</dimen>
+    <dimen name="clock_face_h">512dp</dimen>
+    <dimen name="clock_margin_top">200dp</dimen>
+
+    <dimen name="btn_press_signing_in_top">150dp</dimen>
+    <dimen name="btn_press_signing_out_top">70dp</dimen>
+    <dimen name="press_signing_btn_h">110dp</dimen>
+    <dimen name="press_signing_btn_w">350dp</dimen>
+    <dimen name="press_signing_txt_size">44sp</dimen>
+
+    <dimen name="detect_progress_txt_size">44sp</dimen>
 </resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_time_info_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/head_bg">
+
+    <TextView
+        android:id="@+id/tv_time_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="10:30:56"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/time_info_txt_size"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_date_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_time_info"
+        android:layout_centerHorizontal="true"
+        android:text="2019/11/03 星期一"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/date_info_txt_size"
+        android:textStyle="bold" />
+</RelativeLayout>

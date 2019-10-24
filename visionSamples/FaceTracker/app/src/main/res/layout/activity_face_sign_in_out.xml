@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".flow.FaceSignInOutActivity">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:keepScreenOn="true">
+
+        <include layout="@layout/view_top_time_info_layout"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <com.google.android.gms.samples.vision.face.facetracker.ui.face.camera.CameraSourcePreview
+            android:id="@+id/preview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/rl_time_info_layout">
+            <com.google.android.gms.samples.vision.face.facetracker.ui.face.graph.GraphicOverlay
+                android:id="@+id/faceOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageView
+                android:id="@+id/iv_detect_square"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/material_barcode_square_512"/>
+        </com.google.android.gms.samples.vision.face.facetracker.ui.face.camera.CameraSourcePreview>
+
+        <TextView
+            android:id="@+id/tv_detecting_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:textSize="@dimen/detect_progress_txt_size"
+            android:text="@string/msg_detecting_progress"
+            app:layout_constraintTop_toBottomOf="@+id/rl_time_info_layout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

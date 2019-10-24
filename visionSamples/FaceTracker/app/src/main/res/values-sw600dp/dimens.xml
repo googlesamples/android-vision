@@ -7,11 +7,21 @@
     <dimen name="clock_face_h">512dp</dimen>
     <dimen name="clock_margin_top">200dp</dimen>
 
+    <dimen name="btn_setting_w">70dp</dimen>
+    <dimen name="btn_setting_h">70dp</dimen>
+    <dimen name="btn_setting_margin_right">40dp</dimen>
     <dimen name="btn_press_signing_in_top">150dp</dimen>
     <dimen name="btn_press_signing_out_top">70dp</dimen>
     <dimen name="press_signing_btn_h">110dp</dimen>
     <dimen name="press_signing_btn_w">350dp</dimen>
     <dimen name="press_signing_txt_size">44sp</dimen>
 
-    <dimen name="detect_progress_txt_size">44sp</dimen>
+    <dimen name="scaning_progress_txt_size">44sp</dimen>
+
+    <dimen name="result_txt_size">84sp</dimen>
+    <dimen name="result_name_margin_top">170dp</dimen>
+    <dimen name="result_margin_top">70dp</dimen>
+    <dimen name="signing_finish_w">200dp</dimen>
+    <dimen name="signing_finish_h">200dp</dimen>
+    <dimen name="signing_finish_margin_top">50dp</dimen>
 </resources>

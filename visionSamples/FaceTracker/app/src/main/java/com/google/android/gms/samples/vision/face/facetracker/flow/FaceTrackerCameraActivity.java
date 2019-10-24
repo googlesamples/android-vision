@@ -29,11 +29,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.PopupMenu;
-import androidx.databinding.DataBindingUtil;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.samples.vision.face.facetracker.R;
@@ -53,7 +48,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
-public final class FaceTrackerCameraActivity extends AppCompatActivity {
+public final class FaceTrackerCamera extends AppCompatActivity {
 
     public static final String TEMP_PHOTO_FILE_NAME = "face_track.jpg";
     public static final String EXTRA_OUTPUT = "extra_output";
@@ -268,7 +263,7 @@ public final class FaceTrackerCameraActivity extends AppCompatActivity {
                             bos.close();
                         } catch (IOException e) {
                             e.printStackTrace();
-                            Toast.makeText(FaceTrackerCameraActivity.this, "Photo capture failed", Toast.LENGTH_LONG).show();
+                            Toast.makeText(FaceTrackerCamera.this, "Photo capture failed", Toast.LENGTH_LONG).show();
                         }
 
                         mBinding.ivBtnSwitch.setTag(R.drawable.ic_confirm);

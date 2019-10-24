@@ -10,4 +10,6 @@
     <color name="button_bg">#58ba95</color>
     <color name="button_press_bg">#c7c8c8</color>
     <color name="transparent">#00000000</color>
+
+    <color name="signing_result_txt">#418bc7</color>
 </resources>

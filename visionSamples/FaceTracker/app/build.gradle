@@ -43,9 +43,11 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
-
     // Bitmap Resizer
     api 'com.github.hkk595:Resizer:v1.5'
+
+    // Circle ImageView
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'

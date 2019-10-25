@@ -6,11 +6,12 @@
     <dimen name="clock_face_w">256dp</dimen>
     <dimen name="clock_face_h">256dp</dimen>
     <dimen name="clock_margin_top">50dp</dimen>
+    <dimen name="btn_radius">12.5dp</dimen>
 
     <dimen name="btn_setting_w">40dp</dimen>
     <dimen name="btn_setting_h">40dp</dimen>
     <dimen name="btn_setting_margin_right">20dp</dimen>
-    <dimen name="btn_press_signing_in_top">40dp</dimen>
+    <dimen name="btn_press_signing_in_top">80dp</dimen>
     <dimen name="btn_press_signing_out_top">40dp</dimen>
     <dimen name="press_signing_btn_h">60dp</dimen>
     <dimen name="press_signing_btn_w">180dp</dimen>

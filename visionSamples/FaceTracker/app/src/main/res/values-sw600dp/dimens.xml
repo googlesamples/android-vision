@@ -6,6 +6,7 @@
     <dimen name="clock_face_w">512dp</dimen>
     <dimen name="clock_face_h">512dp</dimen>
     <dimen name="clock_margin_top">200dp</dimen>
+    <dimen name="btn_radius">25dp</dimen>
 
     <dimen name="btn_setting_w">70dp</dimen>
     <dimen name="btn_setting_h">70dp</dimen>

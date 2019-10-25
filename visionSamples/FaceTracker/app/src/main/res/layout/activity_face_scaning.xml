@@ -8,7 +8,9 @@
         android:layout_height="match_parent"
         android:keepScreenOn="true">
 
-        <include layout="@layout/view_top_time_info_layout"
+        <include
+            android:id="@+id/rl_include_time_info_layout"
+            layout="@layout/view_top_time_info_layout"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
@@ -17,7 +19,7 @@
             android:id="@+id/preview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/rl_time_info_layout">
+            app:layout_constraintTop_toBottomOf="@id/rl_include_time_info_layout">
             <com.google.android.gms.samples.vision.face.facetracker.ui.face.graph.GraphicOverlay
                 android:id="@+id/faceOverlay"
                 android:layout_width="match_parent"
@@ -40,7 +42,7 @@
             android:textStyle="bold"
             android:textSize="@dimen/scaning_progress_txt_size"
             android:text="@string/msg_detecting_progress"
-            app:layout_constraintTop_toBottomOf="@+id/rl_time_info_layout"
+            app:layout_constraintTop_toBottomOf="@+id/rl_include_time_info_layout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 

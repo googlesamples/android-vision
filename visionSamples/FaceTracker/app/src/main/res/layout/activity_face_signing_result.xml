@@ -9,6 +9,7 @@
         android:orientation="vertical">
 
         <include
+            android:id="@+id/rl_include_time_info_layout"
             layout="@layout/view_top_time_info_layout"
             android:visibility="invisible"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -20,10 +21,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@drawable/bg_signing"
-            app:layout_constraintBottom_toBottomOf="@id/rl_time_info_layout"
+            app:layout_constraintBottom_toBottomOf="@id/rl_include_time_info_layout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/rl_time_info_layout" />
+            app:layout_constraintTop_toTopOf="@id/rl_include_time_info_layout" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

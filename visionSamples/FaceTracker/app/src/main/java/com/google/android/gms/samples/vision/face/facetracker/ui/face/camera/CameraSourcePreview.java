@@ -46,6 +46,7 @@ public class CameraSourcePreview extends ViewGroup {
     private CameraSource.ShutterCallback mShutterCallback;
     private boolean mStartRequested;
     private boolean mSurfaceAvailable;
+    private boolean mIsEnableShutterLight = true;
 
 
     public CameraSourcePreview(Context context, AttributeSet attrs) {
@@ -90,11 +91,19 @@ public class CameraSourcePreview extends ViewGroup {
         mOverlay.setIsDrawFaceTracking(isDrawFaceTracking);
     }
 
+    public void setIsEnableShutterLight(boolean isEnableShutterLight) {
+        mIsEnableShutterLight = isEnableShutterLight;
+    }
+
     public void takePhoto(final View view, final CameraSource.ShutterCallback shutterCallback, final CameraSource.PictureCallback pictureCallback) {
         if (mShutterCallback == null) {
             mShutterCallback = new CameraSource.ShutterCallback() {
                 @Override
                 public void onShutter() {
+                    if (!mIsEnableShutterLight) {
+                        return;
+                    }
+
                     Context ctx = getContext();
                     ObjectAnimator backgroundColorAnimator = ObjectAnimator.ofObject(view
                             , "backgroundColor"

@@ -48,7 +48,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
-public final class FaceTrackerCamera extends AppCompatActivity {
+public final class FaceTrackerCameraActivity extends AppCompatActivity {
 
     public static final String TEMP_PHOTO_FILE_NAME = "face_track.jpg";
     public static final String EXTRA_OUTPUT = "extra_output";
@@ -187,7 +187,9 @@ public final class FaceTrackerCamera extends AppCompatActivity {
             }
 
             @Override
-            public void onUpdate(Face face) {}
+            public void onUpdate(Face face) {
+
+            }
 
             @Override
             public void onMissing(Face face) {
@@ -263,7 +265,7 @@ public final class FaceTrackerCamera extends AppCompatActivity {
                             bos.close();
                         } catch (IOException e) {
                             e.printStackTrace();
-                            Toast.makeText(FaceTrackerCamera.this, "Photo capture failed", Toast.LENGTH_LONG).show();
+                            Toast.makeText(FaceTrackerCameraActivity.this, "Photo capture failed", Toast.LENGTH_LONG).show();
                         }
 
                         mBinding.ivBtnSwitch.setTag(R.drawable.ic_confirm);

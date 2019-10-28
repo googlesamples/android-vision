@@ -47,7 +47,7 @@
                 app:layout_constraintRight_toRightOf="parent"/>
 
             <TextView
-                android:id="@+id/tv_scaning_result"
+                android:id="@+id/tv_sign_result"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/result_margin_top"
@@ -60,27 +60,26 @@
                 app:layout_constraintRight_toRightOf="parent"/>
 
             <TextView
-                android:id="@+id/tv_time_info"
+                android:id="@+id/tv_result_time_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:text="10:30:56"
                 android:textColor="@color/signing_result_txt"
                 android:textSize="@dimen/time_info_txt_size"
-                app:layout_constraintTop_toBottomOf="@id/tv_scaning_result"
+                app:layout_constraintTop_toBottomOf="@id/tv_sign_result"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
 
             <TextView
-                android:id="@+id/tv_date_info"
+                android:id="@+id/tv_resule_date_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_time_info"
                 android:layout_centerHorizontal="true"
                 android:text="2019/11/03 星期一"
                 android:textColor="@color/signing_result_txt"
                 android:textSize="@dimen/date_info_txt_size"
-                app:layout_constraintTop_toBottomOf="@id/tv_time_info"
+                app:layout_constraintTop_toBottomOf="@id/tv_result_time_info"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
 
@@ -89,11 +88,13 @@
                 android:layout_width="@dimen/press_signing_btn_w"
                 android:layout_height="@dimen/press_signing_btn_h"
                 android:background="@drawable/signing_button_bg_selector"
+                android:textColor="@android:color/white"
                 android:textStyle="bold"
                 android:textSize="@dimen/press_signing_txt_size"
                 android:text="@string/btn_signing_finish_confirm"
                 android:layout_marginTop="@dimen/signing_finish_margin_top"
-                app:layout_constraintTop_toBottomOf="@+id/tv_date_info"
+                android:onClick="onClick"
+                app:layout_constraintTop_toBottomOf="@+id/tv_resule_date_info"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
 
@@ -107,7 +108,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/v_top_head"
-            app:layout_constraintBottom_toBottomOf="@id/v_top_head"/>
+            app:layout_constraintBottom_toBottomOf="@id/v_top_head" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -12,5 +12,11 @@ data class SignData(val Employees:List<Employee>) {
                         , val SignType:String
                         , val SignDateTime:String
                         , val PersonId:String
-                        , val FaceId:String)
+                        , val FaceId:String) {
+        fun getTrimedSignDateTime():String = SignDateTime.run {
+            // ingore all string at last dot "."
+            SignDateTime.substring(0, SignDateTime.lastIndexOf("."))
+                        .replace("T", " ")
+        }
+    }
 }

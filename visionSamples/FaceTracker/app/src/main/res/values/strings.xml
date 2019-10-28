@@ -7,12 +7,16 @@
 
     <string name="msg_detecting_progress">偵測中...</string>
     <string name="msg_face_check_progress">辨識中...</string>
+    <string name="msg_face_finish_detecting_progress">辨識完成, 請稍等...</string>
     <string name="msg_detecting_eye_not_open">無法識別臉部眼睛, 請睜開眼</string>
     <string name="msg_detecting_face_out_of_range">無法識別臉部, 請將臉部移至偵測範圍</string>
     <string name="msg_signing">打卡中...</string>
     <string name="msg_progress_wait">註冊會員資料中...</string>
+    <string name="msg_sign_in_success">上班打卡完成</string>
+    <string name="msg_sign_out_success">下班打卡完成</string>
 
     <string name="err_no_sign_type_info">無法識別打卡型態為上班/下班</string>
+    <string name="err_no_member_info">無員工資料, 請重新識別</string>
 
     <string name="btn_signing_finish_confirm">確定</string>
     <string name="btn_press_signing_in">上班打卡</string>

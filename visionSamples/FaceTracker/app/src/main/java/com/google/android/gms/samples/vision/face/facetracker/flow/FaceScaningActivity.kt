@@ -118,14 +118,19 @@ class FaceScaningActivity: AppCompatActivity() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .doFinally {
                         mIsFaceChecking = false
-                        mBinding.tvDetectingProgress.text = getString(R.string.msg_detecting_face_out_of_range)
+                        mBinding.tvDetectingProgress.text = getString(R.string.msg_face_finish_detecting_progress)
                     }
                     .subscribe(object :Observer<SignData> {
                         override fun onSubscribe(d: Disposable) {}
 
                         override fun onNext(t: SignData) {
-                            FaceSigningResultActivity.startActivity(this@FaceScaningActivity, Utils.toJson(t, SignData::class.java))
-                            finish()
+                            if (!t.Employees.isEmpty()) {
+                                FaceSigningResultActivity.startActivity(
+                                    this@FaceScaningActivity,
+                                    Utils.toJson(t, SignData::class.java)
+                                )
+                                finish()
+                            }
                         }
 
                         override fun onError(e: Throwable) {
@@ -159,13 +164,16 @@ class FaceScaningActivity: AppCompatActivity() {
                 if(face.isLeftEyeOpenProbability < EYE_OPEN_VALID_PROB || face.isRightEyeOpenProbability < EYE_OPEN_VALID_PROB) {
                     mBinding.tvDetectingProgress.text = getString(R.string.msg_detecting_eye_not_open)
                     isValid = false
+
+                    mHandler.removeCallbacks(mDetectRunnable)
                 }
 
                 for(landmark in face.landmarks) {
                     if(landmark.position.x < 0 ||landmark.position.y < 0) {
                         mBinding.tvDetectingProgress.text = getString(R.string.msg_detecting_face_out_of_range)
                         isValid = false
-                        break
+
+                        mHandler.removeCallbacks(mDetectRunnable)
                     }
                 }
 
@@ -173,12 +181,7 @@ class FaceScaningActivity: AppCompatActivity() {
                     // 臉部維持有效至少VALID_FACE_RETAIN_DURATION_MS時間長才會觸發打卡
                     mIsFaceChecking = true
                     mBinding.tvDetectingProgress.text = getString(R.string.msg_face_check_progress)
-
                     mHandler.postDelayed(mDetectRunnable, VALID_FACE_RETAIN_DURATION_MS)
-                } else {
-                    mBinding.tvDetectingProgress.text = getString(R.string.msg_detecting_progress)
-                    // 臉部維持有效在VALID_FACE_RETAIN_DURATION_MS時間內, 若又變成無效時則取消正在Delay Waiting的mDetectRunnable
-                    mHandler.removeCallbacks(mDetectRunnable)
                 }
 
             }, {e -> e.printStackTrace()})

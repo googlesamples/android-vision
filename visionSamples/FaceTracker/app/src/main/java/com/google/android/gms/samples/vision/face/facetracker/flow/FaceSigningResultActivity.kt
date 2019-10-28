@@ -13,7 +13,6 @@ import com.google.android.gms.samples.vision.face.facetracker.databinding.Activi
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.SERVER_TRIMED_DATE_FORMAT
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.SIGN_RESULT_PAGE_DATE_FORMAT
-import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.SIGN_RESULT_PAGE_DEFAULT_TIME_FORMAT
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.SIGN_RESULT_PAGE_TIME_FORMAT
 import com.google.android.gms.samples.vision.face.facetracker.utils.TimeUtils
 import com.turn2cloud.paddemo.utils.Utils
@@ -53,12 +52,6 @@ class FaceSigningResultActivity : AppCompatActivity() {
         }
 
         init()
-
-        if (mEmployee == null) {
-            ViewUtils.showToast(this, getString(R.string.err_no_member_info))
-            finish()
-            return
-        }
         initView()
     }
 

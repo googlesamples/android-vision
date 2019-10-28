@@ -24,11 +24,11 @@ import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Fa
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.CAMERA_SOURCE_REQUEST_FPS
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.EYE_OPEN_VALID_PROB
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.FACE_VALID_CHECK_DURATION_SEC
-import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.TEMP_FACE_PHOTO_NAME
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.MultiProcessor
 import com.google.android.gms.vision.face.Face
 import com.google.android.gms.vision.face.FaceDetector
+import com.turn2cloud.paddemo.utils.Utils
 import com.turn2cloud.paddemo.utils.ViewUtils
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -104,6 +104,11 @@ class FaceScaningActivity: AppCompatActivity() {
     }
 
     private fun sign() {
+        if(isFinishing || isDestroyed) {
+            // if detecting finished, then hint user
+            mBinding.tvDetectingProgress.text = getString(R.string.msg_face_finish_detecting_progress)
+            return
+        }
         // 辨識中
         mBinding.preview.takePhoto(mBinding.root, null, { bytes ->
                 val apiInst = ApiInstMgr.getInstnace(this, Constants.Api.BASE_URL, IFaceLink::class.java)!!
@@ -119,8 +124,7 @@ class FaceScaningActivity: AppCompatActivity() {
                         override fun onSubscribe(d: Disposable) {}
 
                         override fun onNext(t: SignData) {
-                            Log.d("randy", t.toString())
-                            FaceSigningResultActivity.startActivity(this@FaceScaningActivity, "")
+                            FaceSigningResultActivity.startActivity(this@FaceScaningActivity, Utils.toJson(t, SignData::class.java))
                             finish()
                         }
 

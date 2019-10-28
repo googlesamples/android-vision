@@ -2,9 +2,9 @@ package com.google.android.gms.samples.vision.face.facetracker.flow
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.view.View.GONE
@@ -23,6 +23,7 @@ import com.google.android.gms.samples.vision.face.facetracker.ui.face.tracker.Gr
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.VALID_FACE_RETAIN_DURATION_MS
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.CAMERA_SOURCE_REQUEST_FPS
+import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.CAPTURE_PHOTO_DELAY_MS
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.EYE_OPEN_VALID_PROB
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.FACE_VALID_CHECK_THROTTLE_BUFFER_SEC
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.MAX_CAPTURE_PHOTO_SIZE
@@ -43,6 +44,7 @@ import okhttp3.RequestBody
 import java.util.concurrent.TimeUnit
 import okhttp3.MediaType.Companion.toMediaType
 import java.io.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 class FaceScaningActivity: AppCompatActivity() {
 
@@ -50,8 +52,10 @@ class FaceScaningActivity: AppCompatActivity() {
     private lateinit var mBinding:ActivityFaceScaningBinding
     private var mCameraSource: CameraSource? = null
     private lateinit var mSignType:String
-    private var mIsFaceChecking:Boolean = false
+    private var mIsFaceChecking:AtomicBoolean = AtomicBoolean(false)
     private val mDetectRunnable = Runnable { sign() }
+    private var mCapturePhotoDelay:Long = 0
+    private var mStartCountTime:Long = 0
 
     companion object {
         const val EXTRA_SIGNING_TYPE = "signing_type"
@@ -117,12 +121,35 @@ class FaceScaningActivity: AppCompatActivity() {
         }
     }
 
+    private fun reInitOnFail() {
+        val mp = MediaPlayer.create(this, R.raw.voice_sign_in_failed)
+
+        mp.start()
+        mp.setOnCompletionListener {
+            mCapturePhotoDelay = CAPTURE_PHOTO_DELAY_MS
+            init()
+            mp.release()
+        }
+    }
+
+    private fun signSuccess(employeeJsonStr:String) {
+        val mp = MediaPlayer.create(this, R.raw.voice_sign_in_success)
+
+        FaceSigningResultActivity.startActivity(this@FaceScaningActivity, employeeJsonStr)
+        finish()
+        mp.start()
+        mp.setOnCompletionListener {
+            mp.release()
+        }
+    }
+
     private fun sign() {
         if(isFinishing || isDestroyed) {
             // if detecting finished, then hint user
             mBinding.tvDetectingProgress.text = getString(R.string.msg_face_finish_detecting_progress)
             return
         }
+        mStartCountTime = System.currentTimeMillis()
         // 辨識中
         mBinding.preview.takePhoto(mBinding.root, null, { bytes ->
                 val apiInst = ApiInstMgr.getInstnace(this, Constants.Api.BASE_URL, IFaceLink::class.java)!!
@@ -136,8 +163,8 @@ class FaceScaningActivity: AppCompatActivity() {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doFinally {
-                        mIsFaceChecking = false
-                        mBinding.tvDetectingProgress.text = getString(R.string.msg_face_finish_detecting_progress)
+                        mIsFaceChecking.set(false)
+                        mBinding.tvDetectingProgress.text = getString(R.string.msg_detecting_progress)
 
                         disposable?.dispose()
                     }
@@ -146,19 +173,16 @@ class FaceScaningActivity: AppCompatActivity() {
 
                         override fun onNext(t: SignData) {
                             if (!t.Employees.isEmpty()) {
-                                FaceSigningResultActivity.startActivity(
-                                    this@FaceScaningActivity,
-                                    Utils.toJson(t, SignData::class.java)
-                                )
-                                finish()
+                                signSuccess(Utils.toJson(t, SignData::class.java))
                             } else {
-                                init()
+                                // Re-initialize camera source
+                                reInitOnFail()
                             }
                         }
 
                         override fun onError(e: Throwable) {
                             e.printStackTrace()
-                            init()
+                            reInitOnFail()
                         }
 
                         override fun onComplete() {}
@@ -167,7 +191,7 @@ class FaceScaningActivity: AppCompatActivity() {
     }
 
     private fun checkFace(face:Face) {
-        if(mIsFaceChecking) {
+        if(mIsFaceChecking.get()) {
             return
         }
 
@@ -200,8 +224,8 @@ class FaceScaningActivity: AppCompatActivity() {
                     }
                 }
 
-                if (isValid) {
-                    mIsFaceChecking = true
+                if (isValid && (System.currentTimeMillis() - mStartCountTime > mCapturePhotoDelay)) {
+                    mIsFaceChecking.set(true)
                     mBinding.tvDetectingProgress.text = getString(R.string.msg_face_check_progress)
                     
                     mHandler.postDelayed(mDetectRunnable, VALID_FACE_RETAIN_DURATION_MS)

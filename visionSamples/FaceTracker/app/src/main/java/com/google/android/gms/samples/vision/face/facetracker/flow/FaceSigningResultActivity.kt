@@ -2,6 +2,7 @@ package com.google.android.gms.samples.vision.face.facetracker.flow
 
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -42,7 +43,6 @@ class FaceSigningResultActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 改到此
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_face_signing_result)
 
         if (intent == null || !intent.hasExtra(EXTRA_EMPLOYEE_INFO_JSON_STR)) {
@@ -56,11 +56,7 @@ class FaceSigningResultActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        mSignData = Utils.fromJson(
-            intent.getStringExtra(EXTRA_EMPLOYEE_INFO_JSON_STR),
-            SignData::class.java
-        )
-
+        mSignData = Utils.fromJson(intent.getStringExtra(EXTRA_EMPLOYEE_INFO_JSON_STR), SignData::class.java)
         mEmployee = if (!mSignData.Employees.isEmpty()) mSignData.Employees[0] else null
         mSignDate = if (mEmployee != null) TimeUtils.convertStrToDate(SERVER_TRIMED_DATE_FORMAT, mEmployee?.getTrimedSignDateTime() ?: "") else mSignDate
     }

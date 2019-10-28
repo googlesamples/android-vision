@@ -9,12 +9,17 @@ object Constants {
     }
 
     object Face {
+        // Valid eye open probability
         const val EYE_OPEN_VALID_PROB = 0.3
         const val FACE_VALID_CHECK_THROTTLE_BUFFER_SEC = 3L
         const val CAMERA_SOURCE_REQUEST_FPS = 30.0f
         const val VALID_FACE_RETAIN_DURATION_MS = 200L
         const val TEMP_FACE_PHOTO_NAME = "temp_face.jpg"
+        // Capture photo width, height in px
         const val MAX_CAPTURE_PHOTO_SIZE = 400
+        // Capture photo delay
+        const val CAPTURE_PHOTO_DELAY_MS = 11000L
+
     }
 
     object Api {

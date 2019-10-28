@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/rl_include_time_info_layout"
+            layout="@layout/view_top_time_info_layout"
+            android:visibility="invisible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/v_top_head"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_signing"
+            app:layout_constraintBottom_toBottomOf="@id/rl_include_time_info_layout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/rl_include_time_info_layout" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/v_top_head">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/result_name_margin_top"
+                android:text="Tom"
+                android:textStyle="bold"
+                android:textSize="@dimen/result_txt_size"
+                android:textColor="@color/signing_result_txt"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+            <TextView
+                android:id="@+id/tv_sign_result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/result_margin_top"
+                android:text="上班打卡完成"
+                android:textStyle="bold"
+                android:textSize="@dimen/result_txt_size"
+                android:textColor="@color/signing_result_txt"
+                app:layout_constraintTop_toBottomOf="@id/tv_name"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+            <TextView
+                android:id="@+id/tv_result_time_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="10:30:56"
+                android:textColor="@color/signing_result_txt"
+                android:textSize="@dimen/time_info_txt_size"
+                app:layout_constraintTop_toBottomOf="@id/tv_sign_result"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+            <TextView
+                android:id="@+id/tv_resule_date_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="2019/11/03 星期一"
+                android:textColor="@color/signing_result_txt"
+                android:textSize="@dimen/date_info_txt_size"
+                app:layout_constraintTop_toBottomOf="@id/tv_result_time_info"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+            <Button
+                android:id="@+id/btn_signing_confirm"
+                android:layout_width="@dimen/press_signing_btn_w"
+                android:layout_height="@dimen/press_signing_btn_h"
+                android:background="@drawable/signing_button_bg_selector"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="@dimen/press_signing_txt_size"
+                android:text="@string/btn_signing_finish_confirm"
+                android:layout_marginTop="@dimen/signing_finish_margin_top"
+                android:onClick="onClick"
+                app:layout_constraintTop_toBottomOf="@+id/tv_resule_date_info"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/iv_signing_finish"
+            android:layout_width="@dimen/signing_finish_w"
+            android:layout_height="@dimen/signing_finish_h"
+            android:src="@drawable/ic_confirm"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/v_top_head"
+            app:layout_constraintBottom_toBottomOf="@id/v_top_head" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

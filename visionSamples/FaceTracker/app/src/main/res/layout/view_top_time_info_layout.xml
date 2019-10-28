@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_time_info_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/head_bg">
+
+    <com.google.android.gms.samples.vision.face.facetracker.view.CustTickTextView
+        android:id="@+id/tv_time_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="10:30:56"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/time_info_txt_size"
+        android:textStyle="bold"
+        app:output_format="HH:mm:ss"/>
+
+    <com.google.android.gms.samples.vision.face.facetracker.view.CustTickTextView
+        android:id="@+id/tv_date_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_time_info"
+        android:layout_centerHorizontal="true"
+        android:text="2019/11/03 星期一"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/date_info_txt_size"
+        android:textStyle="bold"
+        app:output_format="yyyy/MM/dd E"/>
+
+    <ImageView
+        android:id="@+id/iv_settings"
+        android:layout_width="@dimen/btn_setting_w"
+        android:layout_height="@dimen/btn_setting_h"
+        android:layout_marginRight="20dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_setting"/>
+</RelativeLayout>

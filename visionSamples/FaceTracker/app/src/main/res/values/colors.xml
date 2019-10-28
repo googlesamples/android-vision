@@ -2,4 +2,14 @@
 <resources>
     <color name="shutter_effect_color_start">#000000</color>
     <color name="shutter_effect_color_end">#00ffffff</color>
+
+    <color name="head_bg">#323142</color>
+    <color name="second">#58ba95</color>
+    <color name="hour">#000000</color>
+
+    <color name="button_bg">#58ba95</color>
+    <color name="button_press_bg">#c7c8c8</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="signing_result_txt">#418bc7</color>
 </resources>

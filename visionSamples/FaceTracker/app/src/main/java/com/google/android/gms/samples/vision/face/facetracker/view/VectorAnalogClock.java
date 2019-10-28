@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -27,17 +29,10 @@ import com.google.android.gms.samples.vision.face.facetracker.R;
 
 import java.util.Calendar;
 
-/**
- * Created by Turki Alkhateeb on 9/4/16.
- *
- *  Copy Right @2018 Turki Alkhateeb
- *  NOTE(2018): I have written this class long ago as a part of my app "Always On: Ambient Clock,"
- *              the app is now removed from Google Play Store.
- *
- *              I refactored it to make it usable as a library.
- *              Enjoy.
- */
+
 public abstract class VectorAnalogClock extends RelativeLayout {
+
+    private static final String TAG = "VectorAnalogClock";
 
     private AppCompatImageView analogFace;
     private AppCompatImageView analogHour;
@@ -54,6 +49,15 @@ public abstract class VectorAnalogClock extends RelativeLayout {
     private int secondId;
 
     private Context ctx;
+
+    private HandlerThread mTickThread = null;
+    private Handler mTickHandler = null;
+    private Runnable mTickRunnable = new Runnable() {
+        @Override
+        public void run() {
+            tickTick();
+        }
+    };
 
     public VectorAnalogClock(Context ctx) {
         super(ctx);
@@ -80,6 +84,10 @@ public abstract class VectorAnalogClock extends RelativeLayout {
      *  A simple initialization with default assets
      */
     public void initializeSimple(){
+        mTickThread = new HandlerThread(TAG);
+        mTickThread.start();
+        mTickHandler = new Handler(mTickThread.getLooper());
+
         this.faceId = R.drawable.clock_face;
         this.hourId = R.drawable.hours_hand;
         this.minuteId = R.drawable.minutes_hand;
@@ -326,7 +334,6 @@ public abstract class VectorAnalogClock extends RelativeLayout {
         analogSecond.setImageDrawable(second);
 
         dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,3.5f,getResources().getDisplayMetrics());
-
         layoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -334,18 +341,24 @@ public abstract class VectorAnalogClock extends RelativeLayout {
                 setPositionFor(analogMinute);
                 setPositionFor(analogHour);
 
-                tickTick();
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     getViewTreeObserver().removeOnGlobalLayoutListener(layoutListener);
-                }else{
+                } else {
                     getViewTreeObserver().removeGlobalOnLayoutListener(layoutListener);
                 }
+
             }
         };
-
         //the coolest line
         getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
+
+        // Align Time
+        Calendar cal = Calendar.getInstance();
+        long curTimeStamp = cal.getTimeInMillis();
+        cal.add(Calendar.SECOND, 1);
+        cal.set(Calendar.MILLISECOND, 0);
+        long diffMillis = cal.getTimeInMillis() - curTimeStamp;
+        mTickHandler.postDelayed(mTickRunnable, diffMillis);
     }
 
     private void setPositionFor(View v) {

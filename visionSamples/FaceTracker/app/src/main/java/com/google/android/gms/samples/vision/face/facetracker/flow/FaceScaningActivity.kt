@@ -2,16 +2,17 @@ package com.google.android.gms.samples.vision.face.facetracker.flow
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.test.api.ApiInstMgr
-import com.example.test.api.response.ApiResponse
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.samples.vision.face.facetracker.R
@@ -23,7 +24,9 @@ import com.google.android.gms.samples.vision.face.facetracker.utils.Constants
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.VALID_FACE_RETAIN_DURATION_MS
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.CAMERA_SOURCE_REQUEST_FPS
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.EYE_OPEN_VALID_PROB
-import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.FACE_VALID_CHECK_DURATION_SEC
+import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.FACE_VALID_CHECK_THROTTLE_BUFFER_SEC
+import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.MAX_CAPTURE_PHOTO_SIZE
+import com.google.android.gms.samples.vision.face.facetracker.utils.ImageUtils
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.MultiProcessor
 import com.google.android.gms.vision.face.Face
@@ -36,21 +39,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.view_top_time_info_layout.view.*
-import okhttp3.MediaType
 import okhttp3.RequestBody
-import java.io.BufferedOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.nio.file.Files
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicBoolean
 import okhttp3.MediaType.Companion.toMediaType
+import java.io.*
 
 class FaceScaningActivity: AppCompatActivity() {
 
     private val mHandler = Handler()
-    private var mDisposable: Disposable? = null
     private lateinit var mBinding:ActivityFaceScaningBinding
     private var mCameraSource: CameraSource? = null
     private lateinit var mSignType:String
@@ -85,6 +81,14 @@ class FaceScaningActivity: AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
+        mBinding.ivCapturePhoto.drawable.run {
+            val bitmapDrawable = this as BitmapDrawable?
+
+            System.gc()
+            if (bitmapDrawable?.bitmap != null && !bitmapDrawable.bitmap!!.isRecycled) {
+                bitmapDrawable.bitmap.recycle()
+            }
+        }
         mBinding.preview.release()
     }
 
@@ -101,6 +105,16 @@ class FaceScaningActivity: AppCompatActivity() {
 
         createCameraSource()
         startCameraSource()
+
+        mBinding.ivCapturePhoto.visibility = GONE
+        mBinding.ivCapturePhoto.drawable.run {
+            val bitmapDrawable = this as BitmapDrawable?
+
+            System.gc()
+            if (bitmapDrawable?.bitmap != null && !bitmapDrawable.bitmap!!.isRecycled) {
+                bitmapDrawable.bitmap.recycle()
+            }
+        }
     }
 
     private fun sign() {
@@ -112,16 +126,23 @@ class FaceScaningActivity: AppCompatActivity() {
         // 辨識中
         mBinding.preview.takePhoto(mBinding.root, null, { bytes ->
                 val apiInst = ApiInstMgr.getInstnace(this, Constants.Api.BASE_URL, IFaceLink::class.java)!!
+                var disposable:Disposable? = null
+                val byteArray = ImageUtils.createScaledBmpBytes(BitmapFactory.decodeByteArray(bytes, 0, bytes.size), MAX_CAPTURE_PHOTO_SIZE, MAX_CAPTURE_PHOTO_SIZE)
+                mBinding.ivCapturePhoto.visibility = VISIBLE
 
-                apiInst.sign(mSignType, RequestBody.create("application/octet-stream".toMediaType(), bytes))
+                mBinding.ivCapturePhoto.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.size))
+                mBinding.preview.release()
+                apiInst.sign(mSignType, RequestBody.create("application/octet-stream".toMediaType(), byteArray))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doFinally {
                         mIsFaceChecking = false
                         mBinding.tvDetectingProgress.text = getString(R.string.msg_face_finish_detecting_progress)
+
+                        disposable?.dispose()
                     }
                     .subscribe(object :Observer<SignData> {
-                        override fun onSubscribe(d: Disposable) {}
+                        override fun onSubscribe(d: Disposable) {disposable = d}
 
                         override fun onNext(t: SignData) {
                             if (!t.Employees.isEmpty()) {
@@ -130,11 +151,14 @@ class FaceScaningActivity: AppCompatActivity() {
                                     Utils.toJson(t, SignData::class.java)
                                 )
                                 finish()
+                            } else {
+                                init()
                             }
                         }
 
                         override fun onError(e: Throwable) {
                             e.printStackTrace()
+                            init()
                         }
 
                         override fun onComplete() {}
@@ -147,15 +171,13 @@ class FaceScaningActivity: AppCompatActivity() {
             return
         }
 
-        if(mDisposable != null && !mDisposable!!.isDisposed) {
-            mDisposable!!.dispose()
-        }
-
-        mDisposable = Observable.create<Any> { e ->
+        var disposable:Disposable? = null
+        Observable.create<Any> { e ->
             e.onNext(Object())
             e.onComplete()
-        }.throttleFirst(FACE_VALID_CHECK_DURATION_SEC, TimeUnit.SECONDS)
-        .subscribeOn(Schedulers.io())
+        }.throttleFirst(FACE_VALID_CHECK_THROTTLE_BUFFER_SEC, TimeUnit.SECONDS)
+            .doFinally { disposable?.dispose() }
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 // 左右眼張開小於EYE_OPEN_VALID_PROB, 視同無效資訊
@@ -174,17 +196,18 @@ class FaceScaningActivity: AppCompatActivity() {
                         isValid = false
 
                         mHandler.removeCallbacks(mDetectRunnable)
+                        break
                     }
                 }
 
                 if (isValid) {
-                    // 臉部維持有效至少VALID_FACE_RETAIN_DURATION_MS時間長才會觸發打卡
                     mIsFaceChecking = true
                     mBinding.tvDetectingProgress.text = getString(R.string.msg_face_check_progress)
+                    
                     mHandler.postDelayed(mDetectRunnable, VALID_FACE_RETAIN_DURATION_MS)
                 }
 
-            }, {e -> e.printStackTrace()})
+            }, {e -> e.printStackTrace()}).let { disposable = it }
     }
 
 

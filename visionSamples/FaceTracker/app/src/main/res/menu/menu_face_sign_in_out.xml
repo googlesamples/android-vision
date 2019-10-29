@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".flow.FaceSignInOutActivity">
+    <item
+        android:id="@+id/item_signing_stats"
+        android:icon="@drawable/ic_stats"
+        android:title="@string/setting_item_stats"
+        app:showAsAction="always"/>
+</menu>

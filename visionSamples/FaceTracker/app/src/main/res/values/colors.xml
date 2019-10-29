@@ -12,4 +12,6 @@
     <color name="transparent">#00000000</color>
 
     <color name="signing_result_txt">#418bc7</color>
+    <color name="colorPrimaryTextDefaultMaterialLight">#DE000000</color>
+    <color name="text_color">#99000000</color>
 </resources>

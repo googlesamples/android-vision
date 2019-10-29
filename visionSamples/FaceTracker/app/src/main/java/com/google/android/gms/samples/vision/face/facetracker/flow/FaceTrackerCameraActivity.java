@@ -148,7 +148,7 @@ public final class FaceTrackerCameraActivity extends AppCompatActivity {
     private void initSettingsPopupMenu() {
         mSettingMenu = new PopupMenu(this, mBinding.ivSettings);
 
-        mSettingMenu.getMenuInflater().inflate(R.menu.menu_camera_menu, mSettingMenu.getMenu());
+        mSettingMenu.getMenuInflater().inflate(R.menu.menu_camera, mSettingMenu.getMenu());
         mSettingMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

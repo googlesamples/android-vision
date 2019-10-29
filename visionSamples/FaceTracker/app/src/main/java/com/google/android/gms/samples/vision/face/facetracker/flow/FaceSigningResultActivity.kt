@@ -5,6 +5,7 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
+import android.view.View.GONE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.samples.vision.face.facetracker.R
@@ -43,14 +44,14 @@ class FaceSigningResultActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_face_signing_result)
-
         if (intent == null || !intent.hasExtra(EXTRA_EMPLOYEE_INFO_JSON_STR)) {
             ViewUtils.showToast(this, getString(R.string.err_no_member_info))
             finish()
             return
         }
 
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_face_signing_result)
+        mBinding.activity = this
         init()
         initView()
     }
@@ -62,7 +63,6 @@ class FaceSigningResultActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        mBinding.rlIncludeTimeInfoLayout.iv_settings.visibility = View.GONE
         mBinding.tvName.text = mEmployee?.EmployeeName
         mBinding.tvResuleDateInfo.text =
             TimeUtils.convertDateToStr(mSignDate!!, SIGN_RESULT_PAGE_DATE_FORMAT)

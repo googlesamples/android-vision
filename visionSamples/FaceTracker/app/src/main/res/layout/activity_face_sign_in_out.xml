@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -14,13 +15,13 @@
         android:layout_height="match_parent"
         android:background="@drawable/bg_signing"
         android:keepScreenOn="true">
-
         <include
             android:id="@+id/rl_include_time_info_layout"
             layout="@layout/view_top_time_info_layout"
+            bind:listener="@{activity::onClick}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent" />
 
         <com.google.android.gms.samples.vision.face.facetracker.view.CustVectorAnalogClock
             android:id="@+id/cvac_clock"

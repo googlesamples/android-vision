@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
@@ -73,12 +74,7 @@ class FaceScaningActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_face_scaning)
-        initView()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
+        mBinding.activity = this
         init()
     }
 
@@ -94,10 +90,6 @@ class FaceScaningActivity: AppCompatActivity() {
             }
         }
         mBinding.preview.release()
-    }
-
-    private fun initView() {
-        mBinding.rlIncludeTimeInfoLayout.iv_settings.visibility = GONE
     }
 
     private fun init() {
@@ -315,4 +307,6 @@ class FaceScaningActivity: AppCompatActivity() {
 
         }
     }
+
+    fun onClick(v: View) {}
 }

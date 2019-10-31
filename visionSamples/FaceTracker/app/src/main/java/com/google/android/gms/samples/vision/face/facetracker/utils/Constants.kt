@@ -1,11 +1,17 @@
 package com.google.android.gms.samples.vision.face.facetracker.utils
 
+import com.google.android.gms.samples.vision.face.facetracker.BuildConfig
+
 object Constants {
     object AppInfo {
         // "2019-10-28T10:41:39.8691634+08:00"
-        const val SERVER_TRIMED_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
+        const val SERVER_REPONSE_TRIMED_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
+        const val SERVER_REQUEST_DATE_FORMAT = "yyyy-MM-dd"
         const val SIGN_RESULT_PAGE_TIME_FORMAT = "HH:mm:ss"
         const val SIGN_RESULT_PAGE_DATE_FORMAT = "yyyy/MM/dd E"
+        const val AVG_SIGN_STATS_X_FORMAT = "MM-dd"
+        const val AVG_SIGN_STATS_Y_FORMAT = "HH:mm"
+        const val SIGN_IN_CRITERIA_TIME = "09:15:00"
     }
 
     object Face {

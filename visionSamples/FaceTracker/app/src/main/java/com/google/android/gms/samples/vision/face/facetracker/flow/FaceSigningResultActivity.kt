@@ -2,32 +2,27 @@ package com.google.android.gms.samples.vision.face.facetracker.flow
 
 import android.content.Context
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
-import android.view.View.GONE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.samples.vision.face.facetracker.R
-import com.google.android.gms.samples.vision.face.facetracker.api.api.response.model.SignData
-import com.google.android.gms.samples.vision.face.facetracker.databinding.ActivityFaceScaningBinding
+import com.google.android.gms.samples.vision.face.facetracker.api.api.response.model.SignInData
 import com.google.android.gms.samples.vision.face.facetracker.databinding.ActivityFaceSigningResultBinding
-import com.google.android.gms.samples.vision.face.facetracker.utils.Constants
-import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.SERVER_TRIMED_DATE_FORMAT
+import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.SERVER_REPONSE_TRIMED_DATE_FORMAT
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.SIGN_RESULT_PAGE_DATE_FORMAT
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.SIGN_RESULT_PAGE_TIME_FORMAT
 import com.google.android.gms.samples.vision.face.facetracker.utils.TimeUtils
 import com.turn2cloud.paddemo.utils.Utils
 import com.turn2cloud.paddemo.utils.ViewUtils
-import kotlinx.android.synthetic.main.view_top_time_info_layout.view.*
 import java.util.*
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.SignType.*
 
 class FaceSigningResultActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityFaceSigningResultBinding
-    private lateinit var mSignData: SignData
-    private var mEmployee: SignData.Employee? = null
+    private lateinit var mSignData: SignInData
+    private var mEmployee: SignInData.Employee? = null
     private var mSignDate: Date? = null
 
     companion object {
@@ -57,9 +52,9 @@ class FaceSigningResultActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        mSignData = Utils.fromJson(intent.getStringExtra(EXTRA_EMPLOYEE_INFO_JSON_STR), SignData::class.java)
+        mSignData = Utils.fromJson(intent.getStringExtra(EXTRA_EMPLOYEE_INFO_JSON_STR), SignInData::class.java)
         mEmployee = if (!mSignData.Employees.isEmpty()) mSignData.Employees[0] else null
-        mSignDate = if (mEmployee != null) TimeUtils.convertStrToDate(SERVER_TRIMED_DATE_FORMAT, mEmployee?.getTrimedSignDateTime() ?: "") else mSignDate
+        mSignDate = if (mEmployee != null) TimeUtils.convertStrToDate(SERVER_REPONSE_TRIMED_DATE_FORMAT, mEmployee?.getTrimedSignDateTime() ?: "") else mSignDate
     }
 
     private fun initView() {

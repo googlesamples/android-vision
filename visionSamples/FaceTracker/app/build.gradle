@@ -16,9 +16,16 @@ android {
         multiDexEnabled true
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+
+            buildConfigField "String", "API_URL", '"https://facelinkapi.azurewebsites.net"'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "API_URL", '"https://facelinkapi.azurewebsites.net"'
         }
     }
 

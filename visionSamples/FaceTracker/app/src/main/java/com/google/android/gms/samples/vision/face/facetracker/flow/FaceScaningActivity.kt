@@ -18,7 +18,7 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.samples.vision.face.facetracker.R
 import com.google.android.gms.samples.vision.face.facetracker.api.api.interf.IFaceLink
-import com.google.android.gms.samples.vision.face.facetracker.api.api.response.model.SignData
+import com.google.android.gms.samples.vision.face.facetracker.api.api.response.model.SignInData
 import com.google.android.gms.samples.vision.face.facetracker.databinding.ActivityFaceScaningBinding
 import com.google.android.gms.samples.vision.face.facetracker.ui.face.tracker.GraphicFaceTrackerFactory
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants
@@ -40,7 +40,6 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.view_top_time_info_layout.view.*
 import okhttp3.RequestBody
 import java.util.concurrent.TimeUnit
 import okhttp3.MediaType.Companion.toMediaType
@@ -160,12 +159,12 @@ class FaceScaningActivity: AppCompatActivity() {
 
                         disposable?.dispose()
                     }
-                    .subscribe(object :Observer<SignData> {
+                    .subscribe(object :Observer<SignInData> {
                         override fun onSubscribe(d: Disposable) {disposable = d}
 
-                        override fun onNext(t: SignData) {
+                        override fun onNext(t: SignInData) {
                             if (!t.Employees.isEmpty()) {
-                                signSuccess(Utils.toJson(t, SignData::class.java))
+                                signSuccess(Utils.toJson(t, SignInData::class.java))
                             } else {
                                 // Re-initialize camera source
                                 reInitOnFail()

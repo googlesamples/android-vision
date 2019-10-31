@@ -23,7 +23,8 @@ object Constants {
     }
 
     object Api {
-        val BASE_URL = " https://facelinkapi.azurewebsites.net"
+        val BASE_URL = BuildConfig.API_URL
+        val ORIG_ID = "0B193586CD103FA7"
     }
 
     enum class SignType(val type: String) {

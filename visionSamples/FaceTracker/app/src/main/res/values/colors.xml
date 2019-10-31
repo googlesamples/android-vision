@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="white">#ffffffff</color>
+    <!-- The color black, equivalent to 0xff000000 -->
+    <color name="black">#ff000000</color>
+
     <color name="shutter_effect_color_start">#000000</color>
     <color name="shutter_effect_color_end">#00ffffff</color>
 
@@ -11,7 +16,11 @@
     <color name="button_press_bg">#c7c8c8</color>
     <color name="transparent">#00000000</color>
 
-    <color name="signing_result_txt">#418bc7</color>
-    <color name="colorPrimaryTextDefaultMaterialLight">#DE000000</color>
+    <color name="colorPrimaryTextDefaultMaterialLight">#de000000</color>
+    <color name="calendar_header">#37364a</color>
+    <color name="selected_date_circle_color_app">#ff5252</color>
+    <color name="range_color">#ffcdd2</color>
+    <color name="date_disable_color">#c7c8c8</color>
+    <color name="txt_signing_result">#418bc7</color>
     <color name="text_color">#99000000</color>
 </resources>

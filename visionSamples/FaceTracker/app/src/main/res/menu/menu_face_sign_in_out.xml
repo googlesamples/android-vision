@@ -5,7 +5,6 @@
     tools:context=".flow.FaceSignInOutActivity">
     <item
         android:id="@+id/item_signing_stats"
-        android:icon="@drawable/ic_stats"
         android:title="@string/setting_item_stats"
         app:showAsAction="always"/>
 </menu>

@@ -7,25 +7,22 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.samples.vision.face.facetracker.R
-import com.google.android.gms.samples.vision.face.facetracker.api.api.response.model.SignData
-import com.google.android.gms.samples.vision.face.facetracker.databinding.ActivityFaceScaningBinding
+import com.google.android.gms.samples.vision.face.facetracker.api.api.response.model.SignInData
 import com.google.android.gms.samples.vision.face.facetracker.databinding.ActivityFaceSigningResultBinding
-import com.google.android.gms.samples.vision.face.facetracker.utils.Constants
-import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.SERVER_TRIMED_DATE_FORMAT
+import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.SERVER_REPONSE_TRIMED_DATE_FORMAT
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.SIGN_RESULT_PAGE_DATE_FORMAT
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.SIGN_RESULT_PAGE_TIME_FORMAT
 import com.google.android.gms.samples.vision.face.facetracker.utils.TimeUtils
 import com.turn2cloud.paddemo.utils.Utils
 import com.turn2cloud.paddemo.utils.ViewUtils
-import kotlinx.android.synthetic.main.view_top_time_info_layout.view.*
 import java.util.*
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.SignType.*
 
 class FaceSigningResultActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityFaceSigningResultBinding
-    private lateinit var mSignData: SignData
-    private var mEmployee: SignData.Employee? = null
+    private lateinit var mSignData: SignInData
+    private var mEmployee: SignInData.Employee? = null
     private var mSignDate: Date? = null
 
     companion object {
@@ -42,31 +39,25 @@ class FaceSigningResultActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 改到此
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_face_signing_result)
-
         if (intent == null || !intent.hasExtra(EXTRA_EMPLOYEE_INFO_JSON_STR)) {
             ViewUtils.showToast(this, getString(R.string.err_no_member_info))
             finish()
             return
         }
 
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_face_signing_result)
+        mBinding.activity = this
         init()
         initView()
     }
 
     private fun init() {
-        mSignData = Utils.fromJson(
-            intent.getStringExtra(EXTRA_EMPLOYEE_INFO_JSON_STR),
-            SignData::class.java
-        )
-
+        mSignData = Utils.fromJson(intent.getStringExtra(EXTRA_EMPLOYEE_INFO_JSON_STR), SignInData::class.java)
         mEmployee = if (!mSignData.Employees.isEmpty()) mSignData.Employees[0] else null
-        mSignDate = if (mEmployee != null) TimeUtils.convertStrToDate(SERVER_TRIMED_DATE_FORMAT, mEmployee?.getTrimedSignDateTime() ?: "") else mSignDate
+        mSignDate = if (mEmployee != null) TimeUtils.convertStrToDate(SERVER_REPONSE_TRIMED_DATE_FORMAT, mEmployee?.getTrimedSignDateTime() ?: "") else mSignDate
     }
 
     private fun initView() {
-        mBinding.rlIncludeTimeInfoLayout.iv_settings.visibility = View.GONE
         mBinding.tvName.text = mEmployee?.EmployeeName
         mBinding.tvResuleDateInfo.text =
             TimeUtils.convertDateToStr(mSignDate!!, SIGN_RESULT_PAGE_DATE_FORMAT)

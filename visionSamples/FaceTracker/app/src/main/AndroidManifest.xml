@@ -8,14 +8,17 @@
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:name=".FaceTrackerApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
-        android:theme="@style/Theme.AppCompat"
         android:label="FaceTracker"
+        android:theme="@style/AppTheme.NoActionBar"
+        android:largeHeap="true"
         tools:replace="android:label"
         tools:ignore="GoogleAppIndexingWarning">
 
@@ -27,10 +30,9 @@
             android:value="face" />
 
         <activity
-            android:name="com.google.android.gms.samples.vision.face.facetracker.flow.FaceSignInOutActivity"
+            android:name=".flow.FaceSignInOutActivity"
             android:icon="@drawable/icon"
             android:label="Face Tracker"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,18 +40,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <activity-->
-<!--            android:name="com.google.android.gms.samples.vision.face.facetracker.flow.FaceSigningEntry"-->
-<!--            android:icon="@drawable/icon"-->
-<!--            android:label="Face Tracker"-->
-<!--            android:theme="@style/Theme.AppCompat.NoActionBar"-->
-<!--            android:screenOrientation="fullSensor">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
+        <activity android:name=".flow.FaceScaningActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".flow.FaceSigningResultActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".flow.FaceStatisticActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="activity"
+            type="com.google.android.gms.samples.vision.face.facetracker.flow.FaceSigningResultActivity" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,10 +44,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/result_name_margin_top"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:text="Tom"
                 android:textStyle="bold"
                 android:textSize="@dimen/result_txt_size"
-                android:textColor="@color/signing_result_txt"
+                android:textColor="@color/txt_signing_result"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
@@ -54,7 +62,7 @@
                 android:text="上班打卡完成"
                 android:textStyle="bold"
                 android:textSize="@dimen/result_txt_size"
-                android:textColor="@color/signing_result_txt"
+                android:textColor="@color/txt_signing_result"
                 app:layout_constraintTop_toBottomOf="@id/tv_name"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
@@ -65,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:text="10:30:56"
-                android:textColor="@color/signing_result_txt"
+                android:textColor="@color/txt_signing_result"
                 android:textSize="@dimen/time_info_txt_size"
                 app:layout_constraintTop_toBottomOf="@id/tv_sign_result"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -77,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:text="2019/11/03 星期一"
-                android:textColor="@color/signing_result_txt"
+                android:textColor="@color/txt_signing_result"
                 android:textSize="@dimen/date_info_txt_size"
                 app:layout_constraintTop_toBottomOf="@id/tv_result_time_info"
                 app:layout_constraintLeft_toLeftOf="parent"

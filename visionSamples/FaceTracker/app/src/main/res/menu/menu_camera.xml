@@ -3,6 +3,6 @@
     <group android:checkableBehavior="all">
         <item
             android:id="@+id/item_is_draw_face_tracking"
-            android:title="臉部追蹤"></item>
+            android:title="@string/setting_item_face_track"/>
     </group>
 </menu>

@@ -4,6 +4,15 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('../android_release_key')
+            storePassword 'Turn2Cloud'
+            keyAlias = 'Turn2Cloud'
+            keyPassword 'Turn2Cloud'
+        }
+    }
+
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
 
@@ -22,6 +31,7 @@ android {
             buildConfigField "String", "API_URL", '"https://facelinkapi.azurewebsites.net"'
         }
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 

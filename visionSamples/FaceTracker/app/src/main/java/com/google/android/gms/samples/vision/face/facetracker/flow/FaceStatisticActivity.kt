@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.appeaser.sublimepickerlibrary.SublimePicker
@@ -137,6 +136,7 @@ class FaceStatisticActivity : AppCompatActivity() {
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.setDrawGridLines(false)
             xAxis.setDrawAxisLine(false)
+            xAxis.textSize = resources.getDimensionPixelSize(R.dimen.stats_linechart_x_text_size).toFloat()
             xAxis.valueFormatter = object : ValueFormatter() {
                 override fun getAxisLabel(value: Float, axis: AxisBase?): String {
                     return TimeUtils.convertDateToStr(Date(value.toLong()), AVG_SIGN_STATS_X_FORMAT)
@@ -147,16 +147,21 @@ class FaceStatisticActivity : AppCompatActivity() {
             leftAxis.textColor = ColorTemplate.getHoloBlue()
             leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
             leftAxis.setDrawGridLines(true)
+            leftAxis.textSize = resources.getDimensionPixelSize(R.dimen.stats_linechart_y_text_size).toFloat()
             leftAxis.valueFormatter = object :ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
                     return TimeUtils.convertDateToStr(Date(value.toLong()), AVG_SIGN_STATS_Y_FORMAT)
                 }
             }
+
+            this.legend.formSize = resources.getInteger(R.integer.stats_chart_legend_form_size).toFloat()
+            this.legend.textSize = resources.getInteger(R.integer.stats_chart_legend_text_size).toFloat()
         }
         mBinding.pcSignInOutListStats.apply {
             this.setUsePercentValues(true)
             this.description.isEnabled = false
             this.isDrawHoleEnabled = false
+            this.setEntryLabelTextSize(resources.getInteger(R.integer.stats_piechart_value_text_size).toFloat())
             this.setExtraOffsets(5f, 10f, 5f, 5f)
             this.dragDecelerationFrictionCoef = 0.95f
             this.setTransparentCircleColor(Color.WHITE)
@@ -168,6 +173,9 @@ class FaceStatisticActivity : AppCompatActivity() {
             // enable rotation of the chart by touch
             this.isRotationEnabled = true
             this.isHighlightPerTapEnabled = true
+
+            this.legend.formSize = resources.getInteger(R.integer.stats_chart_legend_form_size).toFloat()
+            this.legend.textSize = resources.getInteger(R.integer.stats_chart_legend_text_size).toFloat()
         }
     }
 
@@ -269,7 +277,7 @@ class FaceStatisticActivity : AppCompatActivity() {
 
         val data = LineData(signInDataSet, signOutDataSet)
         data.setValueTextColor(Color.BLACK)
-        data.setValueTextSize(9f)
+        data.setValueTextSize(resources.getInteger(R.integer.stats_linechart_value_text_size).toFloat())
         data.setValueFormatter(object :ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 return TimeUtils.convertDateToStr(Date(value.toLong()), AVG_SIGN_STATS_Y_FORMAT)
@@ -308,6 +316,8 @@ class FaceStatisticActivity : AppCompatActivity() {
 
         val dataSet = PieDataSet(entries, "")
         dataSet.setDrawIcons(false)
+        dataSet.valueTextSize = resources.getInteger(R.integer.stats_piechart_value_text_size).toFloat()
+        dataSet.valueTextColor = Color.WHITE
         dataSet.sliceSpace = 3f
         dataSet.iconsOffset = MPPointF(0f, 40f)
         dataSet.selectionShift = 5f
@@ -315,8 +325,6 @@ class FaceStatisticActivity : AppCompatActivity() {
 
         val data = PieData(dataSet)
         data.setValueFormatter(PercentFormatter(mBinding.pcSignInOutListStats))
-        data.setValueTextSize(11f)
-        data.setValueTextColor(Color.WHITE)
         mBinding.pcSignInOutListStats.data = data
     }
 

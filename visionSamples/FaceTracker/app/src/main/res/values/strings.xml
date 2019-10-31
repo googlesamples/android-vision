@@ -23,9 +23,12 @@
     <string name="btn_press_signing_out">下班打卡</string>
     <string name="btn_date_selection">%1$s ~ %2$s</string>
 
+    <string name="avg_sign_in_time_stats_title">平均出勤時間表</string>
     <string name="setting_item_face_track">臉部追蹤</string>
     <string name="setting_item_stats">統計資料</string>
     <string name="hint_employee_id">Employee ID</string>
+    <string name="on_time_stats_title">準點出勤分佈表</string>
     <string name="pie_on_time">正常</string>
     <string name="pie_late">遲到</string>
+
 </resources>

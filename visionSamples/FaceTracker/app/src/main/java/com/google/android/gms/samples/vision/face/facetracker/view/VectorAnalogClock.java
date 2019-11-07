@@ -50,7 +50,6 @@ public abstract class VectorAnalogClock extends RelativeLayout {
 
     private Context ctx;
 
-    private HandlerThread mTickThread = null;
     private Handler mTickHandler = null;
     private Runnable mTickRunnable = new Runnable() {
         @Override
@@ -84,9 +83,7 @@ public abstract class VectorAnalogClock extends RelativeLayout {
      *  A simple initialization with default assets
      */
     public void initializeSimple(){
-        mTickThread = new HandlerThread(TAG);
-        mTickThread.start();
-        mTickHandler = new Handler(mTickThread.getLooper());
+        mTickHandler = new Handler();
 
         this.faceId = R.drawable.clock_face;
         this.hourId = R.drawable.hours_hand;

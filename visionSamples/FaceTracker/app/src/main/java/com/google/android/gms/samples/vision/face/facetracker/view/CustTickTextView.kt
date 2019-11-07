@@ -19,7 +19,6 @@ class CustTickTextView : TextView {
     }
 
     private lateinit var mFormat: String
-    private lateinit var mTickThread: HandlerThread
     private lateinit var mTickHandler:Handler
     private val mTickRunnable = object:Runnable {
         override fun run() {
@@ -59,10 +58,7 @@ class CustTickTextView : TextView {
         mFormat = attrs.getString(R.styleable.CustTickTextView_output_format)
         val cal = Calendar.getInstance()
         this.text = TimeUtils.convertDateToStr(cal.time, mFormat)
-
-        mTickThread = HandlerThread(TAG)
-        mTickThread.start()
-        mTickHandler = Handler(mTickThread.looper)
+        this.mTickHandler = Handler()
         // Align Time
         val curTimeStamp = cal.timeInMillis
         cal.add(Calendar.SECOND, 1)

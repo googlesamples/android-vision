@@ -220,9 +220,26 @@ class FaceScaningActivity: AppCompatActivity() {
                     mBinding.tvDetectingProgress.text = getString(R.string.msg_face_check_progress)
                     
                     mHandler.postDelayed(mDetectRunnable, VALID_FACE_RETAIN_DURATION_MS)
+        for (landmark in face.landmarks) {
+            if (landmark.position.x < 0 || landmark.position.y < 0) {
+                mBinding.tvDetectingProgress.post {
+                    mBinding.tvDetectingProgress.text = getString(R.string.msg_detecting_face_out_of_range)
                 }
+                isValid = false
+                mHandler.removeCallbacks(mDetectRunnable)
+                break
+            }
+        }
 
             }, {e -> e.printStackTrace()}).let { disposable = it }
+        if (isValid && (System.currentTimeMillis() - mStartCountTime > mCapturePhotoDelay)) {
+            mBinding.tvDetectingProgress.post {
+                mBinding.tvDetectingProgress.text = getString(R.string.msg_face_check_progress)
+            }
+            mHandler.postDelayed(mDetectRunnable, VALID_FACE_RETAIN_DURATION_MS)
+        } else {
+            mIsFaceChecking.set(false)
+        }
     }
 
 
@@ -257,7 +274,9 @@ class FaceScaningActivity: AppCompatActivity() {
                         }
 
                         override fun onDone(face: Face) {
-                            mBinding.tvDetectingProgress.text = getString(R.string.msg_detecting_face_out_of_range)
+                            mBinding.tvDetectingProgress.post {
+                                mBinding.tvDetectingProgress.text = getString(R.string.msg_detecting_face_out_of_range)
+                            }
                         }
                     })
             ).build()

@@ -51,9 +51,12 @@ class FaceScaningActivity: AppCompatActivity() {
     private val mHandler = Handler()
     private lateinit var mBinding:ActivityFaceScaningBinding
     private var mCameraSource: CameraSource? = null
+    private var mMp: MediaPlayer? = null
     private lateinit var mSignType:String
     private var mIsFaceChecking:AtomicBoolean = AtomicBoolean(false)
-    private val mDetectRunnable = Runnable { sign() }
+    private val mDetectRunnable = Runnable {
+        sign()
+    }
     private var mCapturePhotoDelay:Long = 0
     private var mStartCountTime:Long = 0
 
@@ -88,6 +91,8 @@ class FaceScaningActivity: AppCompatActivity() {
                 bitmapDrawable.bitmap.recycle()
             }
         }
+        mMp?.release()
+        mHandler.removeCallbacks(mDetectRunnable)
         mBinding.preview.release()
     }
 
@@ -113,13 +118,13 @@ class FaceScaningActivity: AppCompatActivity() {
     }
 
     private fun reInitOnFail() {
-        val mp = MediaPlayer.create(this, R.raw.voice_sign_in_failed)
+        mMp = MediaPlayer.create(this, R.raw.voice_sign_in_failed)
 
-        mp.start()
-        mp.setOnCompletionListener {
+        mMp!!.start()
+        mMp!!.setOnCompletionListener {
             mCapturePhotoDelay = CAPTURE_PHOTO_DELAY_MS
             init()
-            mp.release()
+            mMp!!.release()
         }
     }
 
@@ -138,6 +143,7 @@ class FaceScaningActivity: AppCompatActivity() {
         if(isFinishing || isDestroyed) {
             // if detecting finished, then hint user
             mBinding.tvDetectingProgress.text = getString(R.string.msg_face_finish_detecting_progress)
+            mIsFaceChecking.set(false)
             return
         }
         mStartCountTime = System.currentTimeMillis()
@@ -156,7 +162,6 @@ class FaceScaningActivity: AppCompatActivity() {
                     .doFinally {
                         mIsFaceChecking.set(false)
                         mBinding.tvDetectingProgress.text = getString(R.string.msg_detecting_progress)
-
                         disposable?.dispose()
                     }
                     .subscribe(object :Observer<SignInData> {
@@ -182,44 +187,21 @@ class FaceScaningActivity: AppCompatActivity() {
     }
 
     private fun checkFace(face:Face) {
-        if(mIsFaceChecking.get()) {
+        if (mIsFaceChecking.get() || isFinishing || isDestroyed) {
             return
         }
+        mIsFaceChecking.set(true)
+        // 左右眼張開小於EYE_OPEN_VALID_PROB, 視同無效資訊
+        var isValid = true
 
-        var disposable:Disposable? = null
-        Observable.create<Any> { e ->
-            e.onNext(Object())
-            e.onComplete()
-        }.throttleFirst(FACE_VALID_CHECK_THROTTLE_BUFFER_SEC, TimeUnit.SECONDS)
-            .doFinally { disposable?.dispose() }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                // 左右眼張開小於EYE_OPEN_VALID_PROB, 視同無效資訊
-                var isValid = true
+        if (face.isLeftEyeOpenProbability < EYE_OPEN_VALID_PROB || face.isRightEyeOpenProbability < EYE_OPEN_VALID_PROB) {
+            mBinding.tvDetectingProgress.post {
+                mBinding.tvDetectingProgress.text = getString(R.string.msg_detecting_eye_not_open)
+            }
+            isValid = false
+            mHandler.removeCallbacks(mDetectRunnable)
+        }
 
-                if(face.isLeftEyeOpenProbability < EYE_OPEN_VALID_PROB || face.isRightEyeOpenProbability < EYE_OPEN_VALID_PROB) {
-                    mBinding.tvDetectingProgress.text = getString(R.string.msg_detecting_eye_not_open)
-                    isValid = false
-
-                    mHandler.removeCallbacks(mDetectRunnable)
-                }
-
-                for(landmark in face.landmarks) {
-                    if(landmark.position.x < 0 ||landmark.position.y < 0) {
-                        mBinding.tvDetectingProgress.text = getString(R.string.msg_detecting_face_out_of_range)
-                        isValid = false
-
-                        mHandler.removeCallbacks(mDetectRunnable)
-                        break
-                    }
-                }
-
-                if (isValid && (System.currentTimeMillis() - mStartCountTime > mCapturePhotoDelay)) {
-                    mIsFaceChecking.set(true)
-                    mBinding.tvDetectingProgress.text = getString(R.string.msg_face_check_progress)
-                    
-                    mHandler.postDelayed(mDetectRunnable, VALID_FACE_RETAIN_DURATION_MS)
         for (landmark in face.landmarks) {
             if (landmark.position.x < 0 || landmark.position.y < 0) {
                 mBinding.tvDetectingProgress.post {
@@ -231,7 +213,6 @@ class FaceScaningActivity: AppCompatActivity() {
             }
         }
 
-            }, {e -> e.printStackTrace()}).let { disposable = it }
         if (isValid && (System.currentTimeMillis() - mStartCountTime > mCapturePhotoDelay)) {
             mBinding.tvDetectingProgress.post {
                 mBinding.tvDetectingProgress.text = getString(R.string.msg_face_check_progress)

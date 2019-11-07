@@ -68,6 +68,6 @@ class CustTickTextView : TextView {
     }
 
     fun release() {
-        mTickThread.quit()
+        mTickHandler.removeCallbacks(mTickRunnable)
     }
 }

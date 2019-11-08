@@ -30,13 +30,14 @@
     <dimen name="stats_type_title_text_size">28sp</dimen>
     <dimen name="stats_type_title_margin_left">10dp</dimen>
     <dimen name="stats_type_title_margin_top">10dp</dimen>
-    <dimen name="stats_chart_margin_top">10dp</dimen>
+    <dimen name="stats_chart_margin">20dp</dimen>
     <dimen name="stats_chart_min_h">500dp</dimen>
     <integer name="stats_chart_legend_text_size">18</integer>
     <integer name="stats_chart_legend_form_size">18</integer>
     <integer name="stats_linechart_value_text_size">20</integer>
     <dimen name="stats_linechart_x_text_size">18sp</dimen>
     <dimen name="stats_linechart_y_text_size">18sp</dimen>
+    <integer name="stats_linechart_extra_bottom_offset">15</integer>
     <dimen name="stats_linechart_x_legend_space">20dp</dimen>
     <dimen name="stats_linechart_y_legend_space">20dp</dimen>
     <integer name="stats_piechart_value_text_size">30</integer>

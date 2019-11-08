@@ -27,7 +27,8 @@
             android:id="@+id/preview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/rl_include_time_info_layout">
+            app:layout_constraintTop_toBottomOf="@id/rl_include_time_info_layout"
+            app:layout_constraintBottom_toBottomOf="parent">
             <com.google.android.gms.samples.vision.face.facetracker.ui.face.graph.GraphicOverlay
                 android:id="@+id/faceOverlay"
                 android:layout_width="match_parent"
@@ -37,7 +38,7 @@
                 android:id="@+id/iv_detect_square"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/camera_viewfinder_square_1"/>
+                android:src="@drawable/camera_viewfinder_square_2"/>
         </com.google.android.gms.samples.vision.face.facetracker.ui.face.camera.CameraSourcePreview>
 
         <TextView

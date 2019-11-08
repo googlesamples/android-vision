@@ -48,7 +48,6 @@ import kotlin.collections.ArrayList
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.SignType.*
 import kotlinx.android.synthetic.main.view_status_ctl_layout.view.*
 
-// TODO: It will need to be refiend
 class FaceStatisticActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityFaceStatisticBinding
@@ -100,15 +99,16 @@ class FaceStatisticActivity : AppCompatActivity() {
 
     private fun initView() {
         mBinding.sdpDatePicker.apply {
+            // 日期區間選擇
             val options = SublimeOptions()
-
             options.setPickerToShow(DATE_PICKER)
             options.setDisplayOptions(ACTIVATE_DATE_PICKER)
             options.setCanPickDateRange(true)
             this.initializePicker(options, mDatePickerListener)
         }
+
         mBinding.lcSignListStats.apply {
-            // 平均打卡時間
+            // 平均打卡時間, 隱藏右邊顯示左邊Y
             this.axisRight.isEnabled = false
             this.axisLeft.isEnabled = true
             // background color
@@ -129,9 +129,9 @@ class FaceStatisticActivity : AppCompatActivity() {
             this.setDrawGridBackground(false)
             // Description
             this.description.isEnabled = false
+            // Extra offset around chart view
+            this.extraBottomOffset = resources.getInteger(R.integer.stats_linechart_extra_bottom_offset).toFloat()
 
-            val xAxis = this.xAxis
-            xAxis.textSize = 11f
             xAxis.textColor = Color.BLACK
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.setDrawGridLines(false)
@@ -143,21 +143,21 @@ class FaceStatisticActivity : AppCompatActivity() {
                 }
             }
 
-            val leftAxis = this.axisLeft
-            leftAxis.textColor = ColorTemplate.getHoloBlue()
-            leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
-            leftAxis.setDrawGridLines(true)
-            leftAxis.textSize = resources.getDimensionPixelSize(R.dimen.stats_linechart_y_text_size).toFloat()
-            leftAxis.valueFormatter = object :ValueFormatter() {
+            axisLeft.textColor = ColorTemplate.getHoloBlue()
+            axisLeft.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
+            axisLeft.setDrawGridLines(true)
+            axisLeft.textSize = resources.getDimensionPixelSize(R.dimen.stats_linechart_y_text_size).toFloat()
+            axisLeft.valueFormatter = object :ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
                     return TimeUtils.convertDateToStr(Date(value.toLong()), AVG_SIGN_STATS_Y_FORMAT)
                 }
             }
 
-            this.legend.formSize = resources.getInteger(R.integer.stats_chart_legend_form_size).toFloat()
-            this.legend.textSize = resources.getInteger(R.integer.stats_chart_legend_text_size).toFloat()
+            legend.formSize = resources.getInteger(R.integer.stats_chart_legend_form_size).toFloat()
+            legend.textSize = resources.getInteger(R.integer.stats_chart_legend_text_size).toFloat()
         }
         mBinding.pcSignInOutListStats.apply {
+            // 準點出勤分佈
             this.setUsePercentValues(true)
             this.description.isEnabled = false
             this.isDrawHoleEnabled = false
@@ -246,8 +246,14 @@ class FaceStatisticActivity : AppCompatActivity() {
             signInList.forEach {
                 totalSignInMS += TimeUtils.convertStrToDate(SERVER_REPONSE_TRIMED_DATE_FORMAT, it.getTrimedSignDateTime()).time
             }
-            val avgSignInTimeStr:Long = (totalSignInMS / signInList.size)
-            signInEntryList.add(Entry(TimeUtils.convertStrToDate(SERVER_REQUEST_DATE_FORMAT, date).time.toFloat(), avgSignInTimeStr.toFloat()))
+            val avgSignInTimeStr = (totalSignInMS / signInList.size)
+            val normalizedTime = Calendar.getInstance();
+            normalizedTime.time = TimeUtils.convertStrToDate(SERVER_REQUEST_DATE_FORMAT, date)
+
+            normalizedTime.set(Calendar.YEAR, 2000)
+            normalizedTime.set(Calendar.MONTH, 1)
+            normalizedTime.set(Calendar.DAY_OF_YEAR, 1)
+            signInEntryList.add(Entry(normalizedTime.timeInMillis.toFloat(), avgSignInTimeStr.toFloat()))
         }
         signInDataSet.values = signInEntryList
 
@@ -261,7 +267,6 @@ class FaceStatisticActivity : AppCompatActivity() {
         signOutDataSet.setFillAlpha(65)
         signOutDataSet.setDrawCircleHole(false)
         signOutDataSet.setHighLightColor(Color.GRAY)
-
         signOutDateMap.forEach {
             val date = it.key
             val signInList = it.value
@@ -270,7 +275,7 @@ class FaceStatisticActivity : AppCompatActivity() {
             signInList.forEach {
                 totalSignInMS += TimeUtils.convertStrToDate(SERVER_REPONSE_TRIMED_DATE_FORMAT, it.getTrimedSignDateTime()).time
             }
-            val avgSignInTimeStr:Long = (totalSignInMS / signInList.size)
+            val avgSignInTimeStr = (totalSignInMS / signInList.size)
             signOutEntryList.add(Entry(TimeUtils.convertStrToDate(SERVER_REQUEST_DATE_FORMAT, date).time.toFloat(), avgSignInTimeStr.toFloat()))
         }
         signOutDataSet.values = signOutEntryList

@@ -39,7 +39,6 @@ class FaceSignInOutActivity : AppCompatActivity() {
             .setDiameterInDp(resources.getDimension(R.dimen.clock_face_diameter))
             .setOpacity(1.0f)
             .setShowSeconds(true)
-            .setColor(Color.BLACK)
     }
 
     private fun initSettingsPopupMenu() {

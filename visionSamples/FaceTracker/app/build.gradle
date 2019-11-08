@@ -23,6 +23,8 @@ android {
         versionCode 2
         versionName "1.1"
         multiDexEnabled true
+        renderscriptSupportModeEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         debug {

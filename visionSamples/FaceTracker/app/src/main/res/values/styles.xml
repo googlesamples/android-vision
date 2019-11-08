@@ -20,7 +20,7 @@
     <style name="Theme_Chart">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_marginTop">@dimen/stats_chart_margin_top</item>
+        <item name="android:layout_margin">@dimen/stats_chart_margin</item>
         <item name="android:minHeight">@dimen/stats_chart_min_h</item>
     </style>
 

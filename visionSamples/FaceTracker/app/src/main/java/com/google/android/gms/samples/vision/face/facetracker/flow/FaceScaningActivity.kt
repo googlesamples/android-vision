@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -57,8 +58,8 @@ class FaceScaningActivity: AppCompatActivity() {
     private val mDetectRunnable = Runnable {
         sign()
     }
-    private var mCapturePhotoDelay:Long = 0
-    private var mStartCountTime:Long = 0
+    private val mCapturePhotoDelay = CAPTURE_PHOTO_DELAY_MS
+    private var mStartCountTime = 0L
 
     companion object {
         const val EXTRA_SIGNING_TYPE = "signing_type"
@@ -97,9 +98,12 @@ class FaceScaningActivity: AppCompatActivity() {
     }
 
     private fun init() {
+        Log.d("randy", ">>> init")
         if (intent == null || !intent.hasExtra(EXTRA_SIGNING_TYPE)) {
             ViewUtils.showToast(this, getString(R.string.err_no_sign_type_info))
             finish()
+            Log.d("randy", "<<< init")
+            return
         }
         mSignType = intent.getStringExtra(EXTRA_SIGNING_TYPE)
 
@@ -115,17 +119,19 @@ class FaceScaningActivity: AppCompatActivity() {
                 bitmapDrawable.bitmap.recycle()
             }
         }
+        Log.d("randy", "<<< init")
     }
 
     private fun reInitOnFail() {
+        Log.d("randy", ">>> reInitOnFail")
         mMp = MediaPlayer.create(this, R.raw.voice_sign_in_failed)
 
         mMp!!.start()
         mMp!!.setOnCompletionListener {
-            mCapturePhotoDelay = CAPTURE_PHOTO_DELAY_MS
             init()
             mMp!!.release()
         }
+        Log.d("randy", "<<< reInitOnFail")
     }
 
     private fun signSuccess(employeeJsonStr:String) {
@@ -140,12 +146,7 @@ class FaceScaningActivity: AppCompatActivity() {
     }
 
     private fun sign() {
-        if(isFinishing || isDestroyed) {
-            // if detecting finished, then hint user
-            mBinding.tvDetectingProgress.text = getString(R.string.msg_face_finish_detecting_progress)
-            mIsFaceChecking.set(false)
-            return
-        }
+        Log.d("randy", ">>> sign")
         mStartCountTime = System.currentTimeMillis()
         // 辨識中
         mBinding.preview.takePhoto(mBinding.root, null, { bytes ->
@@ -163,6 +164,7 @@ class FaceScaningActivity: AppCompatActivity() {
                         mIsFaceChecking.set(false)
                         mBinding.tvDetectingProgress.text = getString(R.string.msg_detecting_progress)
                         disposable?.dispose()
+                        Log.d("randy", "<<< sign")
                     }
                     .subscribe(object :Observer<SignInData> {
                         override fun onSubscribe(d: Disposable) {disposable = d}
@@ -187,7 +189,9 @@ class FaceScaningActivity: AppCompatActivity() {
     }
 
     private fun checkFace(face:Face) {
+        Log.d("randy", ">>> checkFace")
         if (mIsFaceChecking.get() || isFinishing || isDestroyed) {
+            Log.d("randy", "<<< checkFace")
             return
         }
         mIsFaceChecking.set(true)
@@ -221,6 +225,7 @@ class FaceScaningActivity: AppCompatActivity() {
         } else {
             mIsFaceChecking.set(false)
         }
+        Log.d("randy", "<<< checkFace, isValid = ${isValid}, System.currentTimeMillis() - mStartCountTime > mCapturePhotoDelay = ${System.currentTimeMillis() - mStartCountTime > mCapturePhotoDelay}")
     }
 
 

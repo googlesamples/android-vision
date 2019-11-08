@@ -7,7 +7,6 @@
 
     <string name="msg_detecting_progress">偵測中...</string>
     <string name="msg_face_check_progress">辨識中...</string>
-    <string name="msg_face_finish_detecting_progress">辨識完成, 請稍等...</string>
     <string name="msg_detecting_eye_not_open">無法識別臉部眼睛, 請睜開眼</string>
     <string name="msg_detecting_face_out_of_range">無法識別臉部, 請將臉部移至偵測範圍</string>
     <string name="msg_signing">打卡中...</string>

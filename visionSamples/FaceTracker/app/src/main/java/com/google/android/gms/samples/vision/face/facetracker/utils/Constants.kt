@@ -24,7 +24,7 @@ object Constants {
         // Capture photo width, height in px
         const val MAX_CAPTURE_PHOTO_SIZE = 400
         // Capture photo delay
-        const val CAPTURE_PHOTO_DELAY_MS = 11000L
+        const val CAPTURE_PHOTO_DELAY_MS = 8000L
 
     }
 

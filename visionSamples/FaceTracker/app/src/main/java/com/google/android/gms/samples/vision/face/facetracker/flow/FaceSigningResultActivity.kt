@@ -13,10 +13,10 @@ import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Ap
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.SIGN_RESULT_PAGE_DATE_FORMAT
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.SIGN_RESULT_PAGE_TIME_FORMAT
 import com.google.android.gms.samples.vision.face.facetracker.utils.TimeUtils
-import com.turn2cloud.paddemo.utils.Utils
-import com.turn2cloud.paddemo.utils.ViewUtils
 import java.util.*
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.SignType.*
+import com.google.android.gms.samples.vision.face.facetracker.utils.Utils
+import com.google.android.gms.samples.vision.face.facetracker.utils.ViewUtils
 
 class FaceSigningResultActivity : AppCompatActivity() {
 

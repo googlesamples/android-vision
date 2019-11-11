@@ -1,17 +1,24 @@
 package com.google.android.gms.samples.vision.face.facetracker.flow
 
+import android.Manifest
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.MenuItem
 import android.view.View
 import android.view.View.VISIBLE
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.samples.vision.face.facetracker.R
 import com.google.android.gms.samples.vision.face.facetracker.databinding.ActivityFaceSignInOutBinding
+import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.SignType
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.SignType.*
-import kotlinx.android.synthetic.main.view_top_time_info_layout.view.*
+import com.google.android.gms.samples.vision.face.facetracker.utils.ViewUtils
+import permissions.dispatcher.*
 import java.util.*
 
 class FaceSignInOutActivity : AppCompatActivity() {

@@ -30,12 +30,12 @@ import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Fa
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.FACE_VALID_CHECK_THROTTLE_BUFFER_SEC
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.MAX_CAPTURE_PHOTO_SIZE
 import com.google.android.gms.samples.vision.face.facetracker.utils.ImageUtils
+import com.google.android.gms.samples.vision.face.facetracker.utils.Utils
+import com.google.android.gms.samples.vision.face.facetracker.utils.ViewUtils
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.MultiProcessor
 import com.google.android.gms.vision.face.Face
 import com.google.android.gms.vision.face.FaceDetector
-import com.turn2cloud.paddemo.utils.Utils
-import com.turn2cloud.paddemo.utils.ViewUtils
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers

@@ -236,8 +236,8 @@ class FaceScaningActivity: AppCompatActivity() {
      */
     private fun createCameraSource() {
         val detector = FaceDetector.Builder(applicationContext)
-            .setTrackingEnabled(false)
-            .setLandmarkType(FaceDetector.ALL_CLASSIFICATIONS)
+            .setTrackingEnabled(true)
+            .setLandmarkType(FaceDetector.ALL_LANDMARKS)
             .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
             .setMode(FaceDetector.FAST_MODE)
             .build()

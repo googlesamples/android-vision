@@ -14,6 +14,7 @@
     <string name="msg_sign_in_success">上班打卡完成</string>
     <string name="msg_sign_out_success">下班打卡完成</string>
 
+    <string name="err_camera_permission_deny">功能需要存取相機, 請認可相機權限</string>
     <string name="err_no_sign_type_info">無法識別打卡型態為上班/下班</string>
     <string name="err_no_member_info">無員工資料, 請重新識別</string>
 

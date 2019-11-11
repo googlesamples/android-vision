@@ -32,15 +32,26 @@
     <dimen name="stats_type_title_margin_top">10dp</dimen>
     <dimen name="stats_chart_margin">20dp</dimen>
     <dimen name="stats_chart_min_h">500dp</dimen>
-    <integer name="stats_chart_legend_text_size">18</integer>
-    <integer name="stats_chart_legend_form_size">18</integer>
-    <integer name="stats_linechart_value_text_size">20</integer>
-    <dimen name="stats_barchart_x_text_size">18sp</dimen>
-    <dimen name="stats_barchart_y_text_size">18sp</dimen>
-    <integer name="stats_linechart_extra_bottom_offset">15</integer>
-    <dimen name="stats_linechart_x_legend_space">20dp</dimen>
-    <dimen name="stats_linechart_y_legend_space">20dp</dimen>
-    <integer name="stats_piechart_value_text_size">30</integer>
+    <item name="stats_chart_legend_form_size" format="float" type="dimen">15.0</item>
+    <item name="stats_chart_legend_text_size" format="float" type="dimen">15.0</item>
+
+    <item name="stats_bc_extra_bottom_offset" format="float" type="dimen">10.0</item>
+    <item name="stats_bc_bar_width" format="float" type="dimen">0.2</item>
+    <item name="stats_bc_group_space" format="float" type="dimen">0.55</item>
+    <item name="stats_bc_bar_space" format="float" type="dimen">0.03</item>
+    <item name="stats_bc_bar_x_text_size" format="float" type="dimen">15.0</item>
+    <item name="stats_bc_bar_y_text_size" format="float" type="dimen">15.0</item>
+    <item name="stats_bc_value_text_size" format="float" type="dimen">12.0</item>
+
+    <item name="stats_pc_hole_radius" format="float" type="dimen">58.0</item>
+    <item name="stats_pc_trans_circle_radius" format="float" type="dimen">61.0</item>
+    <item name="stats_pc_left_extra_offset" format="float" type="dimen">5.0</item>
+    <item name="stats_pc_top_extra_offset" format="float" type="dimen">10.0</item>
+    <item name="stats_pc_right_extra_offset" format="float" type="dimen">5.0</item>
+    <item name="stats_pc_bottom_extra_offset" format="float" type="dimen">5.0</item>
+    <item name="stats_pc_value_text_size" format="float" type="dimen">20.0</item>
+    <item name="stats_pc_slice_space" format="float" type="dimen">3.0</item>
+    <item name="stats_pc_selection_offset" format="float" type="dimen">5.0</item>
 
     <!-- view_status_ctl_layout -->
     <dimen name="card_view_margin">20dp</dimen>

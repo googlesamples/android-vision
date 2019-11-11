@@ -52,7 +52,7 @@
                             android:textStyle="bold"
                             android:textColor="@android:color/black"
                             android:textSize="@dimen/stats_type_title_text_size"
-                            android:text="@string/avg_sign_in_time_stats_title"
+                            android:text="@string/week_sign_in_stats_title"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toLeftOf="parent"/>
 
@@ -82,7 +82,7 @@
                             android:textStyle="bold"
                             android:textColor="@android:color/black"
                             android:textSize="@dimen/stats_type_title_text_size"
-                            android:text="@string/on_time_stats_title"
+                            android:text="@string/avg_sign_in_stats_title"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toLeftOf="parent"/>
 

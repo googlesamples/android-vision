@@ -8,6 +8,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import com.appeaser.sublimepickerlibrary.SublimePicker
 import com.appeaser.sublimepickerlibrary.datepicker.SelectedDate
@@ -18,14 +19,10 @@ import com.appeaser.sublimepickerlibrary.helpers.SublimeOptions.Picker.DATE_PICK
 import com.appeaser.sublimepickerlibrary.recurrencepicker.SublimeRecurrencePicker
 import com.example.test.api.ApiInstMgr
 import com.example.test.api.response.ApiResponse
-import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
-import com.github.mikephil.charting.formatter.LargeValueFormatter
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 import com.google.android.gms.samples.vision.face.facetracker.R
 import com.google.android.gms.samples.vision.face.facetracker.api.api.interf.IFaceLink
@@ -34,11 +31,14 @@ import com.google.android.gms.samples.vision.face.facetracker.api.api.response.m
 import com.google.android.gms.samples.vision.face.facetracker.databinding.ActivityFaceStatisticBinding
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Api.ORIG_ID
-import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.AVG_SIGN_STATS_Y_FORMAT
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.REPONSE_TRIMED_DATE_FORMAT
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.REQUEST_DATE_FORMAT
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.SIGN_IN_CRITERIA_TIME
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.AppInfo.SIGN_RESULT_PAGE_TIME_FORMAT
+import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Chart.BC_VALUE_FORMAT
+import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Chart.WEEK_STR_SPLITOR
+import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Chart.X_ANIMATION_DURATION
+import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Chart.Y_ANIMATION_DURATION
 import com.google.android.gms.samples.vision.face.facetracker.utils.TimeUtils
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -98,86 +98,83 @@ class FaceStatisticActivity : AppCompatActivity() {
         mBinding.sdpDatePicker.apply {
             // 日期區間選擇
             val options = SublimeOptions()
-            options.setPickerToShow(DATE_PICKER)
+            options.pickerToShow = DATE_PICKER
             options.setDisplayOptions(ACTIVATE_DATE_PICKER)
             options.setCanPickDateRange(true)
             this.initializePicker(options, mDatePickerListener)
         }
 
         mBinding.bcSignListStats.apply {
-            // 平均打卡時間, 隱藏右邊顯示左邊Y
-            this.axisRight.isEnabled = false
-            this.axisLeft.isEnabled = true
-            // Value position
-            this.setDrawValueAboveBar(true)
-            // background color
-            this.setBackgroundColor(Color.WHITE)
-            // disable description text
-            this.description.isEnabled = false
-            // Pinch
-            this.setPinchZoom(false)
-            // Bar Shadow
-            this.setDrawBarShadow(false)
-            // Grid background
-            this.setDrawGridBackground(false)
-            // Description
-            this.description.isEnabled = false
-            // Extra offset around chart view
-            this.extraBottomOffset = resources.getInteger(R.integer.stats_linechart_extra_bottom_offset).toFloat()
+            // 準點出勤分佈
+            mBinding.bcSignListStats.setPinchZoom(false)
+            mBinding.bcSignListStats.setDrawBarShadow(false)
+            mBinding.bcSignListStats.setDrawGridBackground(false)
+            mBinding.bcSignListStats.description.isEnabled = false
+            mBinding.bcSignListStats.extraBottomOffset = ResourcesCompat.getFloat(resources, R.dimen.stats_bc_extra_bottom_offset)
+            mBinding.bcSignListStats.isAutoScaleMinMaxEnabled = true
 
-            xAxis.textColor = Color.BLACK
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.setDrawGridLines(false)
-            xAxis.setDrawAxisLine(false)
-//            xAxis.textSize = resources.getDimensionPixelSize(R.dimen.stats_barchart_x_text_size).toFloat()
-            xAxis.axisMinimum = 0.0f
-            xAxis.axisMaximum = 8.0f
-            xAxis.granularity = 1f
+            val xAxis = mBinding.bcSignListStats.xAxis
             xAxis.setCenterAxisLabels(true)
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+            xAxis.valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    var weekStr = ""
 
-//            xAxis.valueFormatter = object : ValueFormatter() {
-//                override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-//                    // TODO:
-//                    return ""
-//                }
-//            }
-
-            axisLeft.textColor = ColorTemplate.getHoloBlue()
-            axisLeft.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
-            axisLeft.setDrawGridLines(true)
-//            axisLeft.textSize = resources.getDimensionPixelSize(R.dimen.stats_barchart_y_text_size).toFloat()
-            axisLeft.axisMinimum = 0.0f
-            axisLeft.axisMaximum = 1.01f
-            axisLeft.setDrawGridLines(false)
-            axisLeft.valueFormatter = object :ValueFormatter() {
-                override fun getFormattedValue(value: Float): String = String.format("%.0f%%", value * 100)
+                    run {
+                        resources.getStringArray(R.array.week_array).forEach {
+                            if(it.contains(value.toInt().toString())) {
+                                weekStr = it.substring(it.indexOf(WEEK_STR_SPLITOR) + 1, it.length)
+                                return@run
+                            }
+                        }
+                    }
+                    return weekStr
+                }
             }
+            xAxis.textSize = ResourcesCompat.getFloat(resources, R.dimen.stats_bc_bar_x_text_size)
+            xAxis.axisMinimum = 1.0f
+            xAxis.axisMaximum = 8.0f
 
-            legend.formSize = resources.getInteger(R.integer.stats_chart_legend_form_size).toFloat()
-            legend.textSize = resources.getInteger(R.integer.stats_chart_legend_text_size).toFloat()
-            legend.form = Legend.LegendForm.SQUARE
+            val leftAxis = mBinding.bcSignListStats.axisLeft
+            leftAxis.valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float) = String.format(BC_VALUE_FORMAT, value * 100)
+            }
+            leftAxis.setDrawGridLines(false)
+            leftAxis.axisMinimum = 0f // this replaces setStartAtZero(true)
+            leftAxis.axisMaximum = 1.01f
+            leftAxis.textSize = ResourcesCompat.getFloat(resources, R.dimen.stats_bc_bar_y_text_size)
+            mBinding.bcSignListStats.axisRight.isEnabled = false
+
+            val l = mBinding.bcSignListStats.legend
+            l.setDrawInside(false)
+            l.textSize = ResourcesCompat.getFloat(resources, R.dimen.stats_chart_legend_text_size)
+            l.formSize = ResourcesCompat.getFloat(resources, R.dimen.stats_chart_legend_form_size)
         }
 
         mBinding.pcSignInOutListStats.apply {
-            // 準點出勤分佈
+            // 出勤狀況彙總
             this.setUsePercentValues(true)
             this.description.isEnabled = false
             this.isDrawHoleEnabled = false
-            this.setEntryLabelTextSize(resources.getInteger(R.integer.stats_piechart_value_text_size).toFloat())
-            this.setExtraOffsets(5f, 10f, 5f, 5f)
+            this.setEntryLabelTextSize(ResourcesCompat.getFloat(resources, R.dimen.stats_pc_value_text_size))
+            this.setExtraOffsets(ResourcesCompat.getFloat(resources, R.dimen.stats_pc_left_extra_offset)
+                , ResourcesCompat.getFloat(resources, R.dimen.stats_pc_top_extra_offset)
+                , ResourcesCompat.getFloat(resources, R.dimen.stats_pc_right_extra_offset)
+                , ResourcesCompat.getFloat(resources, R.dimen.stats_pc_bottom_extra_offset))
             this.dragDecelerationFrictionCoef = 0.95f
             this.setTransparentCircleColor(Color.WHITE)
             this.setTransparentCircleAlpha(110)
-            this.holeRadius = 58f
-            this.transparentCircleRadius = 61f
+            this.holeRadius = ResourcesCompat.getFloat(resources, R.dimen.stats_pc_hole_radius)
+            this.transparentCircleRadius = ResourcesCompat.getFloat(resources, R.dimen.stats_pc_trans_circle_radius)
             this.setDrawCenterText(false)
             this.rotationAngle = 0f
             // enable rotation of the chart by touch
             this.isRotationEnabled = true
             this.isHighlightPerTapEnabled = true
 
-            this.legend.formSize = resources.getInteger(R.integer.stats_chart_legend_form_size).toFloat()
-            this.legend.textSize = resources.getInteger(R.integer.stats_chart_legend_text_size).toFloat()
+            this.legend.formSize = ResourcesCompat.getFloat(resources, R.dimen.stats_chart_legend_form_size)
+            this.legend.textSize = ResourcesCompat.getFloat(resources, R.dimen.stats_chart_legend_text_size)
+            this.legend.yEntrySpace = ResourcesCompat.getFloat(resources, R.dimen.stats_pc_legend_y_entry_space)
         }
     }
 
@@ -220,12 +217,12 @@ class FaceStatisticActivity : AppCompatActivity() {
             }
 
             // 找時間對應的Week Day
-            val curCal = Calendar.getInstance()
-            curCal.time = TimeUtils.convertStrToDate(REPONSE_TRIMED_DATE_FORMAT, it.getTrimedSignDateTime())
+            val cal = Calendar.getInstance()
+            cal.time = TimeUtils.convertStrToDate(REPONSE_TRIMED_DATE_FORMAT, it.getTrimedSignDateTime())
             var weekKey = ""
             run {
                 signInWeekStatsMap.keys.forEach {
-                    if (it.contains(curCal.get(Calendar.DAY_OF_WEEK).toString())) {
+                    if (it.contains(cal.get(Calendar.DAY_OF_WEEK).toString())) {
                         weekKey = it
                         return@run
                     }
@@ -233,7 +230,7 @@ class FaceStatisticActivity : AppCompatActivity() {
             }
 
             // 檢查簽入時間
-            val signInTimeStr = TimeUtils.convertDateToStr(curCal.time, SIGN_RESULT_PAGE_TIME_FORMAT)
+            val signInTimeStr = TimeUtils.convertDateToStr(cal.time, SIGN_RESULT_PAGE_TIME_FORMAT)
             val signInStatusPair = signInWeekStatsMap.get(weekKey)
             var newNormal = signInStatusPair!!.first
             var newLate = signInStatusPair!!.second
@@ -253,7 +250,7 @@ class FaceStatisticActivity : AppCompatActivity() {
             val total = (signInStatsPair.first + signInStatsPair.second).toFloat()
             var normalPercent = if(total == 0f) 0f else signInStatsPair.first / total
             var latePercent = if(total == 0f) 0f else signInStatsPair.second / total
-            val weekXVal = week.substring(0, week.indexOf(":")).toFloat()
+            val weekXVal = week.substring(0, week.indexOf(WEEK_STR_SPLITOR)).toFloat()
 
             normalSignInVals.add(BarEntry(weekXVal, normalPercent))
             lateSignInVals.add(BarEntry(weekXVal, latePercent))
@@ -261,21 +258,25 @@ class FaceStatisticActivity : AppCompatActivity() {
 
         // 建立Bar DataSet
         val normalSignInStatsSet = BarDataSet(normalSignInVals, getString(R.string.on_time_title))
-        normalSignInStatsSet.setColor(Color.rgb(104, 241, 175))
+        normalSignInStatsSet.valueTextSize = ResourcesCompat.getFloat(resources, R.dimen.stats_bc_value_text_size)
+        normalSignInStatsSet.color = Color.rgb(106, 167, 134)
         val lateSignInStatsSet = BarDataSet(lateSignInVals, getString(R.string.late_title))
-        lateSignInStatsSet.setColor(Color.rgb(164, 228, 251))
+        lateSignInStatsSet.valueTextSize = ResourcesCompat.getFloat(resources, R.dimen.stats_bc_value_text_size)
+        lateSignInStatsSet.color = Color.rgb(140, 234, 255)
 
         // 建立BarData
         mBinding.bcSignListStats.data = BarData(normalSignInStatsSet, lateSignInStatsSet).apply {
             setValueFormatter(object : ValueFormatter() {
-                override fun getFormattedValue(value: Float): String =
-                    String.format("%.0f%%", value * 100)
+                // 不顯示0%的直條
+                override fun getFormattedValue(value: Float) = if(value <= 0.0f) "" else String.format(BC_VALUE_FORMAT, value * 100)
             })
         }
-        mBinding.bcSignListStats.data.barWidth = 0.2f
-        mBinding.bcSignListStats.groupBars(0.0f, 0.08f, 0.03f)
+        mBinding.bcSignListStats.data.barWidth = ResourcesCompat.getFloat(resources, R.dimen.stats_bc_bar_width)
         // Group
-        mBinding.bcSignListStats.groupBars(0.0f, 0.08f, 0.03f)
+        mBinding.bcSignListStats.groupBars(0.0f
+            , ResourcesCompat.getFloat(resources, R.dimen.stats_bc_group_space)
+            , ResourcesCompat.getFloat(resources, R.dimen.stats_bc_bar_space))
+        mBinding.bcSignListStats.animateXY(X_ANIMATION_DURATION, Y_ANIMATION_DURATION)
     }
 
     private fun initSignInOutPieChart(signInOutInfos:List<SignInOutInfo>?) {
@@ -308,16 +309,18 @@ class FaceStatisticActivity : AppCompatActivity() {
 
         val dataSet = PieDataSet(entries, "")
         dataSet.setDrawIcons(false)
-        dataSet.valueTextSize = resources.getInteger(R.integer.stats_piechart_value_text_size).toFloat()
-        dataSet.valueTextColor = Color.WHITE
-        dataSet.sliceSpace = 3f
+        dataSet.valueTextSize = ResourcesCompat.getFloat(resources, R.dimen.stats_pc_value_text_size)
+        dataSet.valueTextColor = Color.BLACK
+        dataSet.sliceSpace = ResourcesCompat.getFloat(resources, R.dimen.stats_pc_slice_space)
         dataSet.iconsOffset = MPPointF(0f, 40f)
-        dataSet.selectionShift = 5f
+        dataSet.selectionShift = ResourcesCompat.getFloat(resources, R.dimen.stats_pc_selection_offset)
         dataSet.colors = listOf(Color.rgb(106, 167, 134), Color.rgb(140, 234, 255))
+        dataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
 
         val data = PieData(dataSet)
         data.setValueFormatter(PercentFormatter(mBinding.pcSignInOutListStats))
         mBinding.pcSignInOutListStats.data = data
+        mBinding.pcSignInOutListStats.animateXY(X_ANIMATION_DURATION, Y_ANIMATION_DURATION)
     }
 
     private fun getSignList(

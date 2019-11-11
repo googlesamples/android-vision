@@ -34,7 +34,11 @@ object Constants {
     }
 
     object Chart {
-
+        const val WEEK_STR_SPLITOR = ":"
+        const val BC_VALUE_FORMAT = "%.0f%%"
+        const val PC_VALUE_FORMAT = ":"
+        const val X_ANIMATION_DURATION = 800
+        const val Y_ANIMATION_DURATION = 800
     }
 
     enum class SignType(val type: String) {

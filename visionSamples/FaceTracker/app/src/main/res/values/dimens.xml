@@ -25,4 +25,40 @@
     <dimen name="signing_finish_w">100dp</dimen>
     <dimen name="signing_finish_h">100dp</dimen>
     <dimen name="signing_finish_margin_top">50dp</dimen>
+
+    <!-- FaceStatisticActivity -->
+    <dimen name="stats_type_title_text_size">14sp</dimen>
+    <dimen name="stats_type_title_margin_left">5dp</dimen>
+    <dimen name="stats_type_title_margin_top">5dp</dimen>
+    <dimen name="stats_chart_margin">10dp</dimen>
+    <dimen name="stats_chart_min_h">300dp</dimen>
+    <item name="stats_chart_legend_form_size" format="float" type="dimen">10.0</item>
+    <item name="stats_chart_legend_text_size" format="float" type="dimen">10.0</item>
+
+    <item name="stats_bc_extra_bottom_offset" format="float" type="dimen">10.0</item>
+    <item name="stats_bc_bar_width" format="float" type="dimen">0.2</item>
+    <item name="stats_bc_group_space" format="float" type="dimen">0.55</item>
+    <item name="stats_bc_bar_space" format="float" type="dimen">0.03</item>
+    <item name="stats_bc_bar_x_text_size" format="float" type="dimen">10.0</item>
+    <item name="stats_bc_bar_y_text_size" format="float" type="dimen">10.0</item>
+    <item name="stats_bc_value_text_size" format="float" type="dimen">7.0</item>
+
+    <item name="stats_pc_hole_radius" format="float" type="dimen">58.0</item>
+    <item name="stats_pc_trans_circle_radius" format="float" type="dimen">61.0</item>
+    <item name="stats_pc_left_extra_offset" format="float" type="dimen">5.0</item>
+    <item name="stats_pc_top_extra_offset" format="float" type="dimen">10.0</item>
+    <item name="stats_pc_right_extra_offset" format="float" type="dimen">5.0</item>
+    <item name="stats_pc_bottom_extra_offset" format="float" type="dimen">-10.0</item>
+    <item name="stats_pc_value_text_size" format="float" type="dimen">15.0</item>
+    <item name="stats_pc_slice_space" format="float" type="dimen">3.0</item>
+    <item name="stats_pc_selection_offset" format="float" type="dimen">5.0</item>
+    <item name="stats_pc_legend_y_entry_space" format="float" type="dimen">50</item>
+
+    <!-- view_status_ctl_layout -->
+    <dimen name="card_view_margin">14dp</dimen>
+    <dimen name="date_range_text_size">20sp</dimen>
+    <dimen name="date_range_calendar_icon_margin_left">5dp</dimen>
+    <dimen name="date_range_calendar_icon_w">35dp</dimen>
+    <dimen name="date_range_calendar_icon_h">35dp</dimen>
+    <dimen name="employee_id_input_size">20sp</dimen>
 </resources>

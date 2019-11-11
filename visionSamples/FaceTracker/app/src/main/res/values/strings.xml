@@ -7,7 +7,6 @@
 
     <string name="msg_detecting_progress">偵測中...</string>
     <string name="msg_face_check_progress">辨識中...</string>
-    <string name="msg_face_finish_detecting_progress">辨識完成, 請稍等...</string>
     <string name="msg_detecting_eye_not_open">無法識別臉部眼睛, 請睜開眼</string>
     <string name="msg_detecting_face_out_of_range">無法識別臉部, 請將臉部移至偵測範圍</string>
     <string name="msg_signing">打卡中...</string>
@@ -23,9 +22,22 @@
     <string name="btn_press_signing_out">下班打卡</string>
     <string name="btn_date_selection">%1$s ~ %2$s</string>
 
+    <string name="week_sign_in_stats_title">準點出勤分佈表(週)</string>
+    <string name="avg_sign_in_stats_title">出勤情況匯總表</string>
     <string name="setting_item_face_track">臉部追蹤</string>
     <string name="setting_item_stats">統計資料</string>
     <string name="hint_employee_id">Employee ID</string>
-    <string name="pie_on_time">正常</string>
-    <string name="pie_late">遲到</string>
+    <string name="on_time_title">正常</string>
+    <string name="late_title">遲到</string>
+    <!-- Calendar.DAY_OF_WEEK:WeekName -->
+    <string-array name="week_array">
+        <item>2:週一</item>
+        <item>3:週二</item>
+        <item>4:週三</item>
+        <item>5:週四</item>
+        <item>6:週五</item>
+        <item>7:週六</item>
+        <item>1:週日</item>
+    </string-array>
+
 </resources>

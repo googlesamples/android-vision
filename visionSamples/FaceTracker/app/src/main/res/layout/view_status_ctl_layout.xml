@@ -18,24 +18,23 @@
             android:orientation="horizontal"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent">
             <TextView
                 android:id="@+id/tv_date_range"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@android:color/holo_blue_dark"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="@dimen/date_range_text_size"
                 android:text=""
                 tools:text="2019-10-29 ~ 2019-10-29"/>
 
             <ImageView
                 android:id="@+id/iv_date_range"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginLeft="5dp"
+                android:layout_width="@dimen/date_range_calendar_icon_w"
+                android:layout_height="@dimen/date_range_calendar_icon_h"
+                android:layout_marginLeft="@dimen/date_range_calendar_icon_margin_left"
                 android:src="@drawable/ic_calendar"/>
         </LinearLayout>
         <EditText
@@ -45,12 +44,12 @@
             android:hint="@string/hint_employee_id"
             android:singleLine="true"
             android:gravity="center"
-            android:textSize="14sp"
+            android:textSize="@dimen/employee_id_input_size"
             android:textColor="@color/text_color"
             android:visibility="gone"
-            app:layout_constraintLeft_toRightOf="@id/ll_date_range_layout"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/ll_date_range_layout"
+            app:layout_constraintRight_toRightOf="@id/ll_date_range_layout"
+            app:layout_constraintTop_toBottomOf="@id/ll_date_range_layout"
             app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

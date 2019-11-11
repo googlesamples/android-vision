@@ -14,22 +14,19 @@
     <style name="Theme_CardItem" parent="CardView.Light">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_margin">@dimen/card_view_margin</item>
     </style>
 
     <style name="Theme_Chart">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_marginTop">5dp</item>
-        <item name="android:minHeight">300dp</item>
+        <item name="android:layout_margin">@dimen/stats_chart_margin</item>
+        <item name="android:minHeight">@dimen/stats_chart_min_h</item>
     </style>
 
     <style name="Theme_Ctl_Layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_marginRight">5dp</item>
-        <item name="android:padding">5dp</item>
     </style>
 
 </resources>

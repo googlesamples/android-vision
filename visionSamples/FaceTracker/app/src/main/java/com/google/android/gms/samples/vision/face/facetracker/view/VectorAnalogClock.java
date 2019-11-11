@@ -32,12 +32,11 @@ import java.util.Calendar;
 
 public abstract class VectorAnalogClock extends RelativeLayout {
 
-    private static final String TAG = "VectorAnalogClock";
-
     private AppCompatImageView analogFace;
     private AppCompatImageView analogHour;
     private AppCompatImageView analogMinute;
     private AppCompatImageView analogSecond;
+    private ViewTreeObserver.OnGlobalLayoutListener layoutListener;
 
     @DrawableRes
     private int faceId;
@@ -50,7 +49,6 @@ public abstract class VectorAnalogClock extends RelativeLayout {
 
     private Context ctx;
 
-    private HandlerThread mTickThread = null;
     private Handler mTickHandler = null;
     private Runnable mTickRunnable = new Runnable() {
         @Override
@@ -84,9 +82,7 @@ public abstract class VectorAnalogClock extends RelativeLayout {
      *  A simple initialization with default assets
      */
     public void initializeSimple(){
-        mTickThread = new HandlerThread(TAG);
-        mTickThread.start();
-        mTickHandler = new Handler(mTickThread.getLooper());
+        mTickHandler = new Handler();
 
         this.faceId = R.drawable.clock_face;
         this.hourId = R.drawable.hours_hand;
@@ -113,7 +109,6 @@ public abstract class VectorAnalogClock extends RelativeLayout {
     }
 
     private boolean showSeconds = true;
-    private int color = 0xff000000;
     private float scale = 1.0f;
     private float opacity = 1.0f;
     private Calendar calendar;
@@ -163,13 +158,6 @@ public abstract class VectorAnalogClock extends RelativeLayout {
      */
     public float getOpacity() {
         return opacity;
-    }
-
-    /**
-     * @return hexadecimal integer color
-     */
-    public int getColor() {
-        return color;
     }
 
     /**
@@ -240,16 +228,6 @@ public abstract class VectorAnalogClock extends RelativeLayout {
     }
 
     /**
-     * @param color: hexadecimal color (ex: 0xff000000)
-     */
-    public VectorAnalogClock setColor(int color) {
-        this.color = color;
-        main(ctx);
-
-        return this;
-    }
-
-    /**
      * @param showSeconds: controls whether to show the seconds hand or not.
      */
     public VectorAnalogClock setShowSeconds(boolean showSeconds) {
@@ -262,7 +240,6 @@ public abstract class VectorAnalogClock extends RelativeLayout {
     /**
      *  Black Box
      */
-    ViewTreeObserver.OnGlobalLayoutListener layoutListener;
     private void main(Context ctx) {
 
         Drawable face = AppCompatResources.getDrawable(ctx, faceId);
@@ -316,8 +293,8 @@ public abstract class VectorAnalogClock extends RelativeLayout {
         analogFace.setLayoutParams(layoutParams);
 
         layoutParams = analogSecond.getLayoutParams();
-        float minutesHeight = (sizeInPixels/2) - (sizeInPixels/5.5f);
-        layoutParams.height = (int)minutesHeight;
+        float minutesHeight = (sizeInPixels / 2) - (sizeInPixels / 5.5f);
+        layoutParams.height = (int) minutesHeight;
         analogSecond.setLayoutParams(layoutParams);
 
         layoutParams = analogMinute.getLayoutParams();

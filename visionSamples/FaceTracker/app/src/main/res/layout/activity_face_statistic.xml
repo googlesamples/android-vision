@@ -56,8 +56,8 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toLeftOf="parent"/>
 
-                        <com.github.mikephil.charting.charts.LineChart
-                            android:id="@+id/lc_sign_list_stats"
+                        <com.github.mikephil.charting.charts.BarChart
+                            android:id="@+id/bc_sign_list_stats"
                             style="@style/Theme_Chart"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"

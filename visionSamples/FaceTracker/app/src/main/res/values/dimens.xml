@@ -35,8 +35,8 @@
     <integer name="stats_chart_legend_form_size">8</integer>
     <integer name="stats_chart_legend_text_size">8</integer>
     <integer name="stats_linechart_value_text_size">10</integer>
-    <dimen name="stats_linechart_x_text_size">14sp</dimen>
-    <dimen name="stats_linechart_y_text_size">14sp</dimen>
+    <dimen name="stats_barchart_x_text_size">10sp</dimen>
+    <dimen name="stats_barchart_y_text_size">14sp</dimen>
     <integer name="stats_linechart_extra_bottom_offset">7</integer>
     <dimen name="stats_linechart_x_legend_space">5dp</dimen>
     <dimen name="stats_linechart_y_legend_space">5dp</dimen>

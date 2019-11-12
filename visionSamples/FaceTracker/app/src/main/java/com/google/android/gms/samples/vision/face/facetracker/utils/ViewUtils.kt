@@ -1,4 +1,4 @@
-package com.turn2cloud.paddemo.utils
+package com.google.android.gms.samples.vision.face.facetracker.utils
 
 import android.app.Activity
 import android.app.ProgressDialog

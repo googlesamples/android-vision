@@ -19,6 +19,7 @@
         android:label="FaceTracker"
         android:theme="@style/AppTheme.NoActionBar"
         android:largeHeap="true"
+        android:usesCleartextTraffic="true"
         tools:replace="android:label"
         tools:ignore="GoogleAppIndexingWarning">
 

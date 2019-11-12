@@ -38,7 +38,7 @@
                 android:id="@+id/iv_detect_square"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/camera_viewfinder_square_2"/>
+                app:srcCompat="@drawable/camera_viewfinder_square_3"/>
         </com.google.android.gms.samples.vision.face.facetracker.ui.face.camera.CameraSourcePreview>
 
         <TextView

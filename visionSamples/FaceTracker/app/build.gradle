@@ -20,8 +20,8 @@ android {
         applicationId "com.google.android.gms.samples.vision.face.facetracker"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 3
-        versionName "1.2"
+        versionCode 4
+        versionName "1.3"
         multiDexEnabled true
         renderscriptSupportModeEnabled true
         vectorDrawables.useSupportLibrary = true

@@ -27,7 +27,6 @@ import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Fa
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.CAMERA_SOURCE_REQUEST_FPS
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.CAPTURE_PHOTO_DELAY_MS
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.EYE_OPEN_VALID_PROB
-import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.FACE_VALID_CHECK_THROTTLE_BUFFER_SEC
 import com.google.android.gms.samples.vision.face.facetracker.utils.Constants.Face.MAX_CAPTURE_PHOTO_SIZE
 import com.google.android.gms.samples.vision.face.facetracker.utils.ImageUtils
 import com.google.android.gms.samples.vision.face.facetracker.utils.Utils
@@ -36,13 +35,11 @@ import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.MultiProcessor
 import com.google.android.gms.vision.face.Face
 import com.google.android.gms.vision.face.FaceDetector
-import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import okhttp3.RequestBody
-import java.util.concurrent.TimeUnit
 import okhttp3.MediaType.Companion.toMediaType
 import java.io.*
 import java.util.concurrent.atomic.AtomicBoolean
@@ -151,12 +148,17 @@ class FaceScaningActivity: AppCompatActivity() {
         mStartCountTime = System.currentTimeMillis()
         // 辨識中
         mBinding.preview.takePhoto(mBinding.root, null, { bytes ->
+                mBinding.ivCapturePhoto.visibility = VISIBLE
+                var capturedBytes = bytes
                 val apiInst = ApiInstMgr.getInstnace(this, Constants.Api.BASE_URL, IFaceLink::class.java)!!
                 var disposable:Disposable? = null
-                mBinding.ivCapturePhoto.visibility = VISIBLE
+                val capturedBmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
 
-                mBinding.ivCapturePhoto.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.size))
-                apiInst.sign(mSignType, RequestBody.create("application/octet-stream".toMediaType(), bytes))
+                if(capturedBmp.width > MAX_CAPTURE_PHOTO_SIZE || capturedBmp.height > MAX_CAPTURE_PHOTO_SIZE) {
+                    capturedBytes = ImageUtils.createScaledBmpBytes(capturedBmp, MAX_CAPTURE_PHOTO_SIZE, MAX_CAPTURE_PHOTO_SIZE)
+                }
+                mBinding.ivCapturePhoto.setImageBitmap(capturedBmp)
+                apiInst.sign(mSignType, RequestBody.create("application/octet-stream".toMediaType(), capturedBytes))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doFinally {

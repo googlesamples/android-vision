@@ -31,6 +31,8 @@ android {
             minifyEnabled false
 
             buildConfigField "String", "API_URL", '"https://facelinkapi.azurewebsites.net"'
+            buildConfigField "String", "buglyID", '""'
+            buildConfigField "String", "buglyKey", '""'
         }
         release {
             signingConfig signingConfigs.release
@@ -38,6 +40,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             buildConfigField "String", "API_URL", '"https://facelinkapi.azurewebsites.net"'
+            buildConfigField "String", "buglyID", '"b90e6c5b18"'
+            buildConfigField "String", "buglyKey", '"36d970c4-f48a-499e-b0da-1d34be4421c7"'
         }
     }
 
@@ -105,4 +109,8 @@ dependencies {
 
     // GMS Vision
     implementation 'com.google.android.gms:play-services-vision:17.0.2'
+
+    // bugly
+    implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
 }

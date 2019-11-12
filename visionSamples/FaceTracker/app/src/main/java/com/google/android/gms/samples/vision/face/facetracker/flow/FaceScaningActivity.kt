@@ -107,6 +107,7 @@ class FaceScaningActivity: AppCompatActivity() {
         }
         mSignType = intent.getStringExtra(EXTRA_SIGNING_TYPE)
 
+        mBinding.preview.release()
         createCameraSource()
         startCameraSource()
 
@@ -152,12 +153,10 @@ class FaceScaningActivity: AppCompatActivity() {
         mBinding.preview.takePhoto(mBinding.root, null, { bytes ->
                 val apiInst = ApiInstMgr.getInstnace(this, Constants.Api.BASE_URL, IFaceLink::class.java)!!
                 var disposable:Disposable? = null
-                val byteArray = ImageUtils.createScaledBmpBytes(BitmapFactory.decodeByteArray(bytes, 0, bytes.size), MAX_CAPTURE_PHOTO_SIZE, MAX_CAPTURE_PHOTO_SIZE)
                 mBinding.ivCapturePhoto.visibility = VISIBLE
 
                 mBinding.ivCapturePhoto.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.size))
-                mBinding.preview.release()
-                apiInst.sign(mSignType, RequestBody.create("application/octet-stream".toMediaType(), byteArray))
+                apiInst.sign(mSignType, RequestBody.create("application/octet-stream".toMediaType(), bytes))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doFinally {

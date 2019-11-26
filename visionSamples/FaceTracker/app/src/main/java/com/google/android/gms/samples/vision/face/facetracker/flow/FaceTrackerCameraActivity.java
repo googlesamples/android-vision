@@ -294,6 +294,7 @@ public final class FaceTrackerCameraActivity extends AppCompatActivity {
                 } else {
                     Intent intent = new Intent();
 
+                    intent.putExtra(EXTRA_OUTPUT, mOutputFile.getAbsolutePath());
                     intent.putExtra(EXTRA_IS_CONTAIN_FACE, mFaceCount.get() > 0);
                     setResult(RESULT_OK, intent);
                     finish();

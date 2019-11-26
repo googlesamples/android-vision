@@ -122,25 +122,17 @@ class FaceScaningActivity: AppCompatActivity() {
 
     private fun reInitOnFail() {
         Log.d("randy", ">>> reInitOnFail")
-        mMp = MediaPlayer.create(this, R.raw.voice_sign_in_failed)
-
-        mMp!!.start()
-        mMp!!.setOnCompletionListener {
+        Utils.playSound(this, R.raw.voice_sign_in_failed) {
             init()
-            mMp!!.release()
+            Log.d("randy", "<<< reInitOnFail")
         }
-        Log.d("randy", "<<< reInitOnFail")
     }
 
     private fun signSuccess(employeeJsonStr:String) {
-        val mp = MediaPlayer.create(this, R.raw.voice_sign_in_success)
-
+        Log.d("randy", ">>> reInitOnFail")
+        Utils.playSound(this, R.raw.voice_sign_in_failed, null)
         FaceSigningResultActivity.startActivity(this@FaceScaningActivity, employeeJsonStr)
         finish()
-        mp.start()
-        mp.setOnCompletionListener {
-            mp.release()
-        }
     }
 
     private fun sign() {

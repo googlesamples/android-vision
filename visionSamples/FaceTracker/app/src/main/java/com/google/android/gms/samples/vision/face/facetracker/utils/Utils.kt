@@ -8,7 +8,9 @@ import androidx.core.net.toUri
 import android.graphics.*
 import android.graphics.Bitmap
 import android.content.Context.CONNECTIVITY_SERVICE
+import android.media.MediaPlayer
 import android.net.ConnectivityManager
+import com.google.android.gms.samples.vision.face.facetracker.R
 import com.google.gson.Gson
 import me.echodev.resizer.Resizer
 import java.io.*
@@ -36,5 +38,18 @@ object Utils {
         }
 
         return isConnected
+    }
+
+    fun playSound(ctx: Context, resId: Int, finishCallback: (() -> Unit)?) {
+        val mp = MediaPlayer.create(ctx, resId)
+
+        mp.start()
+        mp.setOnCompletionListener {
+            if(finishCallback != null) {
+                finishCallback()
+            }
+            mp.release()
+        }
+
     }
 }
